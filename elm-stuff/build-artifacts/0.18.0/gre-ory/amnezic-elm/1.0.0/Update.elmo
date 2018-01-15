@@ -1,0 +1,135 @@
+var _gre_ory$amnezic_elm$Update$init_default_question = function (question_id) {
+	return {
+		title: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Question ',
+			_elm_lang$core$Basics$toString(question_id))
+	};
+};
+var _gre_ory$amnezic_elm$Update$init_default_questions = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: _gre_ory$amnezic_elm$Update$init_default_question(0),
+		_1: {
+			ctor: '::',
+			_0: _gre_ory$amnezic_elm$Update$init_default_question(1),
+			_1: {
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$Update$init_default_question(2),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _gre_ory$amnezic_elm$Update$update_player_name = F2(
+	function (player_name, player) {
+		return _elm_lang$core$Native_Utils.update(
+			player,
+			{name: player_name});
+	});
+var _gre_ory$amnezic_elm$Update$update_player = F3(
+	function (model, player_id, update_player_fn) {
+		var _p0 = A2(_elm_lang$core$Array$get, player_id, model.players);
+		if (_p0.ctor === 'Just') {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					players: A3(
+						_elm_lang$core$Array$set,
+						player_id,
+						update_player_fn(_p0._0),
+						model.players)
+				});
+		} else {
+			return model;
+		}
+	});
+var _gre_ory$amnezic_elm$Update$init_default_player = function (player_id) {
+	return {
+		name: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Player ',
+			_elm_lang$core$Basics$toString(player_id)),
+		score: 0
+	};
+};
+var _gre_ory$amnezic_elm$Update$init_default_players = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: _gre_ory$amnezic_elm$Update$init_default_player(1),
+		_1: {
+			ctor: '::',
+			_0: _gre_ory$amnezic_elm$Update$init_default_player(2),
+			_1: {ctor: '[]'}
+		}
+	});
+var _gre_ory$amnezic_elm$Update$go_to_previous_page = function (model) {
+	var _p1 = model.page;
+	switch (_p1.ctor) {
+		case 'PageStart':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageEnd});
+		case 'PageSetUpPlayers':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageStart});
+		case 'PageSetUpThemes':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageSetUpPlayers});
+		case 'PageSetUpQuestions':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageSetUpThemes});
+		case 'PageQuestions':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageSetUpQuestions});
+		case 'PageScore':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageQuestions});
+		default:
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageScore});
+	}
+};
+var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
+	var _p2 = model.page;
+	switch (_p2.ctor) {
+		case 'PageStart':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageSetUpPlayers});
+		case 'PageSetUpPlayers':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageSetUpThemes});
+		case 'PageSetUpThemes':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageSetUpQuestions});
+		case 'PageSetUpQuestions':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageQuestions});
+		case 'PageQuestions':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageScore});
+		case 'PageScore':
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageEnd});
+		default:
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{page: _gre_ory$amnezic_elm$Type$PageStart});
+	}
+};
+var _gre_ory$amnezic_elm$Update$go_to_start_page = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{page: _gre_ory$amnezic_elm$Type$PageStart});
+};

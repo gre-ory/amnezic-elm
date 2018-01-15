@@ -1,0 +1,18 @@
+var _gre_ory$amnezic_elm$Types$Model = F2(
+	function (a, b) {
+		return {questions: a, players: b};
+	});
+var _gre_ory$amnezic_elm$Types$Question = function (a) {
+	return {title: a};
+};
+var _gre_ory$amnezic_elm$Types$Player = F2(
+	function (a, b) {
+		return {name: a, score: b};
+	});
+var _gre_ory$amnezic_elm$Types$Stopped = {ctor: 'Stopped'};
+var _gre_ory$amnezic_elm$Types$Playing = {ctor: 'Playing'};
+var _gre_ory$amnezic_elm$Types$EndGame = {ctor: 'EndGame'};
+var _gre_ory$amnezic_elm$Types$NextQuestion = {ctor: 'NextQuestion'};
+var _gre_ory$amnezic_elm$Types$StartGame = {ctor: 'StartGame'};
+var _gre_ory$amnezic_elm$Types$SetUpQuestions = {ctor: 'SetUpQuestions'};
+var _gre_ory$amnezic_elm$Types$SetUpPlayers = {ctor: 'SetUpPlayers'};
