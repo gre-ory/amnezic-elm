@@ -10,8 +10,14 @@ import Keyboard exposing (..)
 type alias Model = {
   questions: Array Question,
   players: Array Player,
+  state: State
+}
+
+type alias State = {
   page: Page,
-  question_id: Int
+  question_id: Int,
+  step: Step,
+  media_status: MediaStatus
 }
 
 type alias Question = {
@@ -39,9 +45,22 @@ type Page =
   | PageScore
   | PageEnd
 
+type Step =
+  StepNotReady
+  | StepReady
+  | StepShowChoices
+  | StepShowHints
+  | StepShowCorrect
+  | StepShowCards
+  | StepShowScore
+  | StepEnd
+
 type MediaStatus =
-  Playing
-  | Stopped
+  MediaNotReady
+  | MediaReady
+  | MediaPlay
+  | MediaPause
+  | MediaEnd
 
 -- key
 

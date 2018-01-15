@@ -24,15 +24,7 @@ main = Html.program
 -- init
 
 init : ( Model, Cmd.Cmd Msg )
-init =
-  ( {
-      questions = init_default_questions,
-      players = init_default_players,
-      page = PageStart,
-      question_id = 0
-    }
-    , Cmd.none
-  )
+init = ( init_model, Cmd.none )
 
 -- update
 

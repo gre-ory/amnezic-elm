@@ -1,52 +1,142 @@
-var _gre_ory$amnezic_elm$View$render_choice = F2(
-	function (choice_id, choice) {
-		var classes = choice.correct ? 'choice correct' : 'choice distractor';
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class(classes),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$fieldset,
-					{ctor: '[]'},
+var _gre_ory$amnezic_elm$View$render_choice = F3(
+	function (state, choice_id, choice) {
+		var choice_type = choice.correct ? 'correct' : 'distractor';
+		var choice_class = A2(_elm_lang$core$Basics_ops['++'], 'choice ', choice_type);
+		var _p0 = state.step;
+		switch (_p0.ctor) {
+			case 'StepNotReady':
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('loading question...'),
+						_1: {ctor: '[]'}
+					});
+			case 'StepReady':
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('question loaded...'),
+						_1: {ctor: '[]'}
+					});
+			case 'StepShowChoices':
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
+						_1: {ctor: '[]'}
+					},
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(choice.answer),
 						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$fieldset,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(choice.hint),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
+					});
+			case 'StepShowHints':
+				return A2(
+					_elm_lang$html$Html$li,
+					{
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$fieldset,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(choice.correct)),
-								_1: {ctor: '[]'}
-							}),
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
 						_1: {ctor: '[]'}
-					}
-				}
-			});
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(choice.answer),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(' --- '),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(choice.hint),
+								_1: {ctor: '[]'}
+							}
+						}
+					});
+			case 'StepShowCorrect':
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(choice.answer),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(' --- '),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(choice_type),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(' --- '),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(choice.hint),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					});
+			case 'StepShowCards':
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('cards...'),
+						_1: {ctor: '[]'}
+					});
+			case 'StepShowScore':
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('score...'),
+						_1: {ctor: '[]'}
+					});
+			default:
+				return A2(
+					_elm_lang$html$Html$li,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(choice_class),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('next question...'),
+						_1: {ctor: '[]'}
+					});
+		}
 	});
 var _gre_ory$amnezic_elm$View$render_question = F2(
-	function (question_id, question) {
-		var classes = _elm_lang$core$Native_Utils.eq(question_id, 1) ? 'question first' : 'question';
+	function (state, question) {
+		var classes = _elm_lang$core$Native_Utils.eq(state.question_id, 1) ? 'question first' : 'question';
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -79,8 +169,18 @@ var _gre_ory$amnezic_elm$View$render_question = F2(
 						_0: A2(
 							_elm_lang$html$Html$fieldset,
 							{ctor: '[]'},
-							_elm_lang$core$Array$toList(
-								A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_choice, question.choices))),
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$ul,
+									{ctor: '[]'},
+									_elm_lang$core$Array$toList(
+										A2(
+											_elm_lang$core$Array$indexedMap,
+											_gre_ory$amnezic_elm$View$render_choice(state),
+											question.choices))),
+								_1: {ctor: '[]'}
+							}),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -179,9 +279,9 @@ var _gre_ory$amnezic_elm$View$render_error = function (message) {
 		});
 };
 var _gre_ory$amnezic_elm$View$render_questions = function (model) {
-	var _p0 = A2(_elm_lang$core$Array$get, model.question_id, model.questions);
-	if (_p0.ctor === 'Just') {
-		return A2(_gre_ory$amnezic_elm$View$render_question, model.question_id, _p0._0);
+	var _p1 = A2(_elm_lang$core$Array$get, model.state.question_id, model.questions);
+	if (_p1.ctor === 'Just') {
+		return A2(_gre_ory$amnezic_elm$View$render_question, model.state, _p1._0);
 	} else {
 		return _gre_ory$amnezic_elm$View$render_error('unknown question!');
 	}
@@ -319,8 +419,8 @@ var _gre_ory$amnezic_elm$View$render_questions_page = F2(
 			_gre_ory$amnezic_elm$View$render_questions(model));
 	});
 var _gre_ory$amnezic_elm$View$render_page = function (model) {
-	var _p1 = model.page;
-	switch (_p1.ctor) {
+	var _p2 = model.state.page;
+	switch (_p2.ctor) {
 		case 'PageStart':
 			return A2(_gre_ory$amnezic_elm$View$render_default_page, model, 'start');
 		case 'PageThemes':

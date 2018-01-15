@@ -1,6 +1,10 @@
-var _gre_ory$amnezic_elm$Type$Model = F4(
+var _gre_ory$amnezic_elm$Type$Model = F3(
+	function (a, b, c) {
+		return {questions: a, players: b, state: c};
+	});
+var _gre_ory$amnezic_elm$Type$State = F4(
 	function (a, b, c, d) {
-		return {questions: a, players: b, page: c, question_id: d};
+		return {page: a, question_id: b, step: c, media_status: d};
 	});
 var _gre_ory$amnezic_elm$Type$Question = F3(
 	function (a, b, c) {
@@ -20,8 +24,19 @@ var _gre_ory$amnezic_elm$Type$PageQuestions = {ctor: 'PageQuestions'};
 var _gre_ory$amnezic_elm$Type$PagePlayers = {ctor: 'PagePlayers'};
 var _gre_ory$amnezic_elm$Type$PageThemes = {ctor: 'PageThemes'};
 var _gre_ory$amnezic_elm$Type$PageStart = {ctor: 'PageStart'};
-var _gre_ory$amnezic_elm$Type$Stopped = {ctor: 'Stopped'};
-var _gre_ory$amnezic_elm$Type$Playing = {ctor: 'Playing'};
+var _gre_ory$amnezic_elm$Type$StepEnd = {ctor: 'StepEnd'};
+var _gre_ory$amnezic_elm$Type$StepShowScore = {ctor: 'StepShowScore'};
+var _gre_ory$amnezic_elm$Type$StepShowCards = {ctor: 'StepShowCards'};
+var _gre_ory$amnezic_elm$Type$StepShowCorrect = {ctor: 'StepShowCorrect'};
+var _gre_ory$amnezic_elm$Type$StepShowHints = {ctor: 'StepShowHints'};
+var _gre_ory$amnezic_elm$Type$StepShowChoices = {ctor: 'StepShowChoices'};
+var _gre_ory$amnezic_elm$Type$StepReady = {ctor: 'StepReady'};
+var _gre_ory$amnezic_elm$Type$StepNotReady = {ctor: 'StepNotReady'};
+var _gre_ory$amnezic_elm$Type$MediaEnd = {ctor: 'MediaEnd'};
+var _gre_ory$amnezic_elm$Type$MediaPause = {ctor: 'MediaPause'};
+var _gre_ory$amnezic_elm$Type$MediaPlay = {ctor: 'MediaPlay'};
+var _gre_ory$amnezic_elm$Type$MediaReady = {ctor: 'MediaReady'};
+var _gre_ory$amnezic_elm$Type$MediaNotReady = {ctor: 'MediaNotReady'};
 var _gre_ory$amnezic_elm$Type$Unknown = {ctor: 'Unknown'};
 var _gre_ory$amnezic_elm$Type$ArrowRight = {ctor: 'ArrowRight'};
 var _gre_ory$amnezic_elm$Type$ArrowLeft = {ctor: 'ArrowLeft'};

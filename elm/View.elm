@@ -14,7 +14,7 @@ import Type exposing (..)
 
 render_page : Model -> Html Msg
 render_page model =
-  case model.page of
+  case model.state.page of
     PageStart -> render_default_page model "start"
     PageThemes -> render_default_page model "themes"
     PagePlayers -> render_players_page model "players"
@@ -118,17 +118,17 @@ myStyle =
 
 render_questions : Model -> Html Msg
 render_questions model =
-  case Array.get model.question_id model.questions of
-    Just question -> render_question model.question_id question
+  case Array.get model.state.question_id model.questions of
+    Just question -> render_question model.state question
     Nothing -> render_error "unknown question!"
 
 -- question
 
-render_question : Int -> Question -> Html Msg
-render_question question_id question =
+render_question : State -> Question -> Html Msg
+render_question state question =
   let
     classes =
-      if question_id == 1 then
+      if state.question_id == 1 then
         "question first"
       else
         "question"
@@ -140,29 +140,60 @@ render_question question_id question =
       fieldset [ ] [
         text question.audio
       ],
-      fieldset [ ]
-        ( Array.toList <| Array.indexedMap render_choice question.choices )
+      fieldset [ ] [
+        ul [ ]
+          ( Array.toList <| Array.indexedMap ( render_choice state ) question.choices )
+      ]
     ]
 
 -- choice
 
-render_choice : Int -> Choice -> Html Msg
-render_choice choice_id choice =
+render_choice : State -> Int -> Choice -> Html Msg
+render_choice state choice_id choice =
   let
-    classes =
+    choice_type =
       if choice.correct then
-        "choice correct"
+        "correct"
       else
-        "choice distractor"
+        "distractor"
+    choice_class = "choice " ++ choice_type
   in
-    div [ class classes ] [
-      fieldset [ ] [
-        text choice.answer
-      ],
-      fieldset [ ] [
-        text choice.hint
-      ],
-      fieldset [ ] [
-        text ( toString choice.correct )
-      ]
-    ]
+    case state.step of
+      StepNotReady ->
+        li [ class choice_class ] [
+          text "loading question..."
+        ]
+      StepReady ->
+        li [ class choice_class ] [
+          text "question loaded..."
+        ]
+      StepShowChoices ->
+        li [ class choice_class ] [
+          text choice.answer
+        ]
+      StepShowHints ->
+        li [ class choice_class ] [
+          text choice.answer,
+          text " --- ",
+          text choice.hint
+        ]
+      StepShowCorrect ->
+        li [ class choice_class ] [
+          text choice.answer,
+          text " --- ",
+          text choice_type,
+          text " --- ",
+          text choice.hint
+        ]
+      StepShowCards ->
+        li [ class choice_class ] [
+          text "cards..."
+        ]
+      StepShowScore ->
+        li [ class choice_class ] [
+          text "score..."
+        ]
+      StepEnd ->
+        li [ class choice_class ] [
+          text "next question..."
+        ]

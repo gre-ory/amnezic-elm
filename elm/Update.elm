@@ -21,37 +21,79 @@ get_key key_code =
 
 reset_game: Model -> Model
 reset_game model =
-  { model | page=PageStart, question_id=0 }
+  { model | state = init_state }
 
 go_to_start_page: Model -> Model
 go_to_start_page model =
   reset_game model
 
-go_to_next_page: Model -> Model
-go_to_next_page model =
-  case model.page of
-    PageStart -> { model | page=PageThemes }
-    PageThemes -> { model | page=PagePlayers }
-    PagePlayers -> { model | page=PageQuestions }
-    PageQuestions ->
-      if model.question_id+1 < Array.length( model.questions ) then
-        { model | question_id=model.question_id+1 }
-      else
-        { model | page=PageScore }
-    PageScore -> { model | page=PageEnd }
-    PageEnd -> reset_game model
-
 go_to_previous_page: Model -> Model
 go_to_previous_page model =
-  case model.page of
+  case model.state.page of
     PageStart -> model
     PageThemes -> model
     PagePlayers -> model
-    PageQuestions -> { model | page=PagePlayers }
-    PageScore -> { model | page=PageQuestions }
-    PageEnd -> { model | page=PageScore }
+    PageQuestions -> update_page PagePlayers model
+    PageScore -> update_page PageQuestions model
+    PageEnd -> update_page PageScore model
 
--- set-up player
+go_to_next_page: Model -> Model
+go_to_next_page model =
+  case model.state.page of
+    PageStart -> update_page PageThemes model
+    PageThemes -> update_page PagePlayers model
+    PagePlayers -> update_page PageQuestions model
+    PageQuestions -> go_to_next_step model
+    PageScore -> update_page PageEnd model
+    PageEnd -> reset_game model
+
+go_to_next_step: Model -> Model
+go_to_next_step model =
+  case model.state.step of
+    StepNotReady -> update_step StepReady model
+    StepReady -> update_step StepShowChoices model
+    StepShowChoices -> update_step StepShowHints model
+    StepShowHints -> update_step StepShowCorrect model
+    StepShowCorrect -> update_step StepShowCards model
+    StepShowCards -> update_step StepShowScore model
+    StepShowScore -> update_step StepEnd model
+    StepEnd -> go_to_next_question model
+
+next_question_id : Model -> Int
+next_question_id model =
+  ( model.state.question_id + 1 )
+
+can_go_to_next_question : Model -> Bool
+can_go_to_next_question model =
+  ( ( next_question_id model ) < Array.length( model.questions ) )
+
+go_to_next_question : Model -> Model
+go_to_next_question model =
+  if ( can_go_to_next_question model ) then
+    go_to_question model ( next_question_id model )
+  else
+    update_page PageScore model
+
+go_to_question : Model -> Int -> Model
+go_to_question model question_id =
+  { model | state = ( update_state_for_new_question question_id model.state ) }
+
+-- init
+
+init_model : Model
+init_model =
+  { questions = init_default_questions
+  , players = init_default_players
+  , state = init_state
+  }
+
+init_state : State
+init_state =
+  { page = PageStart
+  , question_id = 0
+  , step = StepNotReady
+  , media_status = MediaNotReady
+  }
 
 init_default_players : Array Player
 init_default_players =
@@ -62,20 +104,6 @@ init_default_player player_id =
   { name = ( "Player " ++ ( toString player_id ) )
   , score = 0
   }
-
-update_player : Model -> Int -> ( Player -> Player ) -> Model
-update_player model player_id update_player_fn =
-  case Array.get player_id model.players of
-    Just player ->
-      { model | players = Array.set player_id ( update_player_fn player ) model.players }
-    Nothing
-      -> model
-
-update_player_name : String -> Player -> Player
-update_player_name player_name player =
-  { player | name=player_name }
-
-  -- set-up question
 
 init_default_questions: Array Question
 init_default_questions =
@@ -88,11 +116,43 @@ init_default_question question_id =
   , choices = Array.fromList [ init_default_choice 0 False, init_default_choice 1 True, init_default_choice 2 False, init_default_choice 3 False ]
   }
 
--- set-up choice
-
 init_default_choice : Int -> Bool -> Choice
 init_default_choice choice_id correct =
   { answer = ( "Answer " ++ ( toString choice_id ) )
   , hint = ( "Hint " ++ ( toString choice_id ) )
   , correct = correct
   }
+
+-- update
+
+update_page : Page -> Model -> Model
+update_page page model =
+  { model | state = ( update_state_page page model.state ) }
+
+update_state_page: Page -> State -> State
+update_state_page page state =
+  { state | page = page }
+
+update_step : Step -> Model -> Model
+update_step step model =
+  { model | state = ( update_state_step step model.state ) }
+
+update_state_step: Step -> State -> State
+update_state_step step state =
+  { state | step = step }
+
+update_state_for_new_question: Int -> State -> State
+update_state_for_new_question question_id state =
+  { state | question_id = question_id, step = StepNotReady, media_status = MediaNotReady }
+
+update_player : Model -> Int -> ( Player -> Player ) -> Model
+update_player model player_id update_player_fn =
+  case Array.get player_id model.players of
+    Just player ->
+      { model | players = Array.set player_id ( update_player_fn player ) model.players }
+    Nothing
+      -> model
+
+update_player_name : String -> Player -> Player
+update_player_name player_name player =
+  { player | name = player_name }
