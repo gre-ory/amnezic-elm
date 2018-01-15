@@ -17,7 +17,8 @@ type alias State = {
   page: Page,
   question_id: Int,
   step: Step,
-  media_status: MediaStatus
+  media_status: MediaStatus,
+  selected_cards: Array SelectedCard
 }
 
 type alias Question = {
@@ -37,6 +38,13 @@ type alias Player = {
   score: Int
 }
 
+type alias SelectedCard = {
+  choice_id: Int,
+  player_id: Int,
+  score_engaged: Int,
+  correct: Bool
+}
+
 type Page =
   PageStart
   | PageThemes
@@ -47,13 +55,11 @@ type Page =
 
 type Step =
   StepNotReady
-  | StepReady
   | StepShowChoices
   | StepShowHints
   | StepShowCorrect
   | StepShowCards
   | StepShowScore
-  | StepEnd
 
 type MediaStatus =
   MediaNotReady
@@ -77,4 +83,22 @@ type Msg =
   | GoToNextPage Model
   | GoToPreviousPage Model
   | UpdatePlayerName Int String
+  | SelectCard Int Int
+  | UnselectCard Int Int
   | OnKey KeyCode
+
+-- helper
+
+get_player : Model -> Int -> Maybe Player
+get_player model player_id =
+  Array.get player_id model.players
+
+get_question : Model -> Maybe Question
+get_question model =
+  Array.get model.state.question_id model.questions
+
+get_choice : Model -> Int -> Maybe Choice
+get_choice model choice_id =
+  case get_question model of
+    Just question -> Array.get choice_id question.choices
+    Nothing -> Nothing

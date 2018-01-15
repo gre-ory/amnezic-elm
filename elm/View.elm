@@ -105,30 +105,21 @@ render_player player_id player =
       ]
     ]
 
-myStyle =
-  style
-    [ ("width", "100%")
-    , ("height", "40px")
-    , ("padding", "10px 0")
-    , ("font-size", "2em")
-    , ("text-align", "center")
-    ]
-
 -- questions
 
 render_questions : Model -> Html Msg
 render_questions model =
-  case Array.get model.state.question_id model.questions of
-    Just question -> render_question model.state question
+  case get_question model of
+    Just question -> render_question model question
     Nothing -> render_error "unknown question!"
 
 -- question
 
-render_question : State -> Question -> Html Msg
-render_question state question =
+render_question : Model -> Question -> Html Msg
+render_question model question =
   let
     classes =
-      if state.question_id == 1 then
+      if model.state.question_id == 1 then
         "question first"
       else
         "question"
@@ -140,60 +131,111 @@ render_question state question =
       fieldset [ ] [
         text question.audio
       ],
+      fieldset [ ]
+        ( Array.toList <| Array.indexedMap ( render_choice model ) question.choices ),
       fieldset [ ] [
-        ul [ ]
-          ( Array.toList <| Array.indexedMap ( render_choice state ) question.choices )
+        render_selected_cards model.state
       ]
     ]
 
 -- choice
 
-render_choice : State -> Int -> Choice -> Html Msg
-render_choice state choice_id choice =
+render_choice : Model -> Int -> Choice -> Html Msg
+render_choice model choice_id choice =
   let
     choice_type =
       if choice.correct then
         "correct"
       else
         "distractor"
-    choice_class = "choice " ++ choice_type
+    choice_class = "choice"
   in
-    case state.step of
+    case model.state.step of
       StepNotReady ->
-        li [ class choice_class ] [
+        div [ class choice_class ] [
           text "loading question..."
         ]
-      StepReady ->
-        li [ class choice_class ] [
-          text "question loaded..."
-        ]
       StepShowChoices ->
-        li [ class choice_class ] [
-          text choice.answer
+        div [ class choice_class ] [
+          div [ class "answer" ] [
+            text choice.answer
+          ],
+          div [ class "hint" ] [
+            text " --- "
+          ]
         ]
       StepShowHints ->
-        li [ class choice_class ] [
-          text choice.answer,
-          text " --- ",
-          text choice.hint
+        div [ class choice_class ] [
+          div [ class "answer" ] [
+            text choice.answer
+          ],
+          div [ class "hint" ] [
+            text choice.hint
+          ]
         ]
       StepShowCorrect ->
-        li [ class choice_class ] [
-          text choice.answer,
-          text " --- ",
-          text choice_type,
-          text " --- ",
-          text choice.hint
+        div [ class ( choice_class ++ " " ++ choice_type ) ] [
+          div [ class "answer" ] [
+            text choice.answer
+          ],
+          div [ class "hint" ] [
+            text choice.hint
+          ]
         ]
       StepShowCards ->
-        li [ class choice_class ] [
-          text "cards..."
+        div [ class ( choice_class ++ " " ++ choice_type ) ] [
+          render_cards model choice_id,
+          div [ class "answer" ] [
+            text choice.answer
+          ],
+          div [ class "hint" ] [
+            text choice.hint
+          ]
         ]
       StepShowScore ->
-        li [ class choice_class ] [
-          text "score..."
+        div [ class ( choice_class ++ " " ++ choice_type ) ] [
+          render_cards model choice_id,
+          div [ class "answer" ] [
+            text choice.answer
+          ],
+          div [ class "hint" ] [
+            text choice.hint
+          ]
         ]
-      StepEnd ->
-        li [ class choice_class ] [
-          text "next question..."
-        ]
+
+-- card
+
+render_id_to_nb : Int -> Html Msg
+render_id_to_nb id =
+  text ( toString( id + 1 ) )
+
+render_cards : Model -> Int -> Html Msg
+render_cards model choice_id =
+  div [ class "cards" ]
+    ( Array.toList <| Array.indexedMap ( render_card model choice_id ) model.players )
+
+render_card : Model -> Int -> Int -> Player -> Html Msg
+render_card model choice_id player_id player =
+  div [ class "card", onClick ( SelectCard choice_id player_id ) ] [
+    render_id_to_nb( choice_id ),
+    text " ",
+    render_id_to_nb( player_id )
+  ]
+
+render_selected_cards : State -> Html Msg
+render_selected_cards state =
+  div [ class "selected_cards" ]
+    ( Array.toList <| Array.indexedMap ( render_selected_card ) state.selected_cards )
+
+render_selected_card : Int -> SelectedCard -> Html Msg
+render_selected_card selected_card_id selected_card =
+  div [ class "selected_card", onClick ( UnselectCard selected_card.choice_id selected_card.player_id ) ] [
+    text "#",
+    render_id_to_nb( selected_card_id ),
+    text " ",
+    render_id_to_nb( selected_card.choice_id ),
+    text " ",
+    render_id_to_nb( selected_card.player_id ),
+    text " ",
+    text ( toString ( selected_card.correct ) )
+  ]

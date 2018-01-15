@@ -50,14 +50,12 @@ go_to_next_page model =
 go_to_next_step: Model -> Model
 go_to_next_step model =
   case model.state.step of
-    StepNotReady -> update_step StepReady model
-    StepReady -> update_step StepShowChoices model
+    StepNotReady -> update_step StepShowChoices model
     StepShowChoices -> update_step StepShowHints model
     StepShowHints -> update_step StepShowCorrect model
     StepShowCorrect -> update_step StepShowCards model
     StepShowCards -> update_step StepShowScore model
-    StepShowScore -> update_step StepEnd model
-    StepEnd -> go_to_next_question model
+    StepShowScore -> go_to_next_question model
 
 next_question_id : Model -> Int
 next_question_id model =
@@ -93,6 +91,7 @@ init_state =
   , question_id = 0
   , step = StepNotReady
   , media_status = MediaNotReady
+  , selected_cards = Array.fromList [ ]
   }
 
 init_default_players : Array Player
@@ -123,6 +122,13 @@ init_default_choice choice_id correct =
   , correct = correct
   }
 
+init_selected_card : Int -> Int -> Bool -> SelectedCard
+init_selected_card choice_id player_id correct =
+  { choice_id = choice_id
+  , player_id = player_id
+  , score_engaged = 0
+  , correct = False }
+
 -- update
 
 update_page : Page -> Model -> Model
@@ -143,16 +149,34 @@ update_state_step step state =
 
 update_state_for_new_question: Int -> State -> State
 update_state_for_new_question question_id state =
-  { state | question_id = question_id, step = StepNotReady, media_status = MediaNotReady }
+  { state | question_id = question_id, step = StepNotReady, media_status = MediaNotReady, selected_cards = Array.fromList [ ] }
 
 update_player : Model -> Int -> ( Player -> Player ) -> Model
 update_player model player_id update_player_fn =
   case Array.get player_id model.players of
     Just player ->
       { model | players = Array.set player_id ( update_player_fn player ) model.players }
-    Nothing
-      -> model
+    Nothing ->
+      model
 
 update_player_name : String -> Player -> Player
 update_player_name player_name player =
   { player | name = player_name }
+
+select_card : Model -> Int -> Int -> Model
+select_card model choice_id player_id =
+  case get_choice model choice_id of
+    Just choice ->
+      let
+        selected_card = init_selected_card choice_id player_id choice.correct
+      in
+        { model | state=add_selected_card model.state selected_card }
+    Nothing -> model
+
+add_selected_card : State -> SelectedCard -> State
+add_selected_card state selected_card =
+  { state | selected_cards = ( Array.push selected_card state.selected_cards ) }
+
+unselect_card : Model -> Int -> Int -> Model
+unselect_card model choice_id player_id =
+  model -- TODO

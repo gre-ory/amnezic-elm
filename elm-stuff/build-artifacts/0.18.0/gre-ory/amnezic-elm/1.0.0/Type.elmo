@@ -1,10 +1,26 @@
+var _gre_ory$amnezic_elm$Type$get_question = function (model) {
+	return A2(_elm_lang$core$Array$get, model.state.question_id, model.questions);
+};
+var _gre_ory$amnezic_elm$Type$get_choice = F2(
+	function (model, choice_id) {
+		var _p0 = _gre_ory$amnezic_elm$Type$get_question(model);
+		if (_p0.ctor === 'Just') {
+			return A2(_elm_lang$core$Array$get, choice_id, _p0._0.choices);
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _gre_ory$amnezic_elm$Type$get_player = F2(
+	function (model, player_id) {
+		return A2(_elm_lang$core$Array$get, player_id, model.players);
+	});
 var _gre_ory$amnezic_elm$Type$Model = F3(
 	function (a, b, c) {
 		return {questions: a, players: b, state: c};
 	});
-var _gre_ory$amnezic_elm$Type$State = F4(
-	function (a, b, c, d) {
-		return {page: a, question_id: b, step: c, media_status: d};
+var _gre_ory$amnezic_elm$Type$State = F5(
+	function (a, b, c, d, e) {
+		return {page: a, question_id: b, step: c, media_status: d, selected_cards: e};
 	});
 var _gre_ory$amnezic_elm$Type$Question = F3(
 	function (a, b, c) {
@@ -18,19 +34,21 @@ var _gre_ory$amnezic_elm$Type$Player = F2(
 	function (a, b) {
 		return {name: a, score: b};
 	});
+var _gre_ory$amnezic_elm$Type$SelectedCard = F4(
+	function (a, b, c, d) {
+		return {choice_id: a, player_id: b, score_engaged: c, correct: d};
+	});
 var _gre_ory$amnezic_elm$Type$PageEnd = {ctor: 'PageEnd'};
 var _gre_ory$amnezic_elm$Type$PageScore = {ctor: 'PageScore'};
 var _gre_ory$amnezic_elm$Type$PageQuestions = {ctor: 'PageQuestions'};
 var _gre_ory$amnezic_elm$Type$PagePlayers = {ctor: 'PagePlayers'};
 var _gre_ory$amnezic_elm$Type$PageThemes = {ctor: 'PageThemes'};
 var _gre_ory$amnezic_elm$Type$PageStart = {ctor: 'PageStart'};
-var _gre_ory$amnezic_elm$Type$StepEnd = {ctor: 'StepEnd'};
 var _gre_ory$amnezic_elm$Type$StepShowScore = {ctor: 'StepShowScore'};
 var _gre_ory$amnezic_elm$Type$StepShowCards = {ctor: 'StepShowCards'};
 var _gre_ory$amnezic_elm$Type$StepShowCorrect = {ctor: 'StepShowCorrect'};
 var _gre_ory$amnezic_elm$Type$StepShowHints = {ctor: 'StepShowHints'};
 var _gre_ory$amnezic_elm$Type$StepShowChoices = {ctor: 'StepShowChoices'};
-var _gre_ory$amnezic_elm$Type$StepReady = {ctor: 'StepReady'};
 var _gre_ory$amnezic_elm$Type$StepNotReady = {ctor: 'StepNotReady'};
 var _gre_ory$amnezic_elm$Type$MediaEnd = {ctor: 'MediaEnd'};
 var _gre_ory$amnezic_elm$Type$MediaPause = {ctor: 'MediaPause'};
@@ -44,6 +62,14 @@ var _gre_ory$amnezic_elm$Type$Space = {ctor: 'Space'};
 var _gre_ory$amnezic_elm$Type$OnKey = function (a) {
 	return {ctor: 'OnKey', _0: a};
 };
+var _gre_ory$amnezic_elm$Type$UnselectCard = F2(
+	function (a, b) {
+		return {ctor: 'UnselectCard', _0: a, _1: b};
+	});
+var _gre_ory$amnezic_elm$Type$SelectCard = F2(
+	function (a, b) {
+		return {ctor: 'SelectCard', _0: a, _1: b};
+	});
 var _gre_ory$amnezic_elm$Type$UpdatePlayerName = F2(
 	function (a, b) {
 		return {ctor: 'UpdatePlayerName', _0: a, _1: b};
