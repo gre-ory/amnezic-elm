@@ -90,9 +90,18 @@ render_setup_player player_id player =
     div [ class classes ] [
       text ( ( toString player_id ) ++ " -- " ++ player.name ++ " -- " ++ ( toString player.score ) ++ " -- " ),
       input [ placeholder "player name", onInput ( UpdatePlayerName player_id ) ] [
-        text player.name
+        text ( toString player.name )
       ]
     ]
+
+myStyle =
+  style
+    [ ("width", "100%")
+    , ("height", "40px")
+    , ("padding", "10px 0")
+    , ("font-size", "2em")
+    , ("text-align", "center")
+    ]    
 
 -- questions
 

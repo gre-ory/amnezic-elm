@@ -18,6 +18,26 @@ var _gre_ory$amnezic_elm$Type$PageSetUpPlayers = {ctor: 'PageSetUpPlayers'};
 var _gre_ory$amnezic_elm$Type$PageStart = {ctor: 'PageStart'};
 var _gre_ory$amnezic_elm$Type$Stopped = {ctor: 'Stopped'};
 var _gre_ory$amnezic_elm$Type$Playing = {ctor: 'Playing'};
+var _gre_ory$amnezic_elm$Type$Unknown = {ctor: 'Unknown'};
+var _gre_ory$amnezic_elm$Type$ArrowRight = {ctor: 'ArrowRight'};
+var _gre_ory$amnezic_elm$Type$ArrowLeft = {ctor: 'ArrowLeft'};
+var _gre_ory$amnezic_elm$Type$Space = {ctor: 'Space'};
+var _gre_ory$amnezic_elm$Type$get_key = function (key_code) {
+	var _p0 = key_code;
+	switch (_p0) {
+		case 32:
+			return _gre_ory$amnezic_elm$Type$Space;
+		case 37:
+			return _gre_ory$amnezic_elm$Type$ArrowLeft;
+		case 39:
+			return _gre_ory$amnezic_elm$Type$ArrowRight;
+		default:
+			return _gre_ory$amnezic_elm$Type$Unknown;
+	}
+};
+var _gre_ory$amnezic_elm$Type$OnKey = function (a) {
+	return {ctor: 'OnKey', _0: a};
+};
 var _gre_ory$amnezic_elm$Type$UpdatePlayerName = F2(
 	function (a, b) {
 		return {ctor: 'UpdatePlayerName', _0: a, _1: b};

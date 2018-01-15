@@ -4,6 +4,7 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Array exposing (..)
+import Keyboard exposing (..)
 
 import Type exposing (..)
 import View exposing (..)
@@ -17,7 +18,7 @@ main = Html.program
   { init = init
   , view = view
   , update = update
-  , subscriptions = always Sub.none
+  , subscriptions = subscriptions
   }
 
 -- types
@@ -47,8 +48,20 @@ update msg model =
       ( go_to_next_page model, Cmd.none )
     UpdatePlayerName player_id player_name ->
       ( update_player model player_id ( update_player_name player_name ), Cmd.none )
+    OnKey key_code ->
+      case get_key key_code of
+        Space -> ( go_to_start_page model, Cmd.none )
+        ArrowLeft -> ( go_to_previous_page model, Cmd.none )
+        ArrowRight -> ( go_to_next_page model, Cmd.none )
+        _ -> ( model, Cmd.none )
 
 -- subscriptions
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch [
+      Keyboard.downs OnKey
+    ]
 
 -- view
 

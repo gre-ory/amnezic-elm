@@ -1,6 +1,14 @@
 var _gre_ory$amnezic_elm$Main$view = function (model) {
 	return _gre_ory$amnezic_elm$View$render_page(model);
 };
+var _gre_ory$amnezic_elm$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _elm_lang$keyboard$Keyboard$downs(_gre_ory$amnezic_elm$Type$OnKey),
+			_1: {ctor: '[]'}
+		});
+};
 var _gre_ory$amnezic_elm$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
@@ -23,7 +31,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 					_0: _gre_ory$amnezic_elm$Update$go_to_next_page(_p0._0),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'UpdatePlayerName':
 				return {
 					ctor: '_Tuple2',
 					_0: A3(
@@ -33,6 +41,30 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						_gre_ory$amnezic_elm$Update$update_player_name(_p0._1)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			default:
+				var _p1 = _gre_ory$amnezic_elm$Type$get_key(_p0._0);
+				switch (_p1.ctor) {
+					case 'Space':
+						return {
+							ctor: '_Tuple2',
+							_0: _gre_ory$amnezic_elm$Update$go_to_start_page(model),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					case 'ArrowLeft':
+						return {
+							ctor: '_Tuple2',
+							_0: _gre_ory$amnezic_elm$Update$go_to_previous_page(model),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					case 'ArrowRight':
+						return {
+							ctor: '_Tuple2',
+							_0: _gre_ory$amnezic_elm$Update$go_to_next_page(model),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					default:
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
 		}
 	});
 var _gre_ory$amnezic_elm$Main$init = {
@@ -41,9 +73,4 @@ var _gre_ory$amnezic_elm$Main$init = {
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _gre_ory$amnezic_elm$Main$main = _elm_lang$html$Html$program(
-	{
-		init: _gre_ory$amnezic_elm$Main$init,
-		view: _gre_ory$amnezic_elm$Main$view,
-		update: _gre_ory$amnezic_elm$Main$update,
-		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
-	})();
+	{init: _gre_ory$amnezic_elm$Main$init, view: _gre_ory$amnezic_elm$Main$view, update: _gre_ory$amnezic_elm$Main$update, subscriptions: _gre_ory$amnezic_elm$Main$subscriptions})();
