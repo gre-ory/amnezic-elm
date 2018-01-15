@@ -21,18 +21,17 @@ main = Html.program
   , subscriptions = subscriptions
   }
 
--- types
-
-
 -- init
 
 init : ( Model, Cmd.Cmd Msg )
 init =
-  ( { page = PageStart
-    , questions = init_default_questions
-    , players = init_default_players
+  ( {
+      questions = init_default_questions,
+      players = init_default_players,
+      page = PageStart,
+      question_id = 0
     }
-  , Cmd.none
+    , Cmd.none
   )
 
 -- update
@@ -40,14 +39,17 @@ init =
 update : Msg -> Model -> ( Model, Cmd.Cmd Msg )
 update msg model =
   case msg of
+    -- navivation
     GoToStartPage model ->
       ( go_to_start_page model, Cmd.none )
     GoToPreviousPage model ->
       ( go_to_previous_page model, Cmd.none )
     GoToNextPage model ->
       ( go_to_next_page model, Cmd.none )
+    -- update
     UpdatePlayerName player_id player_name ->
       ( update_player model player_id ( update_player_name player_name ), Cmd.none )
+    -- keyboard
     OnKey key_code ->
       case get_key key_code of
         Space -> ( go_to_start_page model, Cmd.none )

@@ -7,26 +7,34 @@ import Keyboard exposing (..)
 
 -- types
 
-type alias Model =
-  { page: Page
-  , questions: Array Question
-  , players: Array Player
-  }
+type alias Model = {
+  questions: Array Question,
+  players: Array Player,
+  page: Page,
+  question_id: Int
+}
 
-type alias Question =
-  { title: String
-  }
+type alias Question = {
+  theme: String,
+  audio: String,
+  choices: Array Choice
+}
 
-type alias Player =
-  { name: String
-  , score: Int
-  }
+type alias Choice = {
+  answer: String,
+  hint: String,
+  correct: Bool
+}
+
+type alias Player = {
+  name: String,
+  score: Int
+}
 
 type Page =
   PageStart
-  | PageSetUpPlayers
-  | PageSetUpThemes
-  | PageSetUpQuestions
+  | PageThemes
+  | PagePlayers
   | PageQuestions
   | PageScore
   | PageEnd
@@ -42,14 +50,6 @@ type Key
   | ArrowLeft
   | ArrowRight
   | Unknown
-
-get_key : Int -> Key
-get_key key_code =
-  case key_code of
-    32 -> Space
-    37 -> ArrowLeft
-    39 -> ArrowRight
-    _ -> Unknown
 
 -- messages
 

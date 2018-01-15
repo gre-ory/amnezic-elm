@@ -15,23 +15,12 @@ import Type exposing (..)
 render_page : Model -> Html Msg
 render_page model =
   case model.page of
-    PageStart -> render_default_page model "start" "start: not yet implemented..."
-    PageSetUpPlayers -> render_setup_players model
-    PageSetUpThemes -> render_default_page model "set-up-themes" "set-up themes: not yet implemented..."
-    PageSetUpQuestions -> render_default_page model "set-up-questions" "set-up questions: not yet implemented..."
-    PageQuestions -> render_default_page model "questions" "questions: not yet implemented..."
-    PageScore -> render_default_page model "score" "score: not yet implemented..."
-    PageEnd -> render_default_page model "end" "end: not yet implemented..."
-
-render_default_page : Model -> String -> String -> Html Msg
-render_default_page model page_class page_content =
-  div [ ] [
-    render_header model,
-    fieldset [ class ( "page " ++ page_class ) ] [
-      text page_content
-    ],
-    render_footer model
-  ]
+    PageStart -> render_default_page model "start"
+    PageThemes -> render_default_page model "themes"
+    PagePlayers -> render_players_page model "players"
+    PageQuestions -> render_questions_page model "questions"
+    PageScore -> render_default_page model "score"
+    PageEnd -> render_default_page model "end"
 
 render_header : Model -> Html Msg
 render_header model =
@@ -65,21 +54,43 @@ render_next_button model =
     text "next"
   ]
 
--- players
+render_error : String -> Html Msg
+render_error message =
+  div [ ] [
+    text message
+  ]
 
-render_setup_players : Model -> Html Msg
-render_setup_players model =
-  div [] [
+render_page_skeleton : Model -> String -> Html Msg -> Html Msg
+render_page_skeleton model page_id html_content =
+  div [ ] [
     render_header model,
-    fieldset [ class ( "page set-up-players" ) ] [
-      div [ class "players" ]
-        ( Array.toList <| Array.indexedMap render_setup_player model.players )
+    fieldset [ class ( "page " ++ page_id ) ] [
+      html_content
     ],
     render_footer model
   ]
 
-render_setup_player : Int -> Player -> Html Msg
-render_setup_player player_id player =
+render_default_page : Model -> String -> Html Msg
+render_default_page model page_id =
+  render_page_skeleton model page_id ( text ( "page " ++ page_id ++ " not yet implemented!" ) )
+
+render_players_page : Model -> String -> Html Msg
+render_players_page model page_id =
+  render_page_skeleton model page_id ( render_players model )
+
+render_questions_page : Model -> String -> Html Msg
+render_questions_page model page_id =
+  render_page_skeleton model page_id ( render_questions model )
+
+-- players
+
+render_players : Model -> Html Msg
+render_players model =
+  div [ ]
+    ( Array.toList <| Array.indexedMap render_player model.players )
+
+render_player : Int -> Player -> Html Msg
+render_player player_id player =
   let
     classes =
       if player_id == 1 then
@@ -101,26 +112,57 @@ myStyle =
     , ("padding", "10px 0")
     , ("font-size", "2em")
     , ("text-align", "center")
-    ]    
+    ]
 
 -- questions
 
 render_questions : Model -> Html Msg
 render_questions model =
-  div [ class "questions" ]
-    ( Array.toList <| Array.indexedMap render_question model.questions )
+  case Array.get model.question_id model.questions of
+    Just question -> render_question model.question_id question
+    Nothing -> render_error "unknown question!"
 
 -- question
 
 render_question : Int -> Question -> Html Msg
-render_question question_index question =
+render_question question_id question =
   let
     classes =
-      if question_index == 1 then
+      if question_id == 1 then
         "question first"
       else
         "question"
   in
-    button [ class classes ] [
-      text question.title
+    div [ class classes ] [
+      fieldset [ ] [
+        text question.theme
+      ],
+      fieldset [ ] [
+        text question.audio
+      ],
+      fieldset [ ]
+        ( Array.toList <| Array.indexedMap render_choice question.choices )
+    ]
+
+-- choice
+
+render_choice : Int -> Choice -> Html Msg
+render_choice choice_id choice =
+  let
+    classes =
+      if choice.correct then
+        "choice correct"
+      else
+        "choice distractor"
+  in
+    div [ class classes ] [
+      fieldset [ ] [
+        text choice.answer
+      ],
+      fieldset [ ] [
+        text choice.hint
+      ],
+      fieldset [ ] [
+        text ( toString choice.correct )
+      ]
     ]

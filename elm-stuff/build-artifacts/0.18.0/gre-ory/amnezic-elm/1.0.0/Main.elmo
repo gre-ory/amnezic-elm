@@ -42,7 +42,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				var _p1 = _gre_ory$amnezic_elm$Type$get_key(_p0._0);
+				var _p1 = _gre_ory$amnezic_elm$Update$get_key(_p0._0);
 				switch (_p1.ctor) {
 					case 'Space':
 						return {
@@ -69,7 +69,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 	});
 var _gre_ory$amnezic_elm$Main$init = {
 	ctor: '_Tuple2',
-	_0: {page: _gre_ory$amnezic_elm$Type$PageStart, questions: _gre_ory$amnezic_elm$Update$init_default_questions, players: _gre_ory$amnezic_elm$Update$init_default_players},
+	_0: {questions: _gre_ory$amnezic_elm$Update$init_default_questions, players: _gre_ory$amnezic_elm$Update$init_default_players, page: _gre_ory$amnezic_elm$Type$PageStart, question_id: 0},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _gre_ory$amnezic_elm$Main$main = _elm_lang$html$Html$program(

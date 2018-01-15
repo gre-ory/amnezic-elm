@@ -1,10 +1,15 @@
-var _gre_ory$amnezic_elm$Type$Model = F3(
-	function (a, b, c) {
-		return {page: a, questions: b, players: c};
+var _gre_ory$amnezic_elm$Type$Model = F4(
+	function (a, b, c, d) {
+		return {questions: a, players: b, page: c, question_id: d};
 	});
-var _gre_ory$amnezic_elm$Type$Question = function (a) {
-	return {title: a};
-};
+var _gre_ory$amnezic_elm$Type$Question = F3(
+	function (a, b, c) {
+		return {theme: a, audio: b, choices: c};
+	});
+var _gre_ory$amnezic_elm$Type$Choice = F3(
+	function (a, b, c) {
+		return {answer: a, hint: b, correct: c};
+	});
 var _gre_ory$amnezic_elm$Type$Player = F2(
 	function (a, b) {
 		return {name: a, score: b};
@@ -12,9 +17,8 @@ var _gre_ory$amnezic_elm$Type$Player = F2(
 var _gre_ory$amnezic_elm$Type$PageEnd = {ctor: 'PageEnd'};
 var _gre_ory$amnezic_elm$Type$PageScore = {ctor: 'PageScore'};
 var _gre_ory$amnezic_elm$Type$PageQuestions = {ctor: 'PageQuestions'};
-var _gre_ory$amnezic_elm$Type$PageSetUpQuestions = {ctor: 'PageSetUpQuestions'};
-var _gre_ory$amnezic_elm$Type$PageSetUpThemes = {ctor: 'PageSetUpThemes'};
-var _gre_ory$amnezic_elm$Type$PageSetUpPlayers = {ctor: 'PageSetUpPlayers'};
+var _gre_ory$amnezic_elm$Type$PagePlayers = {ctor: 'PagePlayers'};
+var _gre_ory$amnezic_elm$Type$PageThemes = {ctor: 'PageThemes'};
 var _gre_ory$amnezic_elm$Type$PageStart = {ctor: 'PageStart'};
 var _gre_ory$amnezic_elm$Type$Stopped = {ctor: 'Stopped'};
 var _gre_ory$amnezic_elm$Type$Playing = {ctor: 'Playing'};
@@ -22,19 +26,6 @@ var _gre_ory$amnezic_elm$Type$Unknown = {ctor: 'Unknown'};
 var _gre_ory$amnezic_elm$Type$ArrowRight = {ctor: 'ArrowRight'};
 var _gre_ory$amnezic_elm$Type$ArrowLeft = {ctor: 'ArrowLeft'};
 var _gre_ory$amnezic_elm$Type$Space = {ctor: 'Space'};
-var _gre_ory$amnezic_elm$Type$get_key = function (key_code) {
-	var _p0 = key_code;
-	switch (_p0) {
-		case 32:
-			return _gre_ory$amnezic_elm$Type$Space;
-		case 37:
-			return _gre_ory$amnezic_elm$Type$ArrowLeft;
-		case 39:
-			return _gre_ory$amnezic_elm$Type$ArrowRight;
-		default:
-			return _gre_ory$amnezic_elm$Type$Unknown;
-	}
-};
 var _gre_ory$amnezic_elm$Type$OnKey = function (a) {
 	return {ctor: 'OnKey', _0: a};
 };

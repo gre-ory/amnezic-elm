@@ -1,9 +1,48 @@
+var _gre_ory$amnezic_elm$Update$init_default_choice = F2(
+	function (choice_id, correct) {
+		return {
+			answer: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Answer ',
+				_elm_lang$core$Basics$toString(choice_id)),
+			hint: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Hint ',
+				_elm_lang$core$Basics$toString(choice_id)),
+			correct: correct
+		};
+	});
 var _gre_ory$amnezic_elm$Update$init_default_question = function (question_id) {
 	return {
-		title: A2(
+		theme: A2(
 			_elm_lang$core$Basics_ops['++'],
-			'Question ',
-			_elm_lang$core$Basics$toString(question_id))
+			'Theme ',
+			_elm_lang$core$Basics$toString(question_id)),
+		audio: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'audio_',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(question_id),
+				'.mp3')),
+		choices: _elm_lang$core$Array$fromList(
+			{
+				ctor: '::',
+				_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 0, false),
+				_1: {
+					ctor: '::',
+					_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 1, true),
+					_1: {
+						ctor: '::',
+						_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 2, false),
+						_1: {
+							ctor: '::',
+							_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 3, false),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			})
 	};
 };
 var _gre_ory$amnezic_elm$Update$init_default_questions = _elm_lang$core$Array$fromList(
@@ -66,25 +105,15 @@ var _gre_ory$amnezic_elm$Update$go_to_previous_page = function (model) {
 	var _p1 = model.page;
 	switch (_p1.ctor) {
 		case 'PageStart':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageEnd});
-		case 'PageSetUpPlayers':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageStart});
-		case 'PageSetUpThemes':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpPlayers});
-		case 'PageSetUpQuestions':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpThemes});
+			return model;
+		case 'PageThemes':
+			return model;
+		case 'PagePlayers':
+			return model;
 		case 'PageQuestions':
 			return _elm_lang$core$Native_Utils.update(
 				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpQuestions});
+				{page: _gre_ory$amnezic_elm$Type$PagePlayers});
 		case 'PageScore':
 			return _elm_lang$core$Native_Utils.update(
 				model,
@@ -94,6 +123,14 @@ var _gre_ory$amnezic_elm$Update$go_to_previous_page = function (model) {
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageScore});
 	}
+};
+var _gre_ory$amnezic_elm$Update$reset_game = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{page: _gre_ory$amnezic_elm$Type$PageStart, question_id: 0});
+};
+var _gre_ory$amnezic_elm$Update$go_to_start_page = function (model) {
+	return _gre_ory$amnezic_elm$Update$reset_game(model);
 };
 var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
 	var _p2 = model.page;
@@ -101,21 +138,21 @@ var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
 		case 'PageStart':
 			return _elm_lang$core$Native_Utils.update(
 				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpPlayers});
-		case 'PageSetUpPlayers':
+				{page: _gre_ory$amnezic_elm$Type$PageThemes});
+		case 'PageThemes':
 			return _elm_lang$core$Native_Utils.update(
 				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpThemes});
-		case 'PageSetUpThemes':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpQuestions});
-		case 'PageSetUpQuestions':
+				{page: _gre_ory$amnezic_elm$Type$PagePlayers});
+		case 'PagePlayers':
 			return _elm_lang$core$Native_Utils.update(
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageQuestions});
 		case 'PageQuestions':
-			return _elm_lang$core$Native_Utils.update(
+			return (_elm_lang$core$Native_Utils.cmp(
+				model.question_id + 1,
+				_elm_lang$core$Array$length(model.questions)) < 0) ? _elm_lang$core$Native_Utils.update(
+				model,
+				{question_id: model.question_id + 1}) : _elm_lang$core$Native_Utils.update(
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageScore});
 		case 'PageScore':
@@ -123,13 +160,19 @@ var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageEnd});
 		default:
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageStart});
+			return _gre_ory$amnezic_elm$Update$reset_game(model);
 	}
 };
-var _gre_ory$amnezic_elm$Update$go_to_start_page = function (model) {
-	return _elm_lang$core$Native_Utils.update(
-		model,
-		{page: _gre_ory$amnezic_elm$Type$PageStart});
+var _gre_ory$amnezic_elm$Update$get_key = function (key_code) {
+	var _p3 = key_code;
+	switch (_p3) {
+		case 32:
+			return _gre_ory$amnezic_elm$Type$Space;
+		case 37:
+			return _gre_ory$amnezic_elm$Type$ArrowLeft;
+		case 39:
+			return _gre_ory$amnezic_elm$Type$ArrowRight;
+		default:
+			return _gre_ory$amnezic_elm$Type$Unknown;
+	}
 };

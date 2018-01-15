@@ -8995,13 +8995,18 @@ var _elm_lang$keyboard$Keyboard$subMap = F2(
 			});
 	});
 _elm_lang$core$Native_Platform.effectManagers['Keyboard'] = {pkg: 'elm-lang/keyboard', init: _elm_lang$keyboard$Keyboard$init, onEffects: _elm_lang$keyboard$Keyboard$onEffects, onSelfMsg: _elm_lang$keyboard$Keyboard$onSelfMsg, tag: 'sub', subMap: _elm_lang$keyboard$Keyboard$subMap};
-var _gre_ory$amnezic_elm$Type$Model = F3(
-	function (a, b, c) {
-		return {page: a, questions: b, players: c};
+var _gre_ory$amnezic_elm$Type$Model = F4(
+	function (a, b, c, d) {
+		return {questions: a, players: b, page: c, question_id: d};
 	});
-var _gre_ory$amnezic_elm$Type$Question = function (a) {
-	return {title: a};
-};
+var _gre_ory$amnezic_elm$Type$Question = F3(
+	function (a, b, c) {
+		return {theme: a, audio: b, choices: c};
+	});
+var _gre_ory$amnezic_elm$Type$Choice = F3(
+	function (a, b, c) {
+		return {answer: a, hint: b, correct: c};
+	});
 var _gre_ory$amnezic_elm$Type$Player = F2(
 	function (a, b) {
 		return {name: a, score: b};
@@ -9009,9 +9014,8 @@ var _gre_ory$amnezic_elm$Type$Player = F2(
 var _gre_ory$amnezic_elm$Type$PageEnd = {ctor: 'PageEnd'};
 var _gre_ory$amnezic_elm$Type$PageScore = {ctor: 'PageScore'};
 var _gre_ory$amnezic_elm$Type$PageQuestions = {ctor: 'PageQuestions'};
-var _gre_ory$amnezic_elm$Type$PageSetUpQuestions = {ctor: 'PageSetUpQuestions'};
-var _gre_ory$amnezic_elm$Type$PageSetUpThemes = {ctor: 'PageSetUpThemes'};
-var _gre_ory$amnezic_elm$Type$PageSetUpPlayers = {ctor: 'PageSetUpPlayers'};
+var _gre_ory$amnezic_elm$Type$PagePlayers = {ctor: 'PagePlayers'};
+var _gre_ory$amnezic_elm$Type$PageThemes = {ctor: 'PageThemes'};
 var _gre_ory$amnezic_elm$Type$PageStart = {ctor: 'PageStart'};
 var _gre_ory$amnezic_elm$Type$Stopped = {ctor: 'Stopped'};
 var _gre_ory$amnezic_elm$Type$Playing = {ctor: 'Playing'};
@@ -9019,19 +9023,6 @@ var _gre_ory$amnezic_elm$Type$Unknown = {ctor: 'Unknown'};
 var _gre_ory$amnezic_elm$Type$ArrowRight = {ctor: 'ArrowRight'};
 var _gre_ory$amnezic_elm$Type$ArrowLeft = {ctor: 'ArrowLeft'};
 var _gre_ory$amnezic_elm$Type$Space = {ctor: 'Space'};
-var _gre_ory$amnezic_elm$Type$get_key = function (key_code) {
-	var _p0 = key_code;
-	switch (_p0) {
-		case 32:
-			return _gre_ory$amnezic_elm$Type$Space;
-		case 37:
-			return _gre_ory$amnezic_elm$Type$ArrowLeft;
-		case 39:
-			return _gre_ory$amnezic_elm$Type$ArrowRight;
-		default:
-			return _gre_ory$amnezic_elm$Type$Unknown;
-	}
-};
 var _gre_ory$amnezic_elm$Type$OnKey = function (a) {
 	return {ctor: 'OnKey', _0: a};
 };
@@ -9048,11 +9039,11 @@ var _gre_ory$amnezic_elm$Type$GoToNextPage = function (a) {
 var _gre_ory$amnezic_elm$Type$GoToStartPage = function (a) {
 	return {ctor: 'GoToStartPage', _0: a};
 };
-var _gre_ory$amnezic_elm$View$render_question = F2(
-	function (question_index, question) {
-		var classes = _elm_lang$core$Native_Utils.eq(question_index, 1) ? 'question first' : 'question';
+var _gre_ory$amnezic_elm$View$render_choice = F2(
+	function (choice_id, choice) {
+		var classes = choice.correct ? 'choice correct' : 'choice distractor';
 		return A2(
-			_elm_lang$html$Html$button,
+			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$class(classes),
@@ -9060,21 +9051,82 @@ var _gre_ory$amnezic_elm$View$render_question = F2(
 			},
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html$text(question.title),
-				_1: {ctor: '[]'}
+				_0: A2(
+					_elm_lang$html$Html$fieldset,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(choice.answer),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$fieldset,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(choice.hint),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$fieldset,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(choice.correct)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
 			});
 	});
-var _gre_ory$amnezic_elm$View$render_questions = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('questions'),
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Array$toList(
-			A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_question, model.questions)));
-};
+var _gre_ory$amnezic_elm$View$render_question = F2(
+	function (question_id, question) {
+		var classes = _elm_lang$core$Native_Utils.eq(question_id, 1) ? 'question first' : 'question';
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$fieldset,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(question.theme),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$fieldset,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(question.audio),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$fieldset,
+							{ctor: '[]'},
+							_elm_lang$core$Array$toList(
+								A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_choice, question.choices))),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
 var _gre_ory$amnezic_elm$View$myStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
@@ -9097,7 +9149,7 @@ var _gre_ory$amnezic_elm$View$myStyle = _elm_lang$html$Html_Attributes$style(
 			}
 		}
 	});
-var _gre_ory$amnezic_elm$View$render_setup_player = F2(
+var _gre_ory$amnezic_elm$View$render_player = F2(
 	function (player_id, player) {
 		var classes = _elm_lang$core$Native_Utils.eq(player_id, 1) ? 'player first' : 'player';
 		return A2(
@@ -9150,6 +9202,31 @@ var _gre_ory$amnezic_elm$View$render_setup_player = F2(
 				}
 			});
 	});
+var _gre_ory$amnezic_elm$View$render_players = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		_elm_lang$core$Array$toList(
+			A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_player, model.players)));
+};
+var _gre_ory$amnezic_elm$View$render_error = function (message) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(message),
+			_1: {ctor: '[]'}
+		});
+};
+var _gre_ory$amnezic_elm$View$render_questions = function (model) {
+	var _p0 = A2(_elm_lang$core$Array$get, model.question_id, model.questions);
+	if (_p0.ctor === 'Just') {
+		return A2(_gre_ory$amnezic_elm$View$render_question, model.question_id, _p0._0);
+	} else {
+		return _gre_ory$amnezic_elm$View$render_error('unknown question!');
+	}
+};
 var _gre_ory$amnezic_elm$View$render_next_button = function (model) {
 	return A2(
 		_elm_lang$html$Html$button,
@@ -9223,45 +9300,8 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 			}
 		});
 };
-var _gre_ory$amnezic_elm$View$render_setup_players = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _gre_ory$amnezic_elm$View$render_header(model),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$fieldset,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('page set-up-players'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('players'),
-								_1: {ctor: '[]'}
-							},
-							_elm_lang$core$Array$toList(
-								A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_setup_player, model.players))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: _gre_ory$amnezic_elm$View$render_footer(model),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _gre_ory$amnezic_elm$View$render_default_page = F3(
-	function (model, page_class, page_content) {
+var _gre_ory$amnezic_elm$View$render_page_skeleton = F3(
+	function (model, page_id, html_content) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{ctor: '[]'},
@@ -9275,12 +9315,12 @@ var _gre_ory$amnezic_elm$View$render_default_page = F3(
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$class(
-								A2(_elm_lang$core$Basics_ops['++'], 'page ', page_class)),
+								A2(_elm_lang$core$Basics_ops['++'], 'page ', page_id)),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(page_content),
+							_0: html_content,
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -9291,31 +9331,96 @@ var _gre_ory$amnezic_elm$View$render_default_page = F3(
 				}
 			});
 	});
+var _gre_ory$amnezic_elm$View$render_default_page = F2(
+	function (model, page_id) {
+		return A3(
+			_gre_ory$amnezic_elm$View$render_page_skeleton,
+			model,
+			page_id,
+			_elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'page ',
+					A2(_elm_lang$core$Basics_ops['++'], page_id, ' not yet implemented!'))));
+	});
+var _gre_ory$amnezic_elm$View$render_players_page = F2(
+	function (model, page_id) {
+		return A3(
+			_gre_ory$amnezic_elm$View$render_page_skeleton,
+			model,
+			page_id,
+			_gre_ory$amnezic_elm$View$render_players(model));
+	});
+var _gre_ory$amnezic_elm$View$render_questions_page = F2(
+	function (model, page_id) {
+		return A3(
+			_gre_ory$amnezic_elm$View$render_page_skeleton,
+			model,
+			page_id,
+			_gre_ory$amnezic_elm$View$render_questions(model));
+	});
 var _gre_ory$amnezic_elm$View$render_page = function (model) {
-	var _p0 = model.page;
-	switch (_p0.ctor) {
+	var _p1 = model.page;
+	switch (_p1.ctor) {
 		case 'PageStart':
-			return A3(_gre_ory$amnezic_elm$View$render_default_page, model, 'start', 'start: not yet implemented...');
-		case 'PageSetUpPlayers':
-			return _gre_ory$amnezic_elm$View$render_setup_players(model);
-		case 'PageSetUpThemes':
-			return A3(_gre_ory$amnezic_elm$View$render_default_page, model, 'set-up-themes', 'set-up themes: not yet implemented...');
-		case 'PageSetUpQuestions':
-			return A3(_gre_ory$amnezic_elm$View$render_default_page, model, 'set-up-questions', 'set-up questions: not yet implemented...');
+			return A2(_gre_ory$amnezic_elm$View$render_default_page, model, 'start');
+		case 'PageThemes':
+			return A2(_gre_ory$amnezic_elm$View$render_default_page, model, 'themes');
+		case 'PagePlayers':
+			return A2(_gre_ory$amnezic_elm$View$render_players_page, model, 'players');
 		case 'PageQuestions':
-			return A3(_gre_ory$amnezic_elm$View$render_default_page, model, 'questions', 'questions: not yet implemented...');
+			return A2(_gre_ory$amnezic_elm$View$render_questions_page, model, 'questions');
 		case 'PageScore':
-			return A3(_gre_ory$amnezic_elm$View$render_default_page, model, 'score', 'score: not yet implemented...');
+			return A2(_gre_ory$amnezic_elm$View$render_default_page, model, 'score');
 		default:
-			return A3(_gre_ory$amnezic_elm$View$render_default_page, model, 'end', 'end: not yet implemented...');
+			return A2(_gre_ory$amnezic_elm$View$render_default_page, model, 'end');
 	}
 };
+var _gre_ory$amnezic_elm$Update$init_default_choice = F2(
+	function (choice_id, correct) {
+		return {
+			answer: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Answer ',
+				_elm_lang$core$Basics$toString(choice_id)),
+			hint: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Hint ',
+				_elm_lang$core$Basics$toString(choice_id)),
+			correct: correct
+		};
+	});
 var _gre_ory$amnezic_elm$Update$init_default_question = function (question_id) {
 	return {
-		title: A2(
+		theme: A2(
 			_elm_lang$core$Basics_ops['++'],
-			'Question ',
-			_elm_lang$core$Basics$toString(question_id))
+			'Theme ',
+			_elm_lang$core$Basics$toString(question_id)),
+		audio: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'audio_',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(question_id),
+				'.mp3')),
+		choices: _elm_lang$core$Array$fromList(
+			{
+				ctor: '::',
+				_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 0, false),
+				_1: {
+					ctor: '::',
+					_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 1, true),
+					_1: {
+						ctor: '::',
+						_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 2, false),
+						_1: {
+							ctor: '::',
+							_0: A2(_gre_ory$amnezic_elm$Update$init_default_choice, 3, false),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			})
 	};
 };
 var _gre_ory$amnezic_elm$Update$init_default_questions = _elm_lang$core$Array$fromList(
@@ -9378,25 +9483,15 @@ var _gre_ory$amnezic_elm$Update$go_to_previous_page = function (model) {
 	var _p1 = model.page;
 	switch (_p1.ctor) {
 		case 'PageStart':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageEnd});
-		case 'PageSetUpPlayers':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageStart});
-		case 'PageSetUpThemes':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpPlayers});
-		case 'PageSetUpQuestions':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpThemes});
+			return model;
+		case 'PageThemes':
+			return model;
+		case 'PagePlayers':
+			return model;
 		case 'PageQuestions':
 			return _elm_lang$core$Native_Utils.update(
 				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpQuestions});
+				{page: _gre_ory$amnezic_elm$Type$PagePlayers});
 		case 'PageScore':
 			return _elm_lang$core$Native_Utils.update(
 				model,
@@ -9406,6 +9501,14 @@ var _gre_ory$amnezic_elm$Update$go_to_previous_page = function (model) {
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageScore});
 	}
+};
+var _gre_ory$amnezic_elm$Update$reset_game = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{page: _gre_ory$amnezic_elm$Type$PageStart, question_id: 0});
+};
+var _gre_ory$amnezic_elm$Update$go_to_start_page = function (model) {
+	return _gre_ory$amnezic_elm$Update$reset_game(model);
 };
 var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
 	var _p2 = model.page;
@@ -9413,21 +9516,21 @@ var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
 		case 'PageStart':
 			return _elm_lang$core$Native_Utils.update(
 				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpPlayers});
-		case 'PageSetUpPlayers':
+				{page: _gre_ory$amnezic_elm$Type$PageThemes});
+		case 'PageThemes':
 			return _elm_lang$core$Native_Utils.update(
 				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpThemes});
-		case 'PageSetUpThemes':
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageSetUpQuestions});
-		case 'PageSetUpQuestions':
+				{page: _gre_ory$amnezic_elm$Type$PagePlayers});
+		case 'PagePlayers':
 			return _elm_lang$core$Native_Utils.update(
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageQuestions});
 		case 'PageQuestions':
-			return _elm_lang$core$Native_Utils.update(
+			return (_elm_lang$core$Native_Utils.cmp(
+				model.question_id + 1,
+				_elm_lang$core$Array$length(model.questions)) < 0) ? _elm_lang$core$Native_Utils.update(
+				model,
+				{question_id: model.question_id + 1}) : _elm_lang$core$Native_Utils.update(
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageScore});
 		case 'PageScore':
@@ -9435,15 +9538,21 @@ var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
 				model,
 				{page: _gre_ory$amnezic_elm$Type$PageEnd});
 		default:
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{page: _gre_ory$amnezic_elm$Type$PageStart});
+			return _gre_ory$amnezic_elm$Update$reset_game(model);
 	}
 };
-var _gre_ory$amnezic_elm$Update$go_to_start_page = function (model) {
-	return _elm_lang$core$Native_Utils.update(
-		model,
-		{page: _gre_ory$amnezic_elm$Type$PageStart});
+var _gre_ory$amnezic_elm$Update$get_key = function (key_code) {
+	var _p3 = key_code;
+	switch (_p3) {
+		case 32:
+			return _gre_ory$amnezic_elm$Type$Space;
+		case 37:
+			return _gre_ory$amnezic_elm$Type$ArrowLeft;
+		case 39:
+			return _gre_ory$amnezic_elm$Type$ArrowRight;
+		default:
+			return _gre_ory$amnezic_elm$Type$Unknown;
+	}
 };
 var _gre_ory$amnezic_elm$Main$view = function (model) {
 	return _gre_ory$amnezic_elm$View$render_page(model);
@@ -9489,7 +9598,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				var _p1 = _gre_ory$amnezic_elm$Type$get_key(_p0._0);
+				var _p1 = _gre_ory$amnezic_elm$Update$get_key(_p0._0);
 				switch (_p1.ctor) {
 					case 'Space':
 						return {
@@ -9516,7 +9625,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 	});
 var _gre_ory$amnezic_elm$Main$init = {
 	ctor: '_Tuple2',
-	_0: {page: _gre_ory$amnezic_elm$Type$PageStart, questions: _gre_ory$amnezic_elm$Update$init_default_questions, players: _gre_ory$amnezic_elm$Update$init_default_players},
+	_0: {questions: _gre_ory$amnezic_elm$Update$init_default_questions, players: _gre_ory$amnezic_elm$Update$init_default_players, page: _gre_ory$amnezic_elm$Type$PageStart, question_id: 0},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _gre_ory$amnezic_elm$Main$main = _elm_lang$html$Html$program(
