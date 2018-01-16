@@ -8,6 +8,7 @@ import Keyboard exposing (..)
 
 import Type exposing (..)
 import View exposing (..)
+import Init exposing (..)
 import Update exposing (..)
 -- import Subscriptions exposing (..)
 

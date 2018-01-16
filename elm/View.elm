@@ -10,6 +10,12 @@ import Array exposing (..)
 
 import Type exposing (..)
 
+-- helper
+
+render_id_to_nb : Int -> Html Msg
+render_id_to_nb id =
+  text ( id_to_nb id )
+
 -- page
 
 render_page : Model -> Html Msg
@@ -22,19 +28,19 @@ render_page model =
     PageScore -> render_default_page model "score"
     PageEnd -> render_default_page model "end"
 
-render_header : Model -> Html Msg
-render_header model =
-  fieldset [ ] [
-    render_start_button model,
-    render_previous_button model,
-    render_next_button model
-  ]
+render_default_page : Model -> String -> Html Msg
+render_default_page model page_id =
+  render_page_skeleton model page_id ( text ( "page " ++ page_id ++ " not yet implemented!" ) )
 
-render_footer : Model -> Html Msg
-render_footer model =
-  fieldset [ ] [
-    text "@amnezic"
-  ]
+render_players_page : Model -> String -> Html Msg
+render_players_page model page_id =
+  render_page_skeleton model page_id ( render_players model )
+
+render_questions_page : Model -> String -> Html Msg
+render_questions_page model page_id =
+  render_page_skeleton model page_id ( render_questions model )
+
+-- button
 
 render_start_button : Model -> Html Msg
 render_start_button model =
@@ -54,6 +60,22 @@ render_next_button model =
     text "next"
   ]
 
+-- skeleton
+
+render_header : Model -> Html Msg
+render_header model =
+  fieldset [ ] [
+    render_start_button model,
+    render_previous_button model,
+    render_next_button model
+  ]
+
+render_footer : Model -> Html Msg
+render_footer model =
+  fieldset [ ] [
+    text "@amnezic"
+  ]
+
 render_error : String -> Html Msg
 render_error message =
   div [ ] [
@@ -70,19 +92,7 @@ render_page_skeleton model page_id html_content =
     render_footer model
   ]
 
-render_default_page : Model -> String -> Html Msg
-render_default_page model page_id =
-  render_page_skeleton model page_id ( text ( "page " ++ page_id ++ " not yet implemented!" ) )
-
-render_players_page : Model -> String -> Html Msg
-render_players_page model page_id =
-  render_page_skeleton model page_id ( render_players model )
-
-render_questions_page : Model -> String -> Html Msg
-render_questions_page model page_id =
-  render_page_skeleton model page_id ( render_questions model )
-
--- players
+-- player
 
 render_players : Model -> Html Msg
 render_players model =
@@ -92,28 +102,23 @@ render_players model =
 render_player : Int -> Player -> Html Msg
 render_player player_id player =
   let
-    classes =
-      if player_id == 1 then
-        "player first"
-      else
-        "player"
+    classes = "player"
   in
     div [ class classes ] [
-      text ( ( toString player_id ) ++ " -- " ++ player.name ++ " -- " ++ ( toString player.score ) ++ " -- " ),
+      render_id_to_nb( player_id ),
+      text ( " -- " ++ player.name ++ " -- " ++ ( toString player.score ) ++ " -- " ),
       input [ placeholder "player name", onInput ( UpdatePlayerName player_id ) ] [
         text ( toString player.name )
       ]
     ]
 
--- questions
+-- question
 
 render_questions : Model -> Html Msg
 render_questions model =
   case get_question model of
     Just question -> render_question model question
     Nothing -> render_error "unknown question!"
-
--- question
 
 render_question : Model -> Question -> Html Msg
 render_question model question =
@@ -135,28 +140,47 @@ render_question model question =
         ( Array.toList <| Array.indexedMap ( render_choice model ) question.choices ),
       fieldset [ ] [
         render_selected_cards model.state
+      ],
+      fieldset [ ] [
+        render_player_scores model
       ]
     ]
 
 -- choice
 
+render_correct_class : Maybe Bool -> String
+render_correct_class maybe_is_correct =
+  case maybe_is_correct of
+    Just is_correct ->
+      if is_correct then
+        "correct"
+      else
+        "incorrect"
+    Nothing ->
+      ""
+
+render_choice_class : Model -> Int -> String
+render_choice_class model choice_id =
+  case get_choice model choice_id of
+    Just choice -> render_correct_class ( Just choice.correct )
+    Nothing -> render_correct_class Nothing
+
 render_choice : Model -> Int -> Choice -> Html Msg
 render_choice model choice_id choice =
   let
-    choice_type =
-      if choice.correct then
-        "correct"
+    classes =
+      if show_result model.state.step then
+        "choice " ++ ( render_choice_class model choice_id )
       else
-        "distractor"
-    choice_class = "choice"
+        "choice"
   in
     case model.state.step of
       StepNotReady ->
-        div [ class choice_class ] [
+        div [ class classes ] [
           text "loading question..."
         ]
       StepShowChoices ->
-        div [ class choice_class ] [
+        div [ class classes ] [
           div [ class "answer" ] [
             text choice.answer
           ],
@@ -165,7 +189,7 @@ render_choice model choice_id choice =
           ]
         ]
       StepShowHints ->
-        div [ class choice_class ] [
+        div [ class classes ] [
           div [ class "answer" ] [
             text choice.answer
           ],
@@ -174,7 +198,7 @@ render_choice model choice_id choice =
           ]
         ]
       StepShowCorrect ->
-        div [ class ( choice_class ++ " " ++ choice_type ) ] [
+        div [ class classes ] [
           div [ class "answer" ] [
             text choice.answer
           ],
@@ -183,7 +207,7 @@ render_choice model choice_id choice =
           ]
         ]
       StepShowCards ->
-        div [ class ( choice_class ++ " " ++ choice_type ) ] [
+        div [ class classes ] [
           render_cards model choice_id,
           div [ class "answer" ] [
             text choice.answer
@@ -193,8 +217,7 @@ render_choice model choice_id choice =
           ]
         ]
       StepShowScore ->
-        div [ class ( choice_class ++ " " ++ choice_type ) ] [
-          render_cards model choice_id,
+        div [ class classes ] [
           div [ class "answer" ] [
             text choice.answer
           ],
@@ -205,10 +228,6 @@ render_choice model choice_id choice =
 
 -- card
 
-render_id_to_nb : Int -> Html Msg
-render_id_to_nb id =
-  text ( toString( id + 1 ) )
-
 render_cards : Model -> Int -> Html Msg
 render_cards model choice_id =
   div [ class "cards" ]
@@ -216,11 +235,28 @@ render_cards model choice_id =
 
 render_card : Model -> Int -> Int -> Player -> Html Msg
 render_card model choice_id player_id player =
-  div [ class "card", onClick ( SelectCard choice_id player_id ) ] [
-    render_id_to_nb( choice_id ),
-    text " ",
-    render_id_to_nb( player_id )
-  ]
+  let
+    selected = has_selected_card choice_id player_id model
+    classes =
+      if selected then
+        "card selected " ++ ( render_choice_class model choice_id )
+      else
+        "card " ++ ( render_choice_class model choice_id )
+  in
+    if selected then
+      div [ class classes ] [
+        render_id_to_nb( choice_id ),
+        text " ",
+        render_id_to_nb( player_id )
+      ]
+    else
+      div [ class classes, onClick ( SelectCard choice_id player_id ) ] [
+        render_id_to_nb( choice_id ),
+        text " ",
+        render_id_to_nb( player_id )
+      ]
+
+-- selected card
 
 render_selected_cards : State -> Html Msg
 render_selected_cards state =
@@ -229,13 +265,34 @@ render_selected_cards state =
 
 render_selected_card : Int -> SelectedCard -> Html Msg
 render_selected_card selected_card_id selected_card =
-  div [ class "selected_card", onClick ( UnselectCard selected_card.choice_id selected_card.player_id ) ] [
-    text "#",
-    render_id_to_nb( selected_card_id ),
-    text " ",
-    render_id_to_nb( selected_card.choice_id ),
-    text " ",
-    render_id_to_nb( selected_card.player_id ),
-    text " ",
-    text ( toString ( selected_card.correct ) )
+  let
+    classes = "selected_card " ++ ( render_correct_class ( Just selected_card.correct ) )
+  in
+    div [ class classes, onClick ( UnselectCard selected_card.choice_id selected_card.player_id ) ] [
+      text "#",
+      render_id_to_nb( selected_card_id ),
+      text " ",
+      render_id_to_nb( selected_card.choice_id ),
+      text " ",
+      render_id_to_nb( selected_card.player_id ),
+      text " ",
+      text ( toString ( selected_card.correct ) )
+    ]
+
+-- player score
+
+render_player_scores : Model -> Html Msg
+render_player_scores model =
+  div [ class "scores" ]
+    ( List.indexedMap render_player_score <| List.reverse <| List.sortBy .score <| Array.toList model.players )
+
+render_player_score : Int -> Player -> Html Msg
+render_player_score rank_id player =
+  div [ class ( "player rank-" ++ id_to_nb( rank_id ) ) ] [
+    div [ ] [
+      text player.name
+    ],
+    div [ ] [
+      text ( toString player.score )
+    ]
   ]

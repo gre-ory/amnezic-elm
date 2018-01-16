@@ -89,6 +89,10 @@ type Msg =
 
 -- helper
 
+id_to_nb : Int -> String
+id_to_nb id =
+  toString( id + 1 )
+
 get_player : Model -> Int -> Maybe Player
 get_player model player_id =
   Array.get player_id model.players
@@ -102,3 +106,25 @@ get_choice model choice_id =
   case get_question model of
     Just question -> Array.get choice_id question.choices
     Nothing -> Nothing
+
+match_selected_card : Int -> Int -> SelectedCard -> Bool
+match_selected_card choice_id player_id selected_card =
+  ( selected_card.choice_id == choice_id ) && ( selected_card.player_id == player_id )
+
+unmatch_selected_card : Int -> Int -> SelectedCard -> Bool
+unmatch_selected_card choice_id player_id selected_card =
+  not ( match_selected_card choice_id player_id selected_card )
+
+has_selected_card : Int -> Int -> Model -> Bool
+has_selected_card choice_id player_id model =
+  List.any ( match_selected_card choice_id player_id ) ( Array.toList model.state.selected_cards )
+
+show_result : Step -> Bool
+show_result step =
+  case step of
+    StepNotReady -> False
+    StepShowChoices -> False
+    StepShowHints -> False
+    StepShowCorrect -> True
+    StepShowCards -> True
+    StepShowScore -> True

@@ -79,6 +79,6 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 				}
 		}
 	});
-var _gre_ory$amnezic_elm$Main$init = {ctor: '_Tuple2', _0: _gre_ory$amnezic_elm$Update$init_model, _1: _elm_lang$core$Platform_Cmd$none};
+var _gre_ory$amnezic_elm$Main$init = {ctor: '_Tuple2', _0: _gre_ory$amnezic_elm$Init$init_model, _1: _elm_lang$core$Platform_Cmd$none};
 var _gre_ory$amnezic_elm$Main$main = _elm_lang$html$Html$program(
 	{init: _gre_ory$amnezic_elm$Main$init, view: _gre_ory$amnezic_elm$Main$view, update: _gre_ory$amnezic_elm$Main$update, subscriptions: _gre_ory$amnezic_elm$Main$subscriptions})();

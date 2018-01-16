@@ -1,11 +1,43 @@
+var _gre_ory$amnezic_elm$Type$show_result = function (step) {
+	var _p0 = step;
+	switch (_p0.ctor) {
+		case 'StepNotReady':
+			return false;
+		case 'StepShowChoices':
+			return false;
+		case 'StepShowHints':
+			return false;
+		case 'StepShowCorrect':
+			return true;
+		case 'StepShowCards':
+			return true;
+		default:
+			return true;
+	}
+};
+var _gre_ory$amnezic_elm$Type$match_selected_card = F3(
+	function (choice_id, player_id, selected_card) {
+		return _elm_lang$core$Native_Utils.eq(selected_card.choice_id, choice_id) && _elm_lang$core$Native_Utils.eq(selected_card.player_id, player_id);
+	});
+var _gre_ory$amnezic_elm$Type$unmatch_selected_card = F3(
+	function (choice_id, player_id, selected_card) {
+		return !A3(_gre_ory$amnezic_elm$Type$match_selected_card, choice_id, player_id, selected_card);
+	});
+var _gre_ory$amnezic_elm$Type$has_selected_card = F3(
+	function (choice_id, player_id, model) {
+		return A2(
+			_elm_lang$core$List$any,
+			A2(_gre_ory$amnezic_elm$Type$match_selected_card, choice_id, player_id),
+			_elm_lang$core$Array$toList(model.state.selected_cards));
+	});
 var _gre_ory$amnezic_elm$Type$get_question = function (model) {
 	return A2(_elm_lang$core$Array$get, model.state.question_id, model.questions);
 };
 var _gre_ory$amnezic_elm$Type$get_choice = F2(
 	function (model, choice_id) {
-		var _p0 = _gre_ory$amnezic_elm$Type$get_question(model);
-		if (_p0.ctor === 'Just') {
-			return A2(_elm_lang$core$Array$get, choice_id, _p0._0.choices);
+		var _p1 = _gre_ory$amnezic_elm$Type$get_question(model);
+		if (_p1.ctor === 'Just') {
+			return A2(_elm_lang$core$Array$get, choice_id, _p1._0.choices);
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
@@ -14,6 +46,9 @@ var _gre_ory$amnezic_elm$Type$get_player = F2(
 	function (model, player_id) {
 		return A2(_elm_lang$core$Array$get, player_id, model.players);
 	});
+var _gre_ory$amnezic_elm$Type$id_to_nb = function (id) {
+	return _elm_lang$core$Basics$toString(id + 1);
+};
 var _gre_ory$amnezic_elm$Type$Model = F3(
 	function (a, b, c) {
 		return {questions: a, players: b, state: c};

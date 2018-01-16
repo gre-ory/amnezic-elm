@@ -6,6 +6,7 @@ module Update exposing (..)
 import Array exposing (..)
 
 import Type exposing (..)
+import Init exposing (..)
 
 -- keyboard
 
@@ -76,59 +77,6 @@ go_to_question : Model -> Int -> Model
 go_to_question model question_id =
   { model | state = ( update_state_for_new_question question_id model.state ) }
 
--- init
-
-init_model : Model
-init_model =
-  { questions = init_default_questions
-  , players = init_default_players
-  , state = init_state
-  }
-
-init_state : State
-init_state =
-  { page = PageStart
-  , question_id = 0
-  , step = StepNotReady
-  , media_status = MediaNotReady
-  , selected_cards = Array.fromList [ ]
-  }
-
-init_default_players : Array Player
-init_default_players =
-  Array.fromList [ init_default_player 1, init_default_player 2 ]
-
-init_default_player : Int -> Player
-init_default_player player_id =
-  { name = ( "Player " ++ ( toString player_id ) )
-  , score = 0
-  }
-
-init_default_questions: Array Question
-init_default_questions =
-  Array.fromList [ init_default_question 0, init_default_question 1, init_default_question 2 ]
-
-init_default_question : Int -> Question
-init_default_question question_id =
-  { theme = ( "Theme " ++ ( toString question_id ) )
-  , audio = ( "audio_" ++ ( toString question_id ) ++ ".mp3" )
-  , choices = Array.fromList [ init_default_choice 0 False, init_default_choice 1 True, init_default_choice 2 False, init_default_choice 3 False ]
-  }
-
-init_default_choice : Int -> Bool -> Choice
-init_default_choice choice_id correct =
-  { answer = ( "Answer " ++ ( toString choice_id ) )
-  , hint = ( "Hint " ++ ( toString choice_id ) )
-  , correct = correct
-  }
-
-init_selected_card : Int -> Int -> Bool -> SelectedCard
-init_selected_card choice_id player_id correct =
-  { choice_id = choice_id
-  , player_id = player_id
-  , score_engaged = 0
-  , correct = False }
-
 -- update
 
 update_page : Page -> Model -> Model
@@ -179,4 +127,8 @@ add_selected_card state selected_card =
 
 unselect_card : Model -> Int -> Int -> Model
 unselect_card model choice_id player_id =
-  model -- TODO
+  { model | state = remove_selected_card choice_id player_id model.state }
+
+remove_selected_card : Int -> Int -> State -> State
+remove_selected_card choice_id player_id state =
+  { state | selected_cards = ( Array.filter ( unmatch_selected_card choice_id player_id ) state.selected_cards ) }

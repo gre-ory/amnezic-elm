@@ -1,462 +1,78 @@
-var _gre_ory$amnezic_elm$View$render_id_to_nb = function (id) {
-	return _elm_lang$html$Html$text(
-		_elm_lang$core$Basics$toString(id + 1));
-};
-var _gre_ory$amnezic_elm$View$render_card = F4(
-	function (model, choice_id, player_id, player) {
+var _gre_ory$amnezic_elm$View$render_player_score = F2(
+	function (rank_id, player) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('card'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						A2(_gre_ory$amnezic_elm$Type$SelectCard, choice_id, player_id)),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _gre_ory$amnezic_elm$View$render_id_to_nb(choice_id),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(' '),
-					_1: {
-						ctor: '::',
-						_0: _gre_ory$amnezic_elm$View$render_id_to_nb(player_id),
-						_1: {ctor: '[]'}
-					}
-				}
-			});
-	});
-var _gre_ory$amnezic_elm$View$render_cards = F2(
-	function (model, choice_id) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('cards'),
-				_1: {ctor: '[]'}
-			},
-			_elm_lang$core$Array$toList(
-				A2(
-					_elm_lang$core$Array$indexedMap,
-					A2(_gre_ory$amnezic_elm$View$render_card, model, choice_id),
-					model.players)));
-	});
-var _gre_ory$amnezic_elm$View$render_selected_card = F2(
-	function (selected_card_id, selected_card) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('selected_card'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						A2(_gre_ory$amnezic_elm$Type$UnselectCard, selected_card.choice_id, selected_card.player_id)),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('#'),
-				_1: {
-					ctor: '::',
-					_0: _gre_ory$amnezic_elm$View$render_id_to_nb(selected_card_id),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(' '),
-						_1: {
-							ctor: '::',
-							_0: _gre_ory$amnezic_elm$View$render_id_to_nb(selected_card.choice_id),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(' '),
-								_1: {
-									ctor: '::',
-									_0: _gre_ory$amnezic_elm$View$render_id_to_nb(selected_card.player_id),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(' '),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html$text(
-												_elm_lang$core$Basics$toString(selected_card.correct)),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			});
-	});
-var _gre_ory$amnezic_elm$View$render_selected_cards = function (state) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('selected_cards'),
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Array$toList(
-			A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_selected_card, state.selected_cards)));
-};
-var _gre_ory$amnezic_elm$View$render_choice = F3(
-	function (model, choice_id, choice) {
-		var choice_class = 'choice';
-		var choice_type = choice.correct ? 'correct' : 'distractor';
-		var _p0 = model.state.step;
-		switch (_p0.ctor) {
-			case 'StepNotReady':
-				return A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(choice_class),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('loading question...'),
-						_1: {ctor: '[]'}
-					});
-			case 'StepShowChoices':
-				return A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(choice_class),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('answer'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(choice.answer),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('hint'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(' --- '),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					});
-			case 'StepShowHints':
-				return A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(choice_class),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('answer'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(choice.answer),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('hint'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(choice.hint),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					});
-			case 'StepShowCorrect':
-				return A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								choice_class,
-								A2(_elm_lang$core$Basics_ops['++'], ' ', choice_type))),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('answer'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(choice.answer),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('hint'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(choice.hint),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					});
-			case 'StepShowCards':
-				return A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								choice_class,
-								A2(_elm_lang$core$Basics_ops['++'], ' ', choice_type))),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(_gre_ory$amnezic_elm$View$render_cards, model, choice_id),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('answer'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(choice.answer),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('hint'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(choice.hint),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
-					});
-			default:
-				return A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								choice_class,
-								A2(_elm_lang$core$Basics_ops['++'], ' ', choice_type))),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(_gre_ory$amnezic_elm$View$render_cards, model, choice_id),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('answer'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(choice.answer),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('hint'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(choice.hint),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
-					});
-		}
-	});
-var _gre_ory$amnezic_elm$View$render_question = F2(
-	function (model, question) {
-		var classes = _elm_lang$core$Native_Utils.eq(model.state.question_id, 1) ? 'question first' : 'question';
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_0: _elm_lang$html$Html_Attributes$class(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'player rank-',
+						_gre_ory$amnezic_elm$Type$id_to_nb(rank_id))),
 				_1: {ctor: '[]'}
 			},
 			{
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$fieldset,
+					_elm_lang$html$Html$div,
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text(question.theme),
+						_0: _elm_lang$html$Html$text(player.name),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$fieldset,
+						_elm_lang$html$Html$div,
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(question.audio),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$fieldset,
-							{ctor: '[]'},
-							_elm_lang$core$Array$toList(
-								A2(
-									_elm_lang$core$Array$indexedMap,
-									_gre_ory$amnezic_elm$View$render_choice(model),
-									question.choices))),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$fieldset,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _gre_ory$amnezic_elm$View$render_selected_cards(model.state),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			});
-	});
-var _gre_ory$amnezic_elm$View$render_player = F2(
-	function (player_id, player) {
-		var classes = _elm_lang$core$Native_Utils.eq(player_id, 1) ? 'player first' : 'player';
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class(classes),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Basics$toString(player_id),
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							' -- ',
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								player.name,
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									' -- ',
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										_elm_lang$core$Basics$toString(player.score),
-										' -- ')))))),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$input,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$placeholder('player name'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onInput(
-									_gre_ory$amnezic_elm$Type$UpdatePlayerName(player_id)),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
 							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(player.name)),
+								_elm_lang$core$Basics$toString(player.score)),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
 				}
 			});
 	});
-var _gre_ory$amnezic_elm$View$render_players = function (model) {
+var _gre_ory$amnezic_elm$View$render_player_scores = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		_elm_lang$core$Array$toList(
-			A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_player, model.players)));
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('scores'),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_elm_lang$core$List$indexedMap,
+			_gre_ory$amnezic_elm$View$render_player_score,
+			_elm_lang$core$List$reverse(
+				A2(
+					_elm_lang$core$List$sortBy,
+					function (_) {
+						return _.score;
+					},
+					_elm_lang$core$Array$toList(model.players)))));
 };
+var _gre_ory$amnezic_elm$View$render_correct_class = function (maybe_is_correct) {
+	var _p0 = maybe_is_correct;
+	if (_p0.ctor === 'Just') {
+		return _p0._0 ? 'correct' : 'incorrect';
+	} else {
+		return '';
+	}
+};
+var _gre_ory$amnezic_elm$View$render_choice_class = F2(
+	function (model, choice_id) {
+		var _p1 = A2(_gre_ory$amnezic_elm$Type$get_choice, model, choice_id);
+		if (_p1.ctor === 'Just') {
+			return _gre_ory$amnezic_elm$View$render_correct_class(
+				_elm_lang$core$Maybe$Just(_p1._0.correct));
+		} else {
+			return _gre_ory$amnezic_elm$View$render_correct_class(_elm_lang$core$Maybe$Nothing);
+		}
+	});
 var _gre_ory$amnezic_elm$View$render_error = function (message) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -467,13 +83,15 @@ var _gre_ory$amnezic_elm$View$render_error = function (message) {
 			_1: {ctor: '[]'}
 		});
 };
-var _gre_ory$amnezic_elm$View$render_questions = function (model) {
-	var _p1 = _gre_ory$amnezic_elm$Type$get_question(model);
-	if (_p1.ctor === 'Just') {
-		return A2(_gre_ory$amnezic_elm$View$render_question, model, _p1._0);
-	} else {
-		return _gre_ory$amnezic_elm$View$render_error('unknown question!');
-	}
+var _gre_ory$amnezic_elm$View$render_footer = function (model) {
+	return A2(
+		_elm_lang$html$Html$fieldset,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('@amnezic'),
+			_1: {ctor: '[]'}
+		});
 };
 var _gre_ory$amnezic_elm$View$render_next_button = function (model) {
 	return A2(
@@ -517,16 +135,6 @@ var _gre_ory$amnezic_elm$View$render_start_button = function (model) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html$text('start'),
-			_1: {ctor: '[]'}
-		});
-};
-var _gre_ory$amnezic_elm$View$render_footer = function (model) {
-	return A2(
-		_elm_lang$html$Html$fieldset,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('@amnezic'),
 			_1: {ctor: '[]'}
 		});
 };
@@ -591,6 +199,71 @@ var _gre_ory$amnezic_elm$View$render_default_page = F2(
 					'page ',
 					A2(_elm_lang$core$Basics_ops['++'], page_id, ' not yet implemented!'))));
 	});
+var _gre_ory$amnezic_elm$View$render_id_to_nb = function (id) {
+	return _elm_lang$html$Html$text(
+		_gre_ory$amnezic_elm$Type$id_to_nb(id));
+};
+var _gre_ory$amnezic_elm$View$render_player = F2(
+	function (player_id, player) {
+		var classes = 'player';
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$View$render_id_to_nb(player_id),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							' -- ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								player.name,
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									' -- ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										_elm_lang$core$Basics$toString(player.score),
+										' -- '))))),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$placeholder('player name'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onInput(
+										_gre_ory$amnezic_elm$Type$UpdatePlayerName(player_id)),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(player.name)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _gre_ory$amnezic_elm$View$render_players = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		_elm_lang$core$Array$toList(
+			A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_player, model.players)));
+};
 var _gre_ory$amnezic_elm$View$render_players_page = F2(
 	function (model, page_id) {
 		return A3(
@@ -599,6 +272,438 @@ var _gre_ory$amnezic_elm$View$render_players_page = F2(
 			page_id,
 			_gre_ory$amnezic_elm$View$render_players(model));
 	});
+var _gre_ory$amnezic_elm$View$render_card = F4(
+	function (model, choice_id, player_id, player) {
+		var selected = A3(_gre_ory$amnezic_elm$Type$has_selected_card, choice_id, player_id, model);
+		var classes = selected ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'card selected ',
+			A2(_gre_ory$amnezic_elm$View$render_choice_class, model, choice_id)) : A2(
+			_elm_lang$core$Basics_ops['++'],
+			'card ',
+			A2(_gre_ory$amnezic_elm$View$render_choice_class, model, choice_id));
+		return selected ? A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$View$render_id_to_nb(choice_id),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(' '),
+					_1: {
+						ctor: '::',
+						_0: _gre_ory$amnezic_elm$View$render_id_to_nb(player_id),
+						_1: {ctor: '[]'}
+					}
+				}
+			}) : A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						A2(_gre_ory$amnezic_elm$Type$SelectCard, choice_id, player_id)),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$View$render_id_to_nb(choice_id),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(' '),
+					_1: {
+						ctor: '::',
+						_0: _gre_ory$amnezic_elm$View$render_id_to_nb(player_id),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _gre_ory$amnezic_elm$View$render_cards = F2(
+	function (model, choice_id) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('cards'),
+				_1: {ctor: '[]'}
+			},
+			_elm_lang$core$Array$toList(
+				A2(
+					_elm_lang$core$Array$indexedMap,
+					A2(_gre_ory$amnezic_elm$View$render_card, model, choice_id),
+					model.players)));
+	});
+var _gre_ory$amnezic_elm$View$render_choice = F3(
+	function (model, choice_id, choice) {
+		var classes = _gre_ory$amnezic_elm$Type$show_result(model.state.step) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'choice ',
+			A2(_gre_ory$amnezic_elm$View$render_choice_class, model, choice_id)) : 'choice';
+		var _p2 = model.state.step;
+		switch (_p2.ctor) {
+			case 'StepNotReady':
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(classes),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('loading question...'),
+						_1: {ctor: '[]'}
+					});
+			case 'StepShowChoices':
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(classes),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('answer'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(choice.answer),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('hint'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(' --- '),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					});
+			case 'StepShowHints':
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(classes),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('answer'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(choice.answer),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('hint'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(choice.hint),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					});
+			case 'StepShowCorrect':
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(classes),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('answer'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(choice.answer),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('hint'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(choice.hint),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					});
+			case 'StepShowCards':
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(classes),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(_gre_ory$amnezic_elm$View$render_cards, model, choice_id),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('answer'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(choice.answer),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('hint'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(choice.hint),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					});
+			default:
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(classes),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('answer'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(choice.answer),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('hint'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(choice.hint),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					});
+		}
+	});
+var _gre_ory$amnezic_elm$View$render_selected_card = F2(
+	function (selected_card_id, selected_card) {
+		var classes = A2(
+			_elm_lang$core$Basics_ops['++'],
+			'selected_card ',
+			_gre_ory$amnezic_elm$View$render_correct_class(
+				_elm_lang$core$Maybe$Just(selected_card.correct)));
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						A2(_gre_ory$amnezic_elm$Type$UnselectCard, selected_card.choice_id, selected_card.player_id)),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('#'),
+				_1: {
+					ctor: '::',
+					_0: _gre_ory$amnezic_elm$View$render_id_to_nb(selected_card_id),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(' '),
+						_1: {
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$View$render_id_to_nb(selected_card.choice_id),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(' '),
+								_1: {
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$View$render_id_to_nb(selected_card.player_id),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(' '),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(
+												_elm_lang$core$Basics$toString(selected_card.correct)),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+var _gre_ory$amnezic_elm$View$render_selected_cards = function (state) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('selected_cards'),
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Array$toList(
+			A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_selected_card, state.selected_cards)));
+};
+var _gre_ory$amnezic_elm$View$render_question = F2(
+	function (model, question) {
+		var classes = _elm_lang$core$Native_Utils.eq(model.state.question_id, 1) ? 'question first' : 'question';
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$fieldset,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(question.theme),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$fieldset,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(question.audio),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$fieldset,
+							{ctor: '[]'},
+							_elm_lang$core$Array$toList(
+								A2(
+									_elm_lang$core$Array$indexedMap,
+									_gre_ory$amnezic_elm$View$render_choice(model),
+									question.choices))),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$fieldset,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$View$render_selected_cards(model.state),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$fieldset,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _gre_ory$amnezic_elm$View$render_player_scores(model),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			});
+	});
+var _gre_ory$amnezic_elm$View$render_questions = function (model) {
+	var _p3 = _gre_ory$amnezic_elm$Type$get_question(model);
+	if (_p3.ctor === 'Just') {
+		return A2(_gre_ory$amnezic_elm$View$render_question, model, _p3._0);
+	} else {
+		return _gre_ory$amnezic_elm$View$render_error('unknown question!');
+	}
+};
 var _gre_ory$amnezic_elm$View$render_questions_page = F2(
 	function (model, page_id) {
 		return A3(
@@ -608,8 +713,8 @@ var _gre_ory$amnezic_elm$View$render_questions_page = F2(
 			_gre_ory$amnezic_elm$View$render_questions(model));
 	});
 var _gre_ory$amnezic_elm$View$render_page = function (model) {
-	var _p2 = model.state.page;
-	switch (_p2.ctor) {
+	var _p4 = model.state.page;
+	switch (_p4.ctor) {
 		case 'PageStart':
 			return A2(_gre_ory$amnezic_elm$View$render_default_page, model, 'start');
 		case 'PageThemes':
