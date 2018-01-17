@@ -269,14 +269,19 @@ render_selected_card selected_card_id selected_card =
     classes = "selected_card " ++ ( render_correct_class ( Just selected_card.correct ) )
   in
     div [ class classes, onClick ( UnselectCard selected_card.choice_id selected_card.player_id ) ] [
-      text "#",
-      render_id_to_nb( selected_card_id ),
-      text " ",
-      render_id_to_nb( selected_card.choice_id ),
-      text " ",
-      render_id_to_nb( selected_card.player_id ),
-      text " ",
-      text ( toString ( selected_card.correct ) )
+      -- text " ",
+      -- render_id_to_nb( selected_card.choice_id ),
+      -- text " ",
+      div [ ] [
+        text "P",
+        render_id_to_nb( selected_card.player_id )
+      ],
+      div [ ] [
+        if selected_card.correct then
+          text ( "+" ++ ( toString selected_card.engaged_point ) )
+        else
+          text ( toString selected_card.engaged_point )
+      ]
     ]
 
 -- player score

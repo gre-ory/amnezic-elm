@@ -53,9 +53,9 @@ var _gre_ory$amnezic_elm$Type$Model = F3(
 	function (a, b, c) {
 		return {questions: a, players: b, state: c};
 	});
-var _gre_ory$amnezic_elm$Type$State = F5(
-	function (a, b, c, d, e) {
-		return {page: a, question_id: b, step: c, media_status: d, selected_cards: e};
+var _gre_ory$amnezic_elm$Type$State = F6(
+	function (a, b, c, d, e, f) {
+		return {page: a, question_id: b, step: c, media_status: d, selected_cards: e, score_mode: f};
 	});
 var _gre_ory$amnezic_elm$Type$Question = F3(
 	function (a, b, c) {
@@ -71,7 +71,7 @@ var _gre_ory$amnezic_elm$Type$Player = F2(
 	});
 var _gre_ory$amnezic_elm$Type$SelectedCard = F4(
 	function (a, b, c, d) {
-		return {choice_id: a, player_id: b, score_engaged: c, correct: d};
+		return {choice_id: a, player_id: b, engaged_point: c, correct: d};
 	});
 var _gre_ory$amnezic_elm$Type$PageEnd = {ctor: 'PageEnd'};
 var _gre_ory$amnezic_elm$Type$PageScore = {ctor: 'PageScore'};
@@ -90,6 +90,8 @@ var _gre_ory$amnezic_elm$Type$MediaPause = {ctor: 'MediaPause'};
 var _gre_ory$amnezic_elm$Type$MediaPlay = {ctor: 'MediaPlay'};
 var _gre_ory$amnezic_elm$Type$MediaReady = {ctor: 'MediaReady'};
 var _gre_ory$amnezic_elm$Type$MediaNotReady = {ctor: 'MediaNotReady'};
+var _gre_ory$amnezic_elm$Type$ScoreByVelocityCappedByRank = {ctor: 'ScoreByVelocityCappedByRank'};
+var _gre_ory$amnezic_elm$Type$ScoreByVelocity = {ctor: 'ScoreByVelocity'};
 var _gre_ory$amnezic_elm$Type$Unknown = {ctor: 'Unknown'};
 var _gre_ory$amnezic_elm$Type$ArrowRight = {ctor: 'ArrowRight'};
 var _gre_ory$amnezic_elm$Type$ArrowLeft = {ctor: 'ArrowLeft'};

@@ -18,7 +18,8 @@ type alias State = {
   question_id: Int,
   step: Step,
   media_status: MediaStatus,
-  selected_cards: Array SelectedCard
+  selected_cards: Array SelectedCard,
+  score_mode: ScoreMode
 }
 
 type alias Question = {
@@ -41,7 +42,7 @@ type alias Player = {
 type alias SelectedCard = {
   choice_id: Int,
   player_id: Int,
-  score_engaged: Int,
+  engaged_point: Int,
   correct: Bool
 }
 
@@ -67,6 +68,10 @@ type MediaStatus =
   | MediaPlay
   | MediaPause
   | MediaEnd
+
+type ScoreMode =
+  ScoreByVelocity
+  | ScoreByVelocityCappedByRank
 
 -- key
 

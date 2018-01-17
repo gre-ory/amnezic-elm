@@ -1,61 +1,128 @@
-var _gre_ory$amnezic_elm$Update$remove_selected_card = F3(
-	function (choice_id, player_id, state) {
+var _gre_ory$amnezic_elm$Update$apply_selected_card = F3(
+	function (player_id, selected_card, score) {
+		return _elm_lang$core$Native_Utils.eq(selected_card.player_id, player_id) ? (score + selected_card.engaged_point) : score;
+	});
+var _gre_ory$amnezic_elm$Update$apply_selected_cards_on_player = F3(
+	function (selected_cards, player_id, player) {
+		return _elm_lang$core$Native_Utils.update(
+			player,
+			{
+				score: A3(
+					_elm_lang$core$Array$foldr,
+					_gre_ory$amnezic_elm$Update$apply_selected_card(player_id),
+					player.score,
+					selected_cards)
+			});
+	});
+var _gre_ory$amnezic_elm$Update$apply_selected_cards = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			players: A2(
+				_elm_lang$core$Array$indexedMap,
+				_gre_ory$amnezic_elm$Update$apply_selected_cards_on_player(model.state.selected_cards),
+				model.players)
+		});
+};
+var _gre_ory$amnezic_elm$Update$compute_engaged_point = F5(
+	function (score_mode, nb_player, nb_selected_card, velociy_id, selected_card) {
+		var point_per_velocity = (_elm_lang$core$Native_Utils.cmp(velociy_id, nb_player) < 0) ? (nb_player - velociy_id) : 1;
+		var sign = selected_card.correct ? 1 : -1;
+		var _p0 = score_mode;
+		if (_p0.ctor === 'ScoreByVelocity') {
+			return _elm_lang$core$Native_Utils.update(
+				selected_card,
+				{engaged_point: sign * point_per_velocity});
+		} else {
+			return _elm_lang$core$Native_Utils.update(
+				selected_card,
+				{engaged_point: sign});
+		}
+	});
+var _gre_ory$amnezic_elm$Update$compute_engaged_points = F3(
+	function (score_mode, nb_player, selected_cards) {
+		var nb_selected_card = _elm_lang$core$Array$length(selected_cards);
+		return A2(
+			_elm_lang$core$Array$indexedMap,
+			A3(_gre_ory$amnezic_elm$Update$compute_engaged_point, score_mode, nb_player, nb_selected_card),
+			selected_cards);
+	});
+var _gre_ory$amnezic_elm$Update$update_selected_cards = F3(
+	function (update_fn, nb_player, state) {
+		var score_mode = state.score_mode;
 		return _elm_lang$core$Native_Utils.update(
 			state,
 			{
-				selected_cards: A2(
-					_elm_lang$core$Array$filter,
-					A2(_gre_ory$amnezic_elm$Type$unmatch_selected_card, choice_id, player_id),
-					state.selected_cards)
+				selected_cards: A3(
+					_gre_ory$amnezic_elm$Update$compute_engaged_points,
+					score_mode,
+					nb_player,
+					update_fn(state.selected_cards))
 			});
 	});
 var _gre_ory$amnezic_elm$Update$unselect_card = F3(
 	function (model, choice_id, player_id) {
+		var update_fn = _elm_lang$core$Array$filter(
+			A2(_gre_ory$amnezic_elm$Type$unmatch_selected_card, choice_id, player_id));
+		var nb_player = _elm_lang$core$Array$length(model.players);
 		return _elm_lang$core$Native_Utils.update(
 			model,
 			{
-				state: A3(_gre_ory$amnezic_elm$Update$remove_selected_card, choice_id, player_id, model.state)
-			});
-	});
-var _gre_ory$amnezic_elm$Update$add_selected_card = F2(
-	function (state, selected_card) {
-		return _elm_lang$core$Native_Utils.update(
-			state,
-			{
-				selected_cards: A2(_elm_lang$core$Array$push, selected_card, state.selected_cards)
+				state: A3(_gre_ory$amnezic_elm$Update$update_selected_cards, update_fn, nb_player, model.state)
 			});
 	});
 var _gre_ory$amnezic_elm$Update$select_card = F3(
 	function (model, choice_id, player_id) {
-		var _p0 = A2(_gre_ory$amnezic_elm$Type$get_choice, model, choice_id);
-		if (_p0.ctor === 'Just') {
-			var selected_card = A3(_gre_ory$amnezic_elm$Init$init_selected_card, choice_id, player_id, _p0._0.correct);
+		var _p1 = A2(_gre_ory$amnezic_elm$Type$get_choice, model, choice_id);
+		if (_p1.ctor === 'Just') {
+			var selected_card = A3(_gre_ory$amnezic_elm$Init$init_selected_card, choice_id, player_id, _p1._0.correct);
+			var update_fn = _elm_lang$core$Array$push(selected_card);
+			var nb_player = _elm_lang$core$Array$length(model.players);
 			return _elm_lang$core$Native_Utils.update(
 				model,
 				{
-					state: A2(_gre_ory$amnezic_elm$Update$add_selected_card, model.state, selected_card)
+					state: A3(_gre_ory$amnezic_elm$Update$update_selected_cards, update_fn, nb_player, model.state)
 				});
 		} else {
 			return model;
 		}
 	});
+var _gre_ory$amnezic_elm$Update$reset_selected_cards = function (state) {
+	return _elm_lang$core$Native_Utils.update(
+		state,
+		{
+			selected_cards: _elm_lang$core$Array$fromList(
+				{ctor: '[]'})
+		});
+};
+var _gre_ory$amnezic_elm$Update$remove_selected_cards = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			state: _gre_ory$amnezic_elm$Update$reset_selected_cards(model.state)
+		});
+};
+var _gre_ory$amnezic_elm$Update$apply_engaged_points = function (model) {
+	return _gre_ory$amnezic_elm$Update$remove_selected_cards(
+		_gre_ory$amnezic_elm$Update$apply_selected_cards(model));
+};
 var _gre_ory$amnezic_elm$Update$update_player_name = F2(
-	function (player_name, player) {
+	function (name, player) {
 		return _elm_lang$core$Native_Utils.update(
 			player,
-			{name: player_name});
+			{name: name});
 	});
 var _gre_ory$amnezic_elm$Update$update_player = F3(
 	function (model, player_id, update_player_fn) {
-		var _p1 = A2(_elm_lang$core$Array$get, player_id, model.players);
-		if (_p1.ctor === 'Just') {
+		var _p2 = A2(_elm_lang$core$Array$get, player_id, model.players);
+		if (_p2.ctor === 'Just') {
 			return _elm_lang$core$Native_Utils.update(
 				model,
 				{
 					players: A3(
 						_elm_lang$core$Array$set,
 						player_id,
-						update_player_fn(_p1._0),
+						update_player_fn(_p2._0),
 						model.players)
 				});
 		} else {
@@ -125,8 +192,8 @@ var _gre_ory$amnezic_elm$Update$go_to_next_question = function (model) {
 		_gre_ory$amnezic_elm$Update$next_question_id(model)) : A2(_gre_ory$amnezic_elm$Update$update_page, _gre_ory$amnezic_elm$Type$PageScore, model);
 };
 var _gre_ory$amnezic_elm$Update$go_to_next_step = function (model) {
-	var _p2 = model.state.step;
-	switch (_p2.ctor) {
+	var _p3 = model.state.step;
+	switch (_p3.ctor) {
 		case 'StepNotReady':
 			return A2(_gre_ory$amnezic_elm$Update$update_step, _gre_ory$amnezic_elm$Type$StepShowChoices, model);
 		case 'StepShowChoices':
@@ -136,14 +203,17 @@ var _gre_ory$amnezic_elm$Update$go_to_next_step = function (model) {
 		case 'StepShowCorrect':
 			return A2(_gre_ory$amnezic_elm$Update$update_step, _gre_ory$amnezic_elm$Type$StepShowCards, model);
 		case 'StepShowCards':
-			return A2(_gre_ory$amnezic_elm$Update$update_step, _gre_ory$amnezic_elm$Type$StepShowScore, model);
+			return A2(
+				_gre_ory$amnezic_elm$Update$update_step,
+				_gre_ory$amnezic_elm$Type$StepShowScore,
+				_gre_ory$amnezic_elm$Update$apply_engaged_points(model));
 		default:
 			return _gre_ory$amnezic_elm$Update$go_to_next_question(model);
 	}
 };
 var _gre_ory$amnezic_elm$Update$go_to_previous_page = function (model) {
-	var _p3 = model.state.page;
-	switch (_p3.ctor) {
+	var _p4 = model.state.page;
+	switch (_p4.ctor) {
 		case 'PageStart':
 			return model;
 		case 'PageThemes':
@@ -167,8 +237,8 @@ var _gre_ory$amnezic_elm$Update$go_to_start_page = function (model) {
 	return _gre_ory$amnezic_elm$Update$reset_game(model);
 };
 var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
-	var _p4 = model.state.page;
-	switch (_p4.ctor) {
+	var _p5 = model.state.page;
+	switch (_p5.ctor) {
 		case 'PageStart':
 			return A2(_gre_ory$amnezic_elm$Update$update_page, _gre_ory$amnezic_elm$Type$PageThemes, model);
 		case 'PageThemes':
@@ -184,8 +254,8 @@ var _gre_ory$amnezic_elm$Update$go_to_next_page = function (model) {
 	}
 };
 var _gre_ory$amnezic_elm$Update$get_key = function (key_code) {
-	var _p5 = key_code;
-	switch (_p5) {
+	var _p6 = key_code;
+	switch (_p6) {
 		case 32:
 			return _gre_ory$amnezic_elm$Type$Space;
 		case 37:

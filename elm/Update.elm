@@ -55,7 +55,7 @@ go_to_next_step model =
     StepShowChoices -> update_step StepShowHints model
     StepShowHints -> update_step StepShowCorrect model
     StepShowCorrect -> update_step StepShowCards model
-    StepShowCards -> update_step StepShowScore model
+    StepShowCards -> update_step StepShowScore ( apply_engaged_points model )
     StepShowScore -> go_to_next_question model
 
 next_question_id : Model -> Int
@@ -108,27 +108,78 @@ update_player model player_id update_player_fn =
       model
 
 update_player_name : String -> Player -> Player
-update_player_name player_name player =
-  { player | name = player_name }
+update_player_name name player =
+  { player | name = name }
+
+reset_selected_cards : State -> State
+reset_selected_cards state =
+  { state | selected_cards = Array.fromList [ ] }
 
 select_card : Model -> Int -> Int -> Model
 select_card model choice_id player_id =
   case get_choice model choice_id of
     Just choice ->
       let
+        nb_player = Array.length model.players
         selected_card = init_selected_card choice_id player_id choice.correct
+        update_fn = Array.push selected_card
       in
-        { model | state=add_selected_card model.state selected_card }
+        { model | state = ( update_selected_cards update_fn nb_player model.state ) }
     Nothing -> model
-
-add_selected_card : State -> SelectedCard -> State
-add_selected_card state selected_card =
-  { state | selected_cards = ( Array.push selected_card state.selected_cards ) }
 
 unselect_card : Model -> Int -> Int -> Model
 unselect_card model choice_id player_id =
-  { model | state = remove_selected_card choice_id player_id model.state }
+  let
+    nb_player = Array.length model.players
+    update_fn = Array.filter ( unmatch_selected_card choice_id player_id )
+  in
+    { model | state = ( update_selected_cards update_fn nb_player model.state ) }
 
-remove_selected_card : Int -> Int -> State -> State
-remove_selected_card choice_id player_id state =
-  { state | selected_cards = ( Array.filter ( unmatch_selected_card choice_id player_id ) state.selected_cards ) }
+update_selected_cards : ( Array SelectedCard -> Array SelectedCard ) -> Int -> State -> State
+update_selected_cards update_fn nb_player state =
+  let
+    score_mode = state.score_mode
+  in
+    { state | selected_cards = ( compute_engaged_points score_mode nb_player <| update_fn <| state.selected_cards ) }
+
+compute_engaged_points : ScoreMode -> Int -> Array SelectedCard -> Array SelectedCard
+compute_engaged_points score_mode nb_player selected_cards =
+  let
+      nb_selected_card = Array.length selected_cards
+  in
+    Array.indexedMap ( compute_engaged_point score_mode nb_player nb_selected_card ) selected_cards
+
+compute_engaged_point : ScoreMode -> Int -> Int -> Int -> SelectedCard -> SelectedCard
+compute_engaged_point score_mode nb_player nb_selected_card velociy_id selected_card =
+  let
+    sign = if selected_card.correct then 1 else -1
+    point_per_velocity = if ( velociy_id < nb_player ) then ( nb_player - velociy_id ) else 1
+  in
+    case score_mode of
+      ScoreByVelocity ->
+        { selected_card | engaged_point = sign * point_per_velocity }
+      ScoreByVelocityCappedByRank ->
+        { selected_card | engaged_point = sign } -- TODO
+
+apply_selected_card : Int -> SelectedCard -> Int -> Int
+apply_selected_card player_id selected_card score =
+  if selected_card.player_id == player_id then
+    score + selected_card.engaged_point
+  else
+    score
+
+apply_selected_cards_on_player : Array SelectedCard -> Int -> Player -> Player
+apply_selected_cards_on_player selected_cards player_id player =
+  { player | score = ( Array.foldr ( apply_selected_card player_id ) player.score selected_cards ) }
+
+apply_selected_cards : Model -> Model
+apply_selected_cards model =
+  { model | players = Array.indexedMap ( apply_selected_cards_on_player model.state.selected_cards ) model.players }
+
+remove_selected_cards : Model -> Model
+remove_selected_cards model =
+  { model | state = reset_selected_cards model.state }
+
+apply_engaged_points : Model -> Model
+apply_engaged_points model =
+  remove_selected_cards ( apply_selected_cards model )
