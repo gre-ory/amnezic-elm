@@ -34,8 +34,17 @@ body, html {
   text-align: right;
 }
 
-.card.selected {
+.card.selected,
+.card.not-selectable {
   opacity: 0.2;
+}
+
+.card.selected-by-player {
+  background-color: gold !important;
+}
+
+.card.selectable:hover {
+  background-color: grey !important;
 }
 
 .card {
@@ -119,4 +128,94 @@ body, html {
 
 .scores .player.rank-3 {
   /*background-*/color: #d35400;
+}
+
+/* ---------- cards ---------- */
+
+.card {
+  /*
+  width: 6em;
+  height: 8.5em;
+  padding: .25em 0;
+  border: solid 1px #999;
+  -moz-border-radius: .5em;
+  border-radius: .5em;
+  box-shadow:1px 1px 5px rgba(0, 0, 0, 0.5);
+  position: relative;
+  text-align: left;
+  -webkit-box-align: baseline;
+  */
+}
+
+/* card symbols */
+
+.card.suit-club .rank:after,
+.card.suit-tarot-club .rank:after {
+  content: " ♣";
+}
+
+.card.suit-spade .rank:after,
+.card.suit-tarot-spade .rank:after {
+  content: " ♠";
+}
+
+.card.suit-heart .rank:after,
+.card.suit-tarot-heart .rank:after {
+  content: " ♥";
+}
+
+.card.suit-diamond .rank:after,
+.card.suit-tarot-diamond .rank:after {
+  content: " ♦";
+}
+
+.card.suit-tarot-trump .rank:after {
+  content: " ★";
+}
+
+.card.suit-uno-red .rank:after,
+.card.suit-uno-yellow .rank:after,
+.card.suit-uno-green .rank:after,
+.card.suit-uno-blue .rank:after {
+  content: " ⚫";
+}
+
+/* card colors */
+
+.card,
+.card.suit-club,
+.card.suit-tarot-club,
+.card.suit-spade,
+.card.suit-tarot-spade,
+.card.suit-tarot-trump {
+  background: white;
+  color: black;
+}
+
+.card.suit-heart,
+.card.suit-tarot-heart,
+.card.suit-diamond,
+.card.suit-tarot-diamond {
+  background: white;
+  color: red;
+}
+
+.card.suit-uno-red {
+  color: white;
+  /* background-*/color: red;
+}
+
+.card.suit-uno-yellow {
+  color: white;
+  /* background-*/color: yellow;
+}
+
+.card.suit-uno-green {
+  color: white;
+  /* background-*/color: green;
+}
+
+.card.suit-uno-blue {
+  color: white;
+  /* background-*/color: blue;
 }

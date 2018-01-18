@@ -118,6 +118,12 @@ var _gre_ory$amnezic_elm$Update$update_player_name = F2(
 			player,
 			{name: name});
 	});
+var _gre_ory$amnezic_elm$Update$update_player_card_suit_id = F2(
+	function (maybe_card_suit_id, player) {
+		return _elm_lang$core$Native_Utils.update(
+			player,
+			{maybe_card_suit_id: maybe_card_suit_id});
+	});
 var _gre_ory$amnezic_elm$Update$update_player = F3(
 	function (model, player_id, update_player_fn) {
 		var _p2 = A2(_elm_lang$core$Array$get, player_id, model.players);

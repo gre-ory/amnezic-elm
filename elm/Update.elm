@@ -162,6 +162,10 @@ update_player model player_id update_player_fn =
     Nothing ->
       model
 
+update_player_card_suit_id : Maybe Int -> Player -> Player
+update_player_card_suit_id maybe_card_suit_id player =
+  { player | maybe_card_suit_id = maybe_card_suit_id }
+
 update_player_name : String -> Player -> Player
 update_player_name name player =
   { player | name = name }

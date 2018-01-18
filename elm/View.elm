@@ -157,8 +157,110 @@ render_player model player_id player =
       input [ placeholder "player name", onInput ( UpdatePlayerName player_id ), value player.name ] [ ],
       render_deactivate_player_button model player_id,
       render_activate_player_button model player_id,
-      render_delete_player_button model player_id
+      render_delete_player_button model player_id,
+      text " -- ",
+      render_card_suits model player_id
     ]
+
+-- card suits
+
+get_card_suit_class : CardSuit -> String
+get_card_suit_class card_suit =
+  case card_suit of
+    Heart -> "heart"
+    Diamond -> "diamond"
+    Club -> "club"
+    Spade -> "spade"
+    TarotHeart -> "tarot-heart"
+    TarotDiamond -> "tarot-diamond"
+    TarotClub -> "tarot-club"
+    TarotSpade -> "tarot-spade"
+    TarotTrump -> "tarot-trump"
+    UnoRed -> "uno-red"
+    UnoBlue -> "uno-blue"
+    UnoGreen -> "uno-green"
+    UnoYellow -> "uno-yellow"
+
+render_card_suits : Model -> Int -> Html Msg
+render_card_suits model player_id =
+  div [ ]
+    ( Array.toList <| Array.indexedMap ( render_card_suit model player_id ) model.card_suits )
+
+render_card_suit : Model -> Int -> Int -> CardSuit -> Html Msg
+render_card_suit model player_id card_suit_id card_suit =
+  case get_player model player_id of
+    Just player ->
+      let
+        is_owned_by_player =
+          case player.maybe_card_suit_id of
+            Just player_card_suit_id -> ( player_card_suit_id == card_suit_id )
+            Nothing -> False
+        is_owned_by_other = if is_owned_by_player then False else ( is_card_suit_already_selected card_suit_id model )
+        on_click =
+          if is_owned_by_player then
+            UnselectCardSuit player_id
+          else if is_owned_by_other  then
+            NothingToDo
+          else
+            SelectCardSuit player_id card_suit_id
+        extra_class =
+          if is_owned_by_player then
+            "selected-by-player"
+          else if is_owned_by_other then
+            "not-selectable"
+          else
+            "selectable"
+      in
+        ( get_render_card_fn card_suit ) Nothing extra_class on_click
+    Nothing ->
+      span [ ] [ ]
+
+render_playing_card : CardSuit -> Maybe Int -> String -> Msg -> Html Msg
+render_playing_card card_suit maybe_rank extra_class on_click =
+  let
+    card_suit_class = ( "suit-" ++ get_card_suit_class card_suit )
+    rank_class =
+      case maybe_rank of
+        Just rank -> "rank-" ++ ( toString rank )
+        Nothing -> "no-rank"
+    classes = String.join " " [ "card", card_suit_class, rank_class, extra_class ]
+  in
+    div [ class classes, onClick on_click ] [
+      case maybe_rank of
+        Just rank ->
+          span [ class "rank" ] [ text ( toString rank ) ]
+        Nothing ->
+          span [ class "rank" ] [  ]
+    ]
+
+render_tarot_playing_card : CardSuit -> Maybe Int -> String -> Msg -> Html Msg
+render_tarot_playing_card card_suit maybe_rank extra_class on_click =
+  render_playing_card card_suit maybe_rank extra_class on_click
+
+render_uno_playing_card : CardSuit -> Maybe Int -> String -> Msg -> Html Msg
+render_uno_playing_card card_suit maybe_rank extra_class on_click =
+  render_playing_card card_suit maybe_rank extra_class on_click
+
+get_render_card_fn : CardSuit -> ( Maybe Int -> String -> Msg -> Html Msg )
+get_render_card_fn card_suit =
+  let
+    render_card_fn =
+      case card_suit of
+        Heart -> render_playing_card
+        Diamond -> render_playing_card
+        Club -> render_playing_card
+        Spade -> render_playing_card
+        TarotHeart -> render_tarot_playing_card
+        TarotDiamond -> render_tarot_playing_card
+        TarotClub -> render_tarot_playing_card
+        TarotSpade -> render_tarot_playing_card
+        TarotTrump -> render_tarot_playing_card
+        UnoRed -> render_uno_playing_card
+        UnoBlue -> render_uno_playing_card
+        UnoGreen -> render_uno_playing_card
+        UnoYellow -> render_uno_playing_card
+  in
+    render_card_fn card_suit
 
 -- question
 
@@ -309,9 +411,6 @@ render_selected_card selected_card_id selected_card =
     classes = "selected_card " ++ ( render_correct_class ( Just selected_card.correct ) )
   in
     div [ class classes, onClick ( UnselectCard selected_card.choice_id selected_card.player_id ) ] [
-      -- text " ",
-      -- render_id_to_nb( selected_card.choice_id ),
-      -- text " ",
       div [ ] [
         text "P",
         render_id_to_nb( selected_card.player_id )

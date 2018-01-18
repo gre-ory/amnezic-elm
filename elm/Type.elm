@@ -10,6 +10,7 @@ import Keyboard exposing (..)
 type alias Model = {
   questions: Array Question,
   players: Array Player,
+  card_suits: Array CardSuit,
   state: State
 }
 
@@ -37,7 +38,8 @@ type alias Choice = {
 type alias Player = {
   name: String,
   score: Int,
-  active: Bool
+  active: Bool,
+  maybe_card_suit_id: Maybe Int
 }
 
 type alias SelectedCard = {
@@ -74,6 +76,21 @@ type ScoreMode =
   ScoreByVelocity
   | ScoreByVelocityCappedByRank
 
+type CardSuit =
+  Heart
+  | Diamond
+  | Club
+  | Spade
+  | TarotHeart
+  | TarotDiamond
+  | TarotClub
+  | TarotSpade
+  | TarotTrump
+  | UnoRed
+  | UnoBlue
+  | UnoGreen
+  | UnoYellow
+
 -- key
 
 type Key
@@ -93,6 +110,8 @@ type Msg =
   | ActivatePlayer Int
   | DeletePlayer Int
   | UpdatePlayerName Int String
+  | UnselectCardSuit Int
+  | SelectCardSuit Int Int
   | SelectCard Int Int
   | UnselectCard Int Int
   | OnKey KeyCode
@@ -103,6 +122,30 @@ type Msg =
 id_to_nb : Int -> String
 id_to_nb id =
   toString( id + 1 )
+
+get_card_suit : Model -> Int -> Maybe CardSuit
+get_card_suit model card_suit_id =
+  Array.get card_suit_id model.card_suits
+
+match_card_suit : Int -> Player -> Bool
+match_card_suit card_suit_id player =
+  case player.maybe_card_suit_id of
+    Just player_card_suit_id -> ( player_card_suit_id == card_suit_id )
+    Nothing -> False
+
+is_card_suit_already_selected : Int -> Model -> Bool
+is_card_suit_already_selected card_suit_id model =
+  List.any ( match_card_suit card_suit_id ) ( Array.toList model.players )
+
+has_card_suit : Player -> Bool
+has_card_suit player =
+  case player.maybe_card_suit_id of
+    Just card_suit_id -> True
+    Nothing -> False
+
+all_player_has_card_suit : Model -> Bool
+all_player_has_card_suit model =
+  List.all ( has_card_suit ) ( Array.toList model.players )
 
 get_player : Model -> Int -> Maybe Player
 get_player model player_id =
@@ -155,7 +198,7 @@ can_go_to_next_page model =
   case model.state.page of
     PageStart -> True
     PageThemes -> True
-    PagePlayers -> True
+    PagePlayers -> all_player_has_card_suit model
     PageQuestions -> can_go_to_next_step model
     PageScore -> True
     PageEnd -> False
@@ -182,7 +225,7 @@ show_result step =
 
 can_add_player : Model -> Bool
 can_add_player model =
-  Array.length model.players < 4
+  Array.length model.players < min 8 ( Array.length model.card_suits )
 
 can_deactivate_player : Model -> Int -> Bool
 can_deactivate_player model player_id =
