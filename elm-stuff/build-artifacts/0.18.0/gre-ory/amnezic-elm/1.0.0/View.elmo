@@ -531,23 +531,42 @@ var _gre_ory$amnezic_elm$View$render_player = F3(
 			});
 	});
 var _gre_ory$amnezic_elm$View$render_players = function (model) {
+	var warning_notification = _gre_ory$amnezic_elm$Type$all_player_has_card_suit(model) ? A2(
+		_elm_lang$html$Html$span,
+		{ctor: '[]'},
+		{ctor: '[]'}) : A2(
+		_elm_lang$html$Html$span,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('alert alert-warning'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('please select one card for each player!'),
+			_1: {ctor: '[]'}
+		});
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				_elm_lang$core$Array$toList(
-					A2(
-						_elm_lang$core$Array$indexedMap,
-						_gre_ory$amnezic_elm$View$render_player(model),
-						model.players))),
+			_0: warning_notification,
 			_1: {
 				ctor: '::',
-				_0: _gre_ory$amnezic_elm$View$render_add_player_button(model),
-				_1: {ctor: '[]'}
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					_elm_lang$core$Array$toList(
+						A2(
+							_elm_lang$core$Array$indexedMap,
+							_gre_ory$amnezic_elm$View$render_player(model),
+							model.players))),
+				_1: {
+					ctor: '::',
+					_0: _gre_ory$amnezic_elm$View$render_add_player_button(model),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };

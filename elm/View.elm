@@ -139,11 +139,19 @@ render_page_skeleton model page_id html_content =
 
 render_players : Model -> Html Msg
 render_players model =
-  div [ ] [
-    div []
-      ( Array.toList <| Array.indexedMap ( render_player model ) model.players ),
-    render_add_player_button model
-  ]
+  let
+    warning_notification =
+      if all_player_has_card_suit model then
+        span [ ] [ ]
+      else
+        span [ class "alert alert-warning" ] [ text "please select one card for each player!" ]
+  in
+    div [ ] [
+      warning_notification,
+      div []
+        ( Array.toList <| Array.indexedMap ( render_player model ) model.players ),
+      render_add_player_button model
+    ]
 
 
 render_player : Model -> Int -> Player -> Html Msg
