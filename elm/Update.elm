@@ -26,37 +26,46 @@ reset_game model =
 
 go_to_start_page: Model -> Model
 go_to_start_page model =
-  reset_game model
+  if can_go_to_start_page model then
+    reset_game model
+  else
+    model
 
 go_to_previous_page: Model -> Model
 go_to_previous_page model =
   case model.state.page of
-    PageStart -> model
-    PageThemes -> model
-    PagePlayers -> model
+    PageStart -> go_to_start_page model
+    PageThemes -> update_page PageStart model
+    PagePlayers -> update_page PageThemes model
     PageQuestions -> update_page PagePlayers model
     PageScore -> update_page PageQuestions model
     PageEnd -> update_page PageScore model
 
 go_to_next_page: Model -> Model
 go_to_next_page model =
-  case model.state.page of
-    PageStart -> update_page PageThemes model
-    PageThemes -> update_page PagePlayers model
-    PagePlayers -> update_page PageQuestions model
-    PageQuestions -> go_to_next_step model
-    PageScore -> update_page PageEnd model
-    PageEnd -> reset_game model
+  if can_go_to_next_page model then
+    case model.state.page of
+      PageStart -> update_page PageThemes model
+      PageThemes -> update_page PagePlayers model
+      PagePlayers -> update_page PageQuestions model
+      PageQuestions -> go_to_next_step model
+      PageScore -> update_page PageEnd model
+      PageEnd -> go_to_start_page model
+  else
+    model
 
 go_to_next_step: Model -> Model
 go_to_next_step model =
-  case model.state.step of
-    StepNotReady -> update_step StepShowChoices model
-    StepShowChoices -> update_step StepShowHints model
-    StepShowHints -> update_step StepShowCorrect model
-    StepShowCorrect -> update_step StepShowCards model
-    StepShowCards -> update_step StepShowScore ( apply_engaged_points model )
-    StepShowScore -> go_to_next_question model
+  if can_go_to_next_step model then
+    case model.state.step of
+      StepNotReady -> update_step StepShowChoices model
+      StepShowChoices -> update_step StepShowHints model
+      StepShowHints -> update_step StepShowCorrect model
+      StepShowCorrect -> update_step StepShowCards model
+      StepShowCards -> update_step StepShowScore ( apply_engaged_points model )
+      StepShowScore -> go_to_next_question model
+  else
+    model
 
 next_question_id : Model -> Int
 next_question_id model =
@@ -76,6 +85,52 @@ go_to_next_question model =
 go_to_question : Model -> Int -> Model
 go_to_question model question_id =
   { model | state = ( update_state_for_new_question question_id model.state ) }
+
+-- player
+
+add_player : Model -> Model
+add_player model =
+  if can_add_player model then
+    { model | players = Array.push ( init_default_player ( Array.length model.players ) ) model.players }
+  else
+    model
+
+deactivate_player : Model -> Int -> Model
+deactivate_player model player_id =
+  if can_deactivate_player model player_id then
+    case get_player model player_id of
+      Just player -> update_player model player_id ( update_player_active False )
+      Nothing -> model
+  else
+    model
+
+activate_player : Model -> Int -> Model
+activate_player model player_id =
+  if can_activate_player model player_id then
+    case get_player model player_id of
+      Just player -> update_player model player_id ( update_player_active True )
+      Nothing -> model
+  else
+    model
+
+delete_player : Model -> Int -> Model
+delete_player model player_id =
+  if can_delete_player model player_id then
+    let
+      before =
+        if 0 < player_id then
+          Array.slice ( 0 ) ( player_id ) model.players
+        else
+          Array.fromList [ ]
+      after =
+        if player_id < Array.length model.players then
+          Array.slice ( player_id + 1 ) ( Array.length model.players ) model.players
+        else
+          Array.fromList [ ]
+    in
+      { model | players = Array.append before after }
+  else
+    model
 
 -- update
 
@@ -110,6 +165,10 @@ update_player model player_id update_player_fn =
 update_player_name : String -> Player -> Player
 update_player_name name player =
   { player | name = name }
+
+update_player_active : Bool -> Player -> Player
+update_player_active active player =
+  { player | active = active }
 
 reset_selected_cards : State -> State
 reset_selected_cards state =

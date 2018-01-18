@@ -1,3 +1,8 @@
+var _gre_ory$amnezic_elm$Type$can_add_player = function (model) {
+	return _elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$Array$length(model.players),
+		4) < 0;
+};
 var _gre_ory$amnezic_elm$Type$show_result = function (step) {
 	var _p0 = step;
 	switch (_p0.ctor) {
@@ -11,6 +16,74 @@ var _gre_ory$amnezic_elm$Type$show_result = function (step) {
 			return true;
 		case 'StepShowCards':
 			return true;
+		default:
+			return true;
+	}
+};
+var _gre_ory$amnezic_elm$Type$can_go_to_next_step = function (model) {
+	var _p1 = model.state.step;
+	switch (_p1.ctor) {
+		case 'StepNotReady':
+			return true;
+		case 'StepShowChoices':
+			return true;
+		case 'StepShowHints':
+			return true;
+		case 'StepShowCorrect':
+			return true;
+		case 'StepShowCards':
+			return true;
+		default:
+			return true;
+	}
+};
+var _gre_ory$amnezic_elm$Type$can_go_to_next_page = function (model) {
+	var _p2 = model.state.page;
+	switch (_p2.ctor) {
+		case 'PageStart':
+			return true;
+		case 'PageThemes':
+			return true;
+		case 'PagePlayers':
+			return true;
+		case 'PageQuestions':
+			return _gre_ory$amnezic_elm$Type$can_go_to_next_step(model);
+		case 'PageScore':
+			return true;
+		default:
+			return false;
+	}
+};
+var _gre_ory$amnezic_elm$Type$can_go_to_previous_page = function (model) {
+	var _p3 = model.state.page;
+	switch (_p3.ctor) {
+		case 'PageStart':
+			return false;
+		case 'PageThemes':
+			return false;
+		case 'PagePlayers':
+			return false;
+		case 'PageQuestions':
+			return true;
+		case 'PageScore':
+			return true;
+		default:
+			return true;
+	}
+};
+var _gre_ory$amnezic_elm$Type$can_go_to_start_page = function (model) {
+	var _p4 = model.state.page;
+	switch (_p4.ctor) {
+		case 'PageStart':
+			return false;
+		case 'PageThemes':
+			return false;
+		case 'PagePlayers':
+			return false;
+		case 'PageQuestions':
+			return false;
+		case 'PageScore':
+			return false;
 		default:
 			return true;
 	}
@@ -35,9 +108,9 @@ var _gre_ory$amnezic_elm$Type$get_question = function (model) {
 };
 var _gre_ory$amnezic_elm$Type$get_choice = F2(
 	function (model, choice_id) {
-		var _p1 = _gre_ory$amnezic_elm$Type$get_question(model);
-		if (_p1.ctor === 'Just') {
-			return A2(_elm_lang$core$Array$get, choice_id, _p1._0.choices);
+		var _p5 = _gre_ory$amnezic_elm$Type$get_question(model);
+		if (_p5.ctor === 'Just') {
+			return A2(_elm_lang$core$Array$get, choice_id, _p5._0.choices);
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
@@ -45,6 +118,45 @@ var _gre_ory$amnezic_elm$Type$get_choice = F2(
 var _gre_ory$amnezic_elm$Type$get_player = F2(
 	function (model, player_id) {
 		return A2(_elm_lang$core$Array$get, player_id, model.players);
+	});
+var _gre_ory$amnezic_elm$Type$can_deactivate_player = F2(
+	function (model, player_id) {
+		if (_elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$Array$length(model.players),
+			2) > 0) {
+			var _p6 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+			if (_p6.ctor === 'Just') {
+				return _p6._0.active;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	});
+var _gre_ory$amnezic_elm$Type$can_activate_player = F2(
+	function (model, player_id) {
+		var _p7 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+		if (_p7.ctor === 'Just') {
+			return !_p7._0.active;
+		} else {
+			return false;
+		}
+	});
+var _gre_ory$amnezic_elm$Type$can_delete_player = F2(
+	function (model, player_id) {
+		if (_elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$Array$length(model.players),
+			2) > 0) {
+			var _p8 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+			if (_p8.ctor === 'Just') {
+				return !_p8._0.active;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	});
 var _gre_ory$amnezic_elm$Type$id_to_nb = function (id) {
 	return _elm_lang$core$Basics$toString(id + 1);
@@ -65,9 +177,9 @@ var _gre_ory$amnezic_elm$Type$Choice = F3(
 	function (a, b, c) {
 		return {answer: a, hint: b, correct: c};
 	});
-var _gre_ory$amnezic_elm$Type$Player = F2(
-	function (a, b) {
-		return {name: a, score: b};
+var _gre_ory$amnezic_elm$Type$Player = F3(
+	function (a, b, c) {
+		return {name: a, score: b, active: c};
 	});
 var _gre_ory$amnezic_elm$Type$SelectedCard = F4(
 	function (a, b, c, d) {
@@ -96,6 +208,7 @@ var _gre_ory$amnezic_elm$Type$Unknown = {ctor: 'Unknown'};
 var _gre_ory$amnezic_elm$Type$ArrowRight = {ctor: 'ArrowRight'};
 var _gre_ory$amnezic_elm$Type$ArrowLeft = {ctor: 'ArrowLeft'};
 var _gre_ory$amnezic_elm$Type$Space = {ctor: 'Space'};
+var _gre_ory$amnezic_elm$Type$NothingToDo = {ctor: 'NothingToDo'};
 var _gre_ory$amnezic_elm$Type$OnKey = function (a) {
 	return {ctor: 'OnKey', _0: a};
 };
@@ -111,6 +224,16 @@ var _gre_ory$amnezic_elm$Type$UpdatePlayerName = F2(
 	function (a, b) {
 		return {ctor: 'UpdatePlayerName', _0: a, _1: b};
 	});
+var _gre_ory$amnezic_elm$Type$DeletePlayer = function (a) {
+	return {ctor: 'DeletePlayer', _0: a};
+};
+var _gre_ory$amnezic_elm$Type$ActivatePlayer = function (a) {
+	return {ctor: 'ActivatePlayer', _0: a};
+};
+var _gre_ory$amnezic_elm$Type$DeactivatePlayer = function (a) {
+	return {ctor: 'DeactivatePlayer', _0: a};
+};
+var _gre_ory$amnezic_elm$Type$AddPlayer = {ctor: 'AddPlayer'};
 var _gre_ory$amnezic_elm$Type$GoToPreviousPage = function (a) {
 	return {ctor: 'GoToPreviousPage', _0: a};
 };

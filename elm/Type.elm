@@ -36,7 +36,8 @@ type alias Choice = {
 
 type alias Player = {
   name: String,
-  score: Int
+  score: Int,
+  active: Bool
 }
 
 type alias SelectedCard = {
@@ -87,10 +88,15 @@ type Msg =
   GoToStartPage Model
   | GoToNextPage Model
   | GoToPreviousPage Model
+  | AddPlayer
+  | DeactivatePlayer Int
+  | ActivatePlayer Int
+  | DeletePlayer Int
   | UpdatePlayerName Int String
   | SelectCard Int Int
   | UnselectCard Int Int
   | OnKey KeyCode
+  | NothingToDo
 
 -- helper
 
@@ -124,6 +130,46 @@ has_selected_card : Int -> Int -> Model -> Bool
 has_selected_card choice_id player_id model =
   List.any ( match_selected_card choice_id player_id ) ( Array.toList model.state.selected_cards )
 
+can_go_to_start_page: Model -> Bool
+can_go_to_start_page model =
+  case model.state.page of
+    PageStart -> False
+    PageThemes -> False
+    PagePlayers -> False
+    PageQuestions -> False
+    PageScore -> False
+    PageEnd -> True
+
+can_go_to_previous_page: Model -> Bool
+can_go_to_previous_page model =
+  case model.state.page of
+    PageStart -> False
+    PageThemes -> False
+    PagePlayers -> False
+    PageQuestions -> True
+    PageScore -> True
+    PageEnd -> True
+
+can_go_to_next_page: Model -> Bool
+can_go_to_next_page model =
+  case model.state.page of
+    PageStart -> True
+    PageThemes -> True
+    PagePlayers -> True
+    PageQuestions -> can_go_to_next_step model
+    PageScore -> True
+    PageEnd -> False
+
+can_go_to_next_step: Model -> Bool
+can_go_to_next_step model =
+  case model.state.step of
+    StepNotReady -> True
+    StepShowChoices -> True
+    StepShowHints -> True
+    StepShowCorrect -> True
+    StepShowCards -> True
+    StepShowScore -> True
+
 show_result : Step -> Bool
 show_result step =
   case step of
@@ -133,3 +179,31 @@ show_result step =
     StepShowCorrect -> True
     StepShowCards -> True
     StepShowScore -> True
+
+can_add_player : Model -> Bool
+can_add_player model =
+  Array.length model.players < 4
+
+can_deactivate_player : Model -> Int -> Bool
+can_deactivate_player model player_id =
+  if Array.length model.players > 2 then
+    case get_player model player_id of
+      Just player -> player.active
+      Nothing -> False
+  else
+    False
+
+can_activate_player : Model -> Int -> Bool
+can_activate_player model player_id =
+  case get_player model player_id of
+    Just player -> not player.active
+    Nothing -> False
+
+can_delete_player : Model -> Int -> Bool
+can_delete_player model player_id =
+  if Array.length model.players > 2 then
+    case get_player model player_id of
+      Just player -> not player.active
+      Nothing -> False
+  else
+    False

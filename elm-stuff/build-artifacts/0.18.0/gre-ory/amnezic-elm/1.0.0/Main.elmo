@@ -31,6 +31,32 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 					_0: _gre_ory$amnezic_elm$Update$go_to_next_page(_p0._0),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'NothingToDo':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'AddPlayer':
+				return {
+					ctor: '_Tuple2',
+					_0: _gre_ory$amnezic_elm$Update$add_player(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'DeactivatePlayer':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_gre_ory$amnezic_elm$Update$deactivate_player, model, _p0._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ActivatePlayer':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_gre_ory$amnezic_elm$Update$activate_player, model, _p0._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'DeletePlayer':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_gre_ory$amnezic_elm$Update$delete_player, model, _p0._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'UpdatePlayerName':
 				return {
 					ctor: '_Tuple2',

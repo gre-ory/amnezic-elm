@@ -40,6 +40,16 @@ update msg model =
     GoToNextPage model ->
       ( go_to_next_page model, Cmd.none )
     -- update
+    NothingToDo ->
+      ( model, Cmd.none )
+    AddPlayer ->
+      ( add_player model, Cmd.none )
+    DeactivatePlayer player_id ->
+      ( deactivate_player model player_id, Cmd.none )
+    ActivatePlayer player_id ->
+      ( activate_player model player_id, Cmd.none )
+    DeletePlayer player_id ->
+      ( delete_player model player_id, Cmd.none )
     UpdatePlayerName player_id player_name ->
       ( update_player model player_id ( update_player_name player_name ), Cmd.none )
     SelectCard choice_id player_id ->

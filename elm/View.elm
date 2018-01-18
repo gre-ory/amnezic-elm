@@ -44,21 +44,64 @@ render_questions_page model page_id =
 
 render_start_button : Model -> Html Msg
 render_start_button model =
-  button [ onClick ( GoToStartPage model ) ] [
-    text "start"
-  ]
+  let
+    maybe_on_click = if ( can_go_to_start_page model ) then Just ( GoToStartPage model ) else Nothing
+  in
+    render_button "repeat" "navigation start" "Start" maybe_on_click
 
 render_previous_button : Model -> Html Msg
 render_previous_button model =
-  button [ onClick ( GoToPreviousPage model ) ] [
-    text "previous"
-  ]
+  let
+    maybe_on_click = if ( can_go_to_previous_page model ) then Just ( GoToPreviousPage model ) else Nothing
+  in
+    render_button "chevron-left" "navigation previous" "Previous" maybe_on_click
 
 render_next_button : Model -> Html Msg
 render_next_button model =
-  button [ onClick ( GoToNextPage model ) ] [
-    text "next"
-  ]
+  let
+    maybe_on_click = if ( can_go_to_next_page model ) then Just ( GoToNextPage model ) else Nothing
+  in
+    render_button "chevron-right" "navigation next" "Next" maybe_on_click
+
+render_add_player_button : Model -> Html Msg
+render_add_player_button model =
+  let
+    maybe_on_click = if ( can_add_player model ) then Just ( AddPlayer ) else Nothing
+  in
+    render_button "plus" "player add" "Add player" maybe_on_click
+
+render_deactivate_player_button : Model -> Int -> Html Msg
+render_deactivate_player_button model player_id =
+  if ( can_deactivate_player model player_id ) then
+    render_button "pause" "player deactivate" "Deactivate player" ( Just ( DeactivatePlayer player_id ) )
+  else
+    span [] []
+
+render_activate_player_button : Model -> Int -> Html Msg
+render_activate_player_button model player_id =
+  if ( can_activate_player model player_id ) then
+    render_button "play" "player activate" "Activate player" ( Just ( ActivatePlayer player_id ) )
+  else
+    span [] []
+
+render_delete_player_button : Model -> Int -> Html Msg
+render_delete_player_button model player_id =
+  let
+    maybe_on_click = if ( can_delete_player model player_id ) then Just ( DeletePlayer player_id ) else Nothing
+  in
+    render_button "trash" "player delete" "Delete player" maybe_on_click
+
+render_button : String -> String -> String -> Maybe Msg -> Html Msg
+render_button button_icon button_text button_class maybe_on_click =
+  case maybe_on_click of
+    Just on_click ->
+      button [ class ( "btn btn-default " ++ button_class ), onClick on_click, title button_text ] [
+        span [ class ( "glyphicon glyphicon-" ++ button_icon ) ] [ ]
+      ]
+    Nothing ->
+      button [ class ( "btn btn-default disabled " ++ button_class ), title button_text ] [
+        span [ class ( "glyphicon glyphicon-" ++ button_icon ) ] [ ]
+      ]
 
 -- skeleton
 
@@ -96,20 +139,25 @@ render_page_skeleton model page_id html_content =
 
 render_players : Model -> Html Msg
 render_players model =
-  div [ ]
-    ( Array.toList <| Array.indexedMap render_player model.players )
+  div [ ] [
+    div []
+      ( Array.toList <| Array.indexedMap ( render_player model ) model.players ),
+    render_add_player_button model
+  ]
 
-render_player : Int -> Player -> Html Msg
-render_player player_id player =
+
+render_player : Model -> Int -> Player -> Html Msg
+render_player model player_id player =
   let
     classes = "player"
   in
     div [ class classes ] [
       render_id_to_nb( player_id ),
       text ( " -- " ++ player.name ++ " -- " ++ ( toString player.score ) ++ " -- " ),
-      input [ placeholder "player name", onInput ( UpdatePlayerName player_id ) ] [
-        text ( toString player.name )
-      ]
+      input [ placeholder "player name", onInput ( UpdatePlayerName player_id ), value player.name ] [ ],
+      render_deactivate_player_button model player_id,
+      render_activate_player_button model player_id,
+      render_delete_player_button model player_id
     ]
 
 -- question
@@ -237,24 +285,16 @@ render_card : Model -> Int -> Int -> Player -> Html Msg
 render_card model choice_id player_id player =
   let
     selected = has_selected_card choice_id player_id model
-    classes =
-      if selected then
-        "card selected " ++ ( render_choice_class model choice_id )
-      else
-        "card " ++ ( render_choice_class model choice_id )
+    on_click = if not selected then SelectCard choice_id player_id else NothingToDo
+    classes = "card " ++ ( render_choice_class model choice_id ) ++ ( if selected then " selected" else "" )
   in
-    if selected then
-      div [ class classes ] [
-        render_id_to_nb( choice_id ),
-        text " ",
+    if player.active then
+      div [ class classes, onClick on_click ] [
+        text "P",
         render_id_to_nb( player_id )
       ]
     else
-      div [ class classes, onClick ( SelectCard choice_id player_id ) ] [
-        render_id_to_nb( choice_id ),
-        text " ",
-        render_id_to_nb( player_id )
-      ]
+      span [ ] [ ]
 
 -- selected card
 
