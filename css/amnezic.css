@@ -89,33 +89,41 @@ body, html, #amnezic, .page {
   vertical-align: middle;
 }
 
-.navbar .navbar-link {
+.navbar .navbar-link,
+.navbar .button {
   padding: 5px 15px;
   display: inline-block;
   line-height: normal;
   text-align: center;
   border-radius: 10px;
-  border: 1px solid white;
+  border: 1px solid transparent;
   color: white !important;
   text-decoration: none;
 }
 
-.navbar .navbar-link .icon {
-  /* margin-right: 10px; */
+.navbar .navbar-link .icon,
+.navbar .button .icon {
+  margin-right: 10px;
 }
 
 .navbar .navbar-link.active {
   background-color: rgba(255,255,255,0.2);
 }
 
-.navbar .navbar-link.enabled:hover {
+.navbar .navbar-link.enabled:hover,
+.navbar .button:hover {
+  /*
   background-color: rgba(255,255,255,0.2);
   -webkit-transform: scale(1.1,1.1);
   -ms-transform: scale(1.1,1.1);
   transform: scale(1.1,1.1);
-  -webkit-box-shadow: 3px 3px 30px 0px rgba(0,0,0,0.3);
-  -moz-box-shadow: 3px 3px 30px 0px rgba(0,0,0,0.3);
-  box-shadow: 3px 3px 30px 0px rgba(0,0,0,0.3);
+  */
+  border: 1px solid white;
+  /*
+  -webkit-box-shadow: 2px 2px 20px 0px rgba(255,255,255,0.2);
+  -moz-box-shadow: 2px 2px 20px 0px rgba(255,255,255,0.2);
+  box-shadow: 2px 2px 20px 0px rgba(255,255,255,0.2);
+  */
   z-index: 9999;
   cursor: pointer;
 }

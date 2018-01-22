@@ -37,6 +37,12 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						_gre_ory$amnezic_elm$Type$next_page(model.state.page)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'MoveForward':
+				return {
+					ctor: '_Tuple2',
+					_0: _gre_ory$amnezic_elm$Update$move_forward(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'NothingToDo':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'AddPlayer':

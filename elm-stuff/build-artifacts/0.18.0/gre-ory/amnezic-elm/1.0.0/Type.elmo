@@ -408,6 +408,7 @@ var _gre_ory$amnezic_elm$Type$DeactivatePlayer = function (a) {
 	return {ctor: 'DeactivatePlayer', _0: a};
 };
 var _gre_ory$amnezic_elm$Type$AddPlayer = {ctor: 'AddPlayer'};
+var _gre_ory$amnezic_elm$Type$MoveForward = {ctor: 'MoveForward'};
 var _gre_ory$amnezic_elm$Type$GoToPreviousPage = {ctor: 'GoToPreviousPage'};
 var _gre_ory$amnezic_elm$Type$GoToNextPage = {ctor: 'GoToNextPage'};
 var _gre_ory$amnezic_elm$Type$GoToPage = function (a) {

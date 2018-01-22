@@ -348,116 +348,6 @@ var _gre_ory$amnezic_elm$View$render_card_suits = F2(
 					A2(_gre_ory$amnezic_elm$View$render_card_suit, model, player_id),
 					model.card_suits)));
 	});
-var _gre_ory$amnezic_elm$View$render_button = F4(
-	function (button_icon, button_text, button_class, maybe_on_click) {
-		var _p8 = maybe_on_click;
-		if (_p8.ctor === 'Just') {
-			return A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(_elm_lang$core$Basics_ops['++'], 'btn btn-default ', button_class)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_p8._0),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$title(button_text),
-							_1: {ctor: '[]'}
-						}
-					}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$span,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class(
-								A2(_elm_lang$core$Basics_ops['++'], 'fas fa-', button_icon)),
-							_1: {ctor: '[]'}
-						},
-						{ctor: '[]'}),
-					_1: {ctor: '[]'}
-				});
-		} else {
-			return A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(_elm_lang$core$Basics_ops['++'], 'btn btn-default disabled ', button_class)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$title(button_text),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$span,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class(
-								A2(_elm_lang$core$Basics_ops['++'], 'fas fa-', button_icon)),
-							_1: {ctor: '[]'}
-						},
-						{ctor: '[]'}),
-					_1: {ctor: '[]'}
-				});
-		}
-	});
-var _gre_ory$amnezic_elm$View$render_delete_player_button = F2(
-	function (model, player_id) {
-		var maybe_on_click = A2(_gre_ory$amnezic_elm$Type$can_delete_player, model, player_id) ? _elm_lang$core$Maybe$Just(
-			_gre_ory$amnezic_elm$Type$DeletePlayer(player_id)) : _elm_lang$core$Maybe$Nothing;
-		return A4(_gre_ory$amnezic_elm$View$render_button, 'trash', 'player delete', 'Delete player', maybe_on_click);
-	});
-var _gre_ory$amnezic_elm$View$render_activate_player_button = F2(
-	function (model, player_id) {
-		return A2(_gre_ory$amnezic_elm$Type$can_activate_player, model, player_id) ? A4(
-			_gre_ory$amnezic_elm$View$render_button,
-			'play',
-			'player activate',
-			'Activate player',
-			_elm_lang$core$Maybe$Just(
-				_gre_ory$amnezic_elm$Type$ActivatePlayer(player_id))) : A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{ctor: '[]'});
-	});
-var _gre_ory$amnezic_elm$View$render_deactivate_player_button = F2(
-	function (model, player_id) {
-		return A2(_gre_ory$amnezic_elm$Type$can_deactivate_player, model, player_id) ? A4(
-			_gre_ory$amnezic_elm$View$render_button,
-			'pause',
-			'player deactivate',
-			'Deactivate player',
-			_elm_lang$core$Maybe$Just(
-				_gre_ory$amnezic_elm$Type$DeactivatePlayer(player_id))) : A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{ctor: '[]'});
-	});
-var _gre_ory$amnezic_elm$View$render_add_player_button = function (model) {
-	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_add_player(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$AddPlayer) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'plus', 'player add', 'Add player', maybe_on_click);
-};
-var _gre_ory$amnezic_elm$View$render_next_button = function (model) {
-	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_go_to_next_page(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$GoToNextPage) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'angle-right', 'navigation next', 'Next', maybe_on_click);
-};
-var _gre_ory$amnezic_elm$View$render_previous_button = function (model) {
-	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_go_to_previous_page(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$GoToPreviousPage) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'chevron-left', 'navigation previous', 'Previous', maybe_on_click);
-};
-var _gre_ory$amnezic_elm$View$render_start_button = function (model) {
-	var maybe_on_click = A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, _gre_ory$amnezic_elm$Type$PageStart) ? _elm_lang$core$Maybe$Just(
-		_gre_ory$amnezic_elm$Type$GoToPage(_gre_ory$amnezic_elm$Type$PageStart)) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'repeat', 'navigation start', 'Start', maybe_on_click);
-};
 var _gre_ory$amnezic_elm$View$render_footer = function (model) {
 	return {
 		ctor: '::',
@@ -466,7 +356,7 @@ var _gre_ory$amnezic_elm$View$render_footer = function (model) {
 	};
 };
 var _gre_ory$amnezic_elm$View$render_icon = function (icon_class) {
-	return A2(
+	return (!_elm_lang$core$String$isEmpty(icon_class)) ? A2(
 		_elm_lang$html$Html$i,
 		{
 			ctor: '::',
@@ -474,11 +364,13 @@ var _gre_ory$amnezic_elm$View$render_icon = function (icon_class) {
 				A2(_elm_lang$core$Basics_ops['++'], 'icon fas fa-', icon_class)),
 			_1: {ctor: '[]'}
 		},
+		{ctor: '[]'}) : A2(
+		_elm_lang$html$Html$span,
+		{ctor: '[]'},
 		{ctor: '[]'});
 };
 var _gre_ory$amnezic_elm$View$render_nav_item = F4(
 	function (model, target_page, icon_class, page_name) {
-		var html_content = _elm_lang$core$String$isEmpty(icon_class) ? _elm_lang$html$Html$text(page_name) : _gre_ory$amnezic_elm$View$render_icon(icon_class);
 		return _elm_lang$core$Native_Utils.eq(model.state.page, target_page) ? A2(
 			_elm_lang$html$Html$li,
 			{
@@ -501,8 +393,12 @@ var _gre_ory$amnezic_elm$View$render_nav_item = F4(
 					},
 					{
 						ctor: '::',
-						_0: html_content,
-						_1: {ctor: '[]'}
+						_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(page_name),
+							_1: {ctor: '[]'}
+						}
 					}),
 				_1: {ctor: '[]'}
 			}) : (A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, target_page) ? A2(
@@ -536,8 +432,12 @@ var _gre_ory$amnezic_elm$View$render_nav_item = F4(
 					},
 					{
 						ctor: '::',
-						_0: html_content,
-						_1: {ctor: '[]'}
+						_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(page_name),
+							_1: {ctor: '[]'}
+						}
 					}),
 				_1: {ctor: '[]'}
 			}) : A2(
@@ -562,8 +462,12 @@ var _gre_ory$amnezic_elm$View$render_nav_item = F4(
 					},
 					{
 						ctor: '::',
-						_0: html_content,
-						_1: {ctor: '[]'}
+						_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(page_name),
+							_1: {ctor: '[]'}
+						}
 					}),
 				_1: {ctor: '[]'}
 			}));
@@ -603,16 +507,16 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 						},
 						{
 							ctor: '::',
-							_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageStart, '', 'Start'),
+							_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageStart, 'reply', 'Start'),
 							_1: {
 								ctor: '::',
-								_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageThemes, '', 'Themes'),
+								_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageThemes, 'sliders-h', 'Themes'),
 								_1: {
 									ctor: '::',
 									_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PagePlayers, 'users', 'Players'),
 									_1: {
 										ctor: '::',
-										_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageQuestions, 'tasks', 'Question'),
+										_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageQuestions, 'question', 'Question'),
 										_1: {
 											ctor: '::',
 											_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageScore, 'star', 'Score'),
@@ -638,22 +542,34 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 							{
 								ctor: '::',
 								_0: A2(
-									_elm_lang$html$Html$ul,
+									_elm_lang$html$Html$a,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('navbar-items'),
-										_1: {ctor: '[]'}
+										_0: _elm_lang$html$Html_Attributes$class('navbar-link enabled'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$href('#'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(_gre_ory$amnezic_elm$Type$MoveForward),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$title('Next step'),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
 									},
 									{
 										ctor: '::',
-										_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageScore, 'angle-right', '>'),
-										_1: {ctor: '[]'}
+										_0: _gre_ory$amnezic_elm$View$render_icon('angle-right'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Next'),
+											_1: {ctor: '[]'}
+										}
 									}),
-								_1: {
-									ctor: '::',
-									_0: _gre_ory$amnezic_elm$View$render_next_button(model),
-									_1: {ctor: '[]'}
-								}
+								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
 					}
@@ -662,6 +578,108 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
+var _gre_ory$amnezic_elm$View$render_button = F4(
+	function (icon_class, button_class, button_text, maybe_on_click) {
+		var _p8 = maybe_on_click;
+		if (_p8.ctor === 'Just') {
+			return A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(_elm_lang$core$Basics_ops['++'], 'button ', button_class)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_p8._0),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$title(button_text),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(button_text),
+						_1: {ctor: '[]'}
+					}
+				});
+		} else {
+			return A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(_elm_lang$core$Basics_ops['++'], 'button disabled ', button_class)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$title(button_text),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(button_text),
+						_1: {ctor: '[]'}
+					}
+				});
+		}
+	});
+var _gre_ory$amnezic_elm$View$render_start_button = function (model) {
+	var maybe_on_click = A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, _gre_ory$amnezic_elm$Type$PageStart) ? _elm_lang$core$Maybe$Just(
+		_gre_ory$amnezic_elm$Type$GoToPage(_gre_ory$amnezic_elm$Type$PageStart)) : _elm_lang$core$Maybe$Nothing;
+	return A4(_gre_ory$amnezic_elm$View$render_button, 'repeat', 'navigation start', 'Start', maybe_on_click);
+};
+var _gre_ory$amnezic_elm$View$render_previous_button = function (model) {
+	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_go_to_previous_page(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$GoToPreviousPage) : _elm_lang$core$Maybe$Nothing;
+	return A4(_gre_ory$amnezic_elm$View$render_button, 'angle-left', 'navigation previous', 'Previous', maybe_on_click);
+};
+var _gre_ory$amnezic_elm$View$render_next_button = function (model) {
+	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_go_to_next_page(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$GoToNextPage) : _elm_lang$core$Maybe$Nothing;
+	return A4(_gre_ory$amnezic_elm$View$render_button, 'angle-right', 'navigation next', 'Next', maybe_on_click);
+};
+var _gre_ory$amnezic_elm$View$render_add_player_button = function (model) {
+	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_add_player(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$AddPlayer) : _elm_lang$core$Maybe$Nothing;
+	return A4(_gre_ory$amnezic_elm$View$render_button, 'plus', 'player add', 'Add player', maybe_on_click);
+};
+var _gre_ory$amnezic_elm$View$render_deactivate_player_button = F2(
+	function (model, player_id) {
+		return A2(_gre_ory$amnezic_elm$Type$can_deactivate_player, model, player_id) ? A4(
+			_gre_ory$amnezic_elm$View$render_button,
+			'pause',
+			'player deactivate',
+			'Deactivate player',
+			_elm_lang$core$Maybe$Just(
+				_gre_ory$amnezic_elm$Type$DeactivatePlayer(player_id))) : A2(
+			_elm_lang$html$Html$span,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	});
+var _gre_ory$amnezic_elm$View$render_activate_player_button = F2(
+	function (model, player_id) {
+		return A2(_gre_ory$amnezic_elm$Type$can_activate_player, model, player_id) ? A4(
+			_gre_ory$amnezic_elm$View$render_button,
+			'play',
+			'player activate',
+			'Activate player',
+			_elm_lang$core$Maybe$Just(
+				_gre_ory$amnezic_elm$Type$ActivatePlayer(player_id))) : A2(
+			_elm_lang$html$Html$span,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	});
+var _gre_ory$amnezic_elm$View$render_delete_player_button = F2(
+	function (model, player_id) {
+		var maybe_on_click = A2(_gre_ory$amnezic_elm$Type$can_delete_player, model, player_id) ? _elm_lang$core$Maybe$Just(
+			_gre_ory$amnezic_elm$Type$DeletePlayer(player_id)) : _elm_lang$core$Maybe$Nothing;
+		return A4(_gre_ory$amnezic_elm$View$render_button, 'trash', 'player delete', 'Delete player', maybe_on_click);
+	});
 var _gre_ory$amnezic_elm$View$render_error = function (message) {
 	return _elm_lang$html$Html$text(message);
 };

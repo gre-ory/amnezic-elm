@@ -39,6 +39,8 @@ update msg model =
       ( go_to_page model ( previous_page model.state.page ), Cmd.none )
     GoToNextPage ->
       ( go_to_page model ( next_page model.state.page ), Cmd.none )
+    MoveForward ->
+      ( move_forward model, Cmd.none )
     -- update
     NothingToDo ->
       ( model, Cmd.none )

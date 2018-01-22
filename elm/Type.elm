@@ -105,6 +105,7 @@ type Msg =
   GoToPage Page
   | GoToNextPage
   | GoToPreviousPage
+  | MoveForward
   | AddPlayer
   | DeactivatePlayer Int
   | ActivatePlayer Int

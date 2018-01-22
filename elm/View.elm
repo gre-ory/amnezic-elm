@@ -48,53 +48,52 @@ render_error message =
 
 render_icon : String -> Html Msg
 render_icon icon_class =
-  i [ class ( "icon fas fa-" ++ icon_class ) ] [ ]
+  if not ( String.isEmpty icon_class ) then
+    i [ class ( "icon fas fa-" ++ icon_class ) ] [ ]
+  else
+    span [ ] [ ]
 
 render_nav_item : Model -> Page -> String -> String -> Html Msg
 render_nav_item model target_page icon_class page_name =
-  let
-    html_content =
-      if String.isEmpty icon_class then
+  if model.state.page == target_page then
+    li [ class "navbar-item active" ] [
+      div [ class "navbar-link active", title page_name ] [
+        render_icon icon_class,
         text page_name
-      else
-        render_icon icon_class
-  in
-    if model.state.page == target_page then
-      li [ class "navbar-item active" ] [
-        div [ class "navbar-link active", title page_name ] [
-          html_content
-        ]
       ]
-    else if can_go_to_page model target_page then
-      li [ class "navbar-item" ] [
-        a [ class "navbar-link enabled", href "#", onClick ( GoToPage target_page ), title page_name ] [
-          html_content
-        ]
+    ]
+  else if can_go_to_page model target_page then
+    li [ class "navbar-item" ] [
+      a [ class "navbar-link enabled", href "#", onClick ( GoToPage target_page ), title page_name ] [
+        render_icon icon_class,
+        text page_name
       ]
-    else
-      li [ class "navbar-item" ] [
-        div [ class "navbar-link disabled", title page_name ] [
-          html_content
-        ]
+    ]
+  else
+    li [ class "navbar-item" ] [
+      div [ class "navbar-link disabled", title page_name ] [
+        render_icon icon_class,
+        text page_name
       ]
+    ]
 
 render_header : Model -> List ( Html Msg )
 render_header model = [
     nav [ class "navbar" ] [
       div [ class "navbar-brand" ] [ text "@mnez!c" ],
       ul [ class "navbar-items" ] [
-        render_nav_item model PageStart "" "Start",
-        render_nav_item model PageThemes "" "Themes",
+        render_nav_item model PageStart "reply" "Start",
+        render_nav_item model PageThemes "sliders-h" "Themes",
         render_nav_item model PagePlayers "users" "Players",
-        render_nav_item model PageQuestions "tasks" "Question",
+        render_nav_item model PageQuestions "question" "Question",
         render_nav_item model PageScore "star" "Score",
         render_nav_item model PageEnd "" "End"
       ],
       div [ class "navbar-nav" ] [
-        ul [ class "navbar-items" ] [
-          render_nav_item model PageScore "angle-right" ">"
-        ],
-        render_next_button model
+        a [ class "navbar-link enabled", href "#", onClick MoveForward, title "Next step" ] [
+          render_icon "angle-right",
+          text "Next"
+        ]
       ]
     ]
   ]
@@ -133,7 +132,7 @@ render_previous_button model =
   let
     maybe_on_click = if can_go_to_previous_page model then Just ( GoToPreviousPage ) else Nothing
   in
-    render_button "chevron-left" "navigation previous" "Previous" maybe_on_click
+    render_button "angle-left" "navigation previous" "Previous" maybe_on_click
 
 render_next_button : Model -> Html Msg
 render_next_button model =
@@ -171,15 +170,17 @@ render_delete_player_button model player_id =
     render_button "trash" "player delete" "Delete player" maybe_on_click
 
 render_button : String -> String -> String -> Maybe Msg -> Html Msg
-render_button button_icon button_text button_class maybe_on_click =
+render_button icon_class button_class button_text maybe_on_click =
   case maybe_on_click of
     Just on_click ->
-      button [ class ( "btn btn-default " ++ button_class ), onClick on_click, title button_text ] [
-        span [ class ( "fas fa-" ++ button_icon ) ] [ ]
+      button [ class ( "button " ++ button_class ), onClick on_click, title button_text ] [
+        render_icon icon_class,
+        text button_text
       ]
     Nothing ->
-      button [ class ( "btn btn-default disabled " ++ button_class ), title button_text ] [
-        span [ class ( "fas fa-" ++ button_icon ) ] [ ]
+      button [ class ( "button disabled " ++ button_class ), title button_text ] [
+        render_icon icon_class,
+        text button_text
       ]
 
 -- player
