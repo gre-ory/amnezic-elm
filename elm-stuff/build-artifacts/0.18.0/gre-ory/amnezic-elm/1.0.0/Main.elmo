@@ -13,22 +13,28 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
-			case 'GoToStartPage':
+			case 'GoToPage':
 				return {
 					ctor: '_Tuple2',
-					_0: _gre_ory$amnezic_elm$Update$go_to_start_page(_p0._0),
+					_0: A2(_gre_ory$amnezic_elm$Update$go_to_page, model, _p0._0),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'GoToPreviousPage':
 				return {
 					ctor: '_Tuple2',
-					_0: _gre_ory$amnezic_elm$Update$go_to_previous_page(_p0._0),
+					_0: A2(
+						_gre_ory$amnezic_elm$Update$go_to_page,
+						model,
+						_gre_ory$amnezic_elm$Type$previous_page(model.state.page)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'GoToNextPage':
 				return {
 					ctor: '_Tuple2',
-					_0: _gre_ory$amnezic_elm$Update$go_to_next_page(_p0._0),
+					_0: A2(
+						_gre_ory$amnezic_elm$Update$go_to_page,
+						model,
+						_gre_ory$amnezic_elm$Type$next_page(model.state.page)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NothingToDo':
@@ -106,19 +112,19 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 					case 'Space':
 						return {
 							ctor: '_Tuple2',
-							_0: _gre_ory$amnezic_elm$Update$go_to_start_page(model),
+							_0: A2(_gre_ory$amnezic_elm$Update$go_to_page, model, _gre_ory$amnezic_elm$Type$PageStart),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					case 'ArrowLeft':
 						return {
 							ctor: '_Tuple2',
-							_0: _gre_ory$amnezic_elm$Update$go_to_previous_page(model),
+							_0: _gre_ory$amnezic_elm$Update$move_backward(model),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					case 'ArrowRight':
 						return {
 							ctor: '_Tuple2',
-							_0: _gre_ory$amnezic_elm$Update$go_to_next_page(model),
+							_0: _gre_ory$amnezic_elm$Update$move_forward(model),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					default:

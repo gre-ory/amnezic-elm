@@ -1,6 +1,138 @@
 
-body, html {
+/* ---------- globals ---------- */
+
+#amnezic {
+  --header-height: 70px;
+  --header-brand-width: 100px;
+  --header-link-width: 100px;
+  --header-nav-width: 100px;
+}
+
+/* ---------- skeleton ---------- */
+
+body, html, #amnezic, .page {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: Oswald;
+}
+
+.page .page-header {
+  width: 100%;
+  height: var(--header-height);
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid #eee; */
+  color: white;
+  background-color: rgba(0,0,0,0.2);
+}
+
+.page .page-content {
+  width: 100%;
+  height: calc( 100% - 100px );
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid #eee; */
+}
+
+.page .page-footer {
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid #eee; */
+  color: white;
+  background-color: rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* ---------- navbar ---------- */
+
+.navbar {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar .navbar-brand {
+  width: var(--header-brand-width);
+  height: 100%;
+  line-height: var(--header-height);
+  margin: auto;
+  /* padding-top: 20px; */
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.navbar .navbar-items {
+  width: calc( 100% - var(--header-brand-width) - var(--header-nav-width) );
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  list-style: none;
+}
+
+.navbar .navbar-item {
+  /* width: var(--header-link-width); */
+  width: auto;
+  height: var(--header-height);
+  line-height: var(--header-height);
+  margin: 0;
+  padding: 0;
+  margin-right: 10px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.navbar .navbar-link {
+  padding: 5px 15px;
+  display: inline-block;
+  line-height: normal;
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid white;
+  color: white !important;
+  text-decoration: none;
+}
+
+.navbar .navbar-link .icon {
+  /* margin-right: 10px; */
+}
+
+.navbar .navbar-link.active {
+  background-color: rgba(255,255,255,0.2);
+}
+
+.navbar .navbar-link.enabled:hover {
+  background-color: rgba(255,255,255,0.2);
+  -webkit-transform: scale(1.1,1.1);
+  -ms-transform: scale(1.1,1.1);
+  transform: scale(1.1,1.1);
+  -webkit-box-shadow: 3px 3px 30px 0px rgba(0,0,0,0.3);
+  -moz-box-shadow: 3px 3px 30px 0px rgba(0,0,0,0.3);
+  box-shadow: 3px 3px 30px 0px rgba(0,0,0,0.3);
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.navbar .navbar-link.disabled {
+  opacity: 0.2;
+}
+
+.navbar .navbar-nav {
+  width: var(--header-nav-width);
+  height: var(--header-height);
+  line-height: var(--header-height);
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
 }
 
 /* ---------- choice ---------- */

@@ -33,12 +33,12 @@ update : Msg -> Model -> ( Model, Cmd.Cmd Msg )
 update msg model =
   case msg of
     -- navivation
-    GoToStartPage model ->
-      ( go_to_start_page model, Cmd.none )
-    GoToPreviousPage model ->
-      ( go_to_previous_page model, Cmd.none )
-    GoToNextPage model ->
-      ( go_to_next_page model, Cmd.none )
+    GoToPage target_page ->
+      ( go_to_page model target_page, Cmd.none )
+    GoToPreviousPage ->
+      ( go_to_page model ( previous_page model.state.page ), Cmd.none )
+    GoToNextPage ->
+      ( go_to_page model ( next_page model.state.page ), Cmd.none )
     -- update
     NothingToDo ->
       ( model, Cmd.none )
@@ -63,9 +63,9 @@ update msg model =
     -- keyboard
     OnKey key_code ->
       case get_key key_code of
-        Space -> ( go_to_start_page model, Cmd.none )
-        ArrowLeft -> ( go_to_previous_page model, Cmd.none )
-        ArrowRight -> ( go_to_next_page model, Cmd.none )
+        Space -> ( go_to_page model PageStart, Cmd.none )
+        ArrowLeft -> ( move_backward model, Cmd.none )
+        ArrowRight -> ( move_forward model, Cmd.none )
         _ -> ( model, Cmd.none )
 
 -- subscriptions

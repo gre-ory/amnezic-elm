@@ -1,26 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
     <title>@mnez!c</title>
-    <!--
-    <style>
-      html,head,body { padding:0; margin:0; }
-      body { font-family: calibri, helvetica, arial, sans-serif; }
-    </style>
-    -->
-    <!-- bootstrap -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <!-- font -->
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!-- link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous" -->
+
+    <!-- Font -->
     <link href="//fonts.googleapis.com/css?family=Oswald:400" rel="stylesheet" type="text/css" data-noprefix="">
-    <!-- application -->
+
+    <!-- Icons -->
+    <!-- link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet" -->
+    <script>FontAwesomeConfig = { searchPseudoElements: true };</script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+    <!-- script defer src="/static/fontawesome/fontawesome-all.js"></script -->
+
+    <!-- Amnezic -->
     <link rel="stylesheet" href="css/amnezic.css"/>
     <script type="text/javascript" src="js/amnezic.js"></script>
   </head>
   <body>
-    <script type="text/javascript">Elm.Main.fullscreen()</script>
+    <div id="amnezic"></div>
+
+    <!-- Bootstrap JS -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    -->
+
+    <!-- Elm -->
+    <script type="text/javascript">
+      var node = document.getElementById( 'amnezic' );
+      var app = Elm.Main.embed( node );
+    </script>
   </body>
 </html>

@@ -24,35 +24,23 @@ reset_game: Model -> Model
 reset_game model =
   { model | state = init_state }
 
-go_to_start_page: Model -> Model
-go_to_start_page model =
-  if can_go_to_start_page model then
-    reset_game model
+go_to_page: Model -> Page -> Model
+go_to_page model target_page =
+  if can_go_to_page model target_page then
+    if target_page == PageStart then
+      update_page target_page <| reset_game model
+    else
+      update_page target_page model
   else
     model
-
-go_to_previous_page: Model -> Model
-go_to_previous_page model =
-  case model.state.page of
-    PageStart -> go_to_start_page model
-    PageThemes -> update_page PageStart model
-    PagePlayers -> update_page PageThemes model
-    PageQuestions -> update_page PagePlayers model
-    PageScore -> update_page PageQuestions model
-    PageEnd -> update_page PageScore model
 
 go_to_next_page: Model -> Model
 go_to_next_page model =
-  if can_go_to_next_page model then
-    case model.state.page of
-      PageStart -> update_page PageThemes model
-      PageThemes -> update_page PagePlayers model
-      PagePlayers -> update_page PageQuestions model
-      PageQuestions -> go_to_next_step model
-      PageScore -> update_page PageEnd model
-      PageEnd -> go_to_start_page model
-  else
-    model
+  go_to_page model ( next_page model.state.page )
+
+go_to_previous_page: Model -> Model
+go_to_previous_page model =
+  go_to_page model ( previous_page model.state.page )
 
 go_to_next_step: Model -> Model
 go_to_next_step model =
@@ -62,8 +50,25 @@ go_to_next_step model =
       StepShowChoices -> update_step StepShowHints model
       StepShowHints -> update_step StepShowCorrect model
       StepShowCorrect -> update_step StepShowCards model
-      StepShowCards -> update_step StepShowScore ( apply_engaged_points model )
+      StepShowCards -> update_step StepShowScore <| apply_engaged_points model
       StepShowScore -> go_to_next_question model
+  else
+    model
+
+move_forward: Model -> Model
+move_forward model =
+  if can_move_forward model then
+    if model.state.page == PageQuestions then
+      go_to_next_step model
+    else
+      go_to_next_page model
+  else
+    model
+
+move_backward: Model -> Model
+move_backward model =
+  if can_move_backward model then
+    go_to_previous_page model
   else
     model
 
@@ -91,7 +96,7 @@ go_to_question model question_id =
 add_player : Model -> Model
 add_player model =
   if can_add_player model then
-    { model | players = Array.push ( init_default_player ( Array.length model.players ) ) model.players }
+    { model | players = Array.push ( init_default_player False ( Array.length model.players ) ) model.players }
   else
     model
 

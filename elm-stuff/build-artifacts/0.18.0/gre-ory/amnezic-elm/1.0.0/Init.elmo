@@ -1,0 +1,121 @@
+var _gre_ory$amnezic_elm$Init$init_selected_card = F3(
+	function (choice_id, player_id, correct) {
+		return {choice_id: choice_id, player_id: player_id, engaged_point: 0, correct: correct};
+	});
+var _gre_ory$amnezic_elm$Init$init_default_choice = F2(
+	function (choice_id, correct) {
+		return {
+			answer: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Answer ',
+				_elm_lang$core$Basics$toString(
+					_gre_ory$amnezic_elm$Type$id_to_nb(choice_id))),
+			hint: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Hint ',
+				_elm_lang$core$Basics$toString(
+					_gre_ory$amnezic_elm$Type$id_to_nb(choice_id))),
+			correct: correct
+		};
+	});
+var _gre_ory$amnezic_elm$Init$init_default_question = function (question_id) {
+	return {
+		theme: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Theme ',
+			_elm_lang$core$Basics$toString(
+				_gre_ory$amnezic_elm$Type$id_to_nb(question_id))),
+		audio: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'audio_',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(
+					_gre_ory$amnezic_elm$Type$id_to_nb(question_id)),
+				'.mp3')),
+		choices: _elm_lang$core$Array$fromList(
+			{
+				ctor: '::',
+				_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 0, false),
+				_1: {
+					ctor: '::',
+					_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 1, true),
+					_1: {
+						ctor: '::',
+						_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 2, false),
+						_1: {
+							ctor: '::',
+							_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 3, false),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			})
+	};
+};
+var _gre_ory$amnezic_elm$Init$init_default_questions = A2(_elm_lang$core$Array$initialize, 4, _gre_ory$amnezic_elm$Init$init_default_question);
+var _gre_ory$amnezic_elm$Init$init_default_player = F2(
+	function (with_card_suit, player_id) {
+		return {
+			name: A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Player ',
+				_elm_lang$core$Basics$toString(
+					_gre_ory$amnezic_elm$Type$id_to_nb(player_id))),
+			score: 0,
+			active: true,
+			maybe_card_suit_id: with_card_suit ? _elm_lang$core$Maybe$Just(player_id) : _elm_lang$core$Maybe$Nothing
+		};
+	});
+var _gre_ory$amnezic_elm$Init$init_default_players = A2(
+	_elm_lang$core$Array$initialize,
+	2,
+	_gre_ory$amnezic_elm$Init$init_default_player(true));
+var _gre_ory$amnezic_elm$Init$init_state = {
+	page: _gre_ory$amnezic_elm$Type$PageStart,
+	question_id: 0,
+	step: _gre_ory$amnezic_elm$Type$StepNotReady,
+	media_status: _gre_ory$amnezic_elm$Type$MediaNotReady,
+	selected_cards: _elm_lang$core$Array$fromList(
+		{ctor: '[]'}),
+	score_mode: _gre_ory$amnezic_elm$Type$ScoreByVelocity
+};
+var _gre_ory$amnezic_elm$Init$init_model = {
+	questions: _gre_ory$amnezic_elm$Init$init_default_questions,
+	players: _gre_ory$amnezic_elm$Init$init_default_players,
+	state: _gre_ory$amnezic_elm$Init$init_state,
+	card_suits: _elm_lang$core$Array$fromList(
+		{
+			ctor: '::',
+			_0: _gre_ory$amnezic_elm$Type$Heart,
+			_1: {
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$Type$Diamond,
+				_1: {
+					ctor: '::',
+					_0: _gre_ory$amnezic_elm$Type$Club,
+					_1: {
+						ctor: '::',
+						_0: _gre_ory$amnezic_elm$Type$Spade,
+						_1: {
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$Type$TarotHeart,
+							_1: {
+								ctor: '::',
+								_0: _gre_ory$amnezic_elm$Type$TarotTrump,
+								_1: {
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$Type$UnoBlue,
+									_1: {
+										ctor: '::',
+										_0: _gre_ory$amnezic_elm$Type$UnoYellow,
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		})
+};

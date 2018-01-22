@@ -14,7 +14,7 @@ import Type exposing (..)
 
 render_id_to_nb : Int -> Html Msg
 render_id_to_nb id =
-  text ( id_to_nb id )
+  text ( toString( id_to_nb id ) )
 
 -- page
 
@@ -30,7 +30,7 @@ render_page model =
 
 render_default_page : Model -> String -> Html Msg
 render_default_page model page_id =
-  render_page_skeleton model page_id ( text ( "page " ++ page_id ++ " not yet implemented!" ) )
+  render_page_skeleton model page_id [ ]
 
 render_players_page : Model -> String -> Html Msg
 render_players_page model page_id =
@@ -40,28 +40,107 @@ render_questions_page : Model -> String -> Html Msg
 render_questions_page model page_id =
   render_page_skeleton model page_id ( render_questions model )
 
+-- skeleton
+
+render_error : String -> Html Msg
+render_error message =
+  text message
+
+render_icon : String -> Html Msg
+render_icon icon_class =
+  i [ class ( "icon fas fa-" ++ icon_class ) ] [ ]
+
+render_nav_item : Model -> Page -> String -> String -> Html Msg
+render_nav_item model target_page icon_class page_name =
+  let
+    html_content =
+      if String.isEmpty icon_class then
+        text page_name
+      else
+        render_icon icon_class
+  in
+    if model.state.page == target_page then
+      li [ class "navbar-item active" ] [
+        div [ class "navbar-link active", title page_name ] [
+          html_content
+        ]
+      ]
+    else if can_go_to_page model target_page then
+      li [ class "navbar-item" ] [
+        a [ class "navbar-link enabled", href "#", onClick ( GoToPage target_page ), title page_name ] [
+          html_content
+        ]
+      ]
+    else
+      li [ class "navbar-item" ] [
+        div [ class "navbar-link disabled", title page_name ] [
+          html_content
+        ]
+      ]
+
+render_header : Model -> List ( Html Msg )
+render_header model = [
+    nav [ class "navbar" ] [
+      div [ class "navbar-brand" ] [ text "@mnez!c" ],
+      ul [ class "navbar-items" ] [
+        render_nav_item model PageStart "" "Start",
+        render_nav_item model PageThemes "" "Themes",
+        render_nav_item model PagePlayers "users" "Players",
+        render_nav_item model PageQuestions "tasks" "Question",
+        render_nav_item model PageScore "star" "Score",
+        render_nav_item model PageEnd "" "End"
+      ],
+      div [ class "navbar-nav" ] [
+        ul [ class "navbar-items" ] [
+          render_nav_item model PageScore "angle-right" ">"
+        ],
+        render_next_button model
+      ]
+    ]
+  ]
+
+render_footer : Model -> List ( Html Msg )
+render_footer model = [
+    text "@amnezic"
+  ]
+
+render_page_skeleton : Model -> String -> List ( Html Msg ) -> Html Msg
+render_page_skeleton model page_id html_elements =
+  let
+    html_content =
+      if List.isEmpty html_elements then
+        [ render_error ( "page " ++ page_id ++ " not yet implemented!" ) ]
+      else
+        html_elements
+  in
+    div [ class ( "page " ++ page_id ) ] [
+      div [ class "page-header" ] ( render_header model ),
+      div [ class "page-content" ] ( html_content ),
+      div [ class "page-footer" ] ( render_footer model )
+    ]
+
 -- button
 
 render_start_button : Model -> Html Msg
 render_start_button model =
   let
-    maybe_on_click = if ( can_go_to_start_page model ) then Just ( GoToStartPage model ) else Nothing
+    maybe_on_click = if can_go_to_page model PageStart then Just ( GoToPage PageStart ) else Nothing
   in
     render_button "repeat" "navigation start" "Start" maybe_on_click
 
 render_previous_button : Model -> Html Msg
 render_previous_button model =
   let
-    maybe_on_click = if ( can_go_to_previous_page model ) then Just ( GoToPreviousPage model ) else Nothing
+    maybe_on_click = if can_go_to_previous_page model then Just ( GoToPreviousPage ) else Nothing
   in
     render_button "chevron-left" "navigation previous" "Previous" maybe_on_click
 
 render_next_button : Model -> Html Msg
 render_next_button model =
   let
-    maybe_on_click = if ( can_go_to_next_page model ) then Just ( GoToNextPage model ) else Nothing
+    maybe_on_click = if can_go_to_next_page model then Just ( GoToNextPage ) else Nothing
   in
-    render_button "chevron-right" "navigation next" "Next" maybe_on_click
+    render_button "angle-right" "navigation next" "Next" maybe_on_click
 
 render_add_player_button : Model -> Html Msg
 render_add_player_button model =
@@ -96,61 +175,33 @@ render_button button_icon button_text button_class maybe_on_click =
   case maybe_on_click of
     Just on_click ->
       button [ class ( "btn btn-default " ++ button_class ), onClick on_click, title button_text ] [
-        span [ class ( "glyphicon glyphicon-" ++ button_icon ) ] [ ]
+        span [ class ( "fas fa-" ++ button_icon ) ] [ ]
       ]
     Nothing ->
       button [ class ( "btn btn-default disabled " ++ button_class ), title button_text ] [
-        span [ class ( "glyphicon glyphicon-" ++ button_icon ) ] [ ]
+        span [ class ( "fas fa-" ++ button_icon ) ] [ ]
       ]
-
--- skeleton
-
-render_header : Model -> Html Msg
-render_header model =
-  fieldset [ ] [
-    render_start_button model,
-    render_previous_button model,
-    render_next_button model
-  ]
-
-render_footer : Model -> Html Msg
-render_footer model =
-  fieldset [ ] [
-    text "@amnezic"
-  ]
-
-render_error : String -> Html Msg
-render_error message =
-  div [ ] [
-    text message
-  ]
-
-render_page_skeleton : Model -> String -> Html Msg -> Html Msg
-render_page_skeleton model page_id html_content =
-  div [ ] [
-    render_header model,
-    fieldset [ class ( "page " ++ page_id ) ] [
-      html_content
-    ],
-    render_footer model
-  ]
 
 -- player
 
-render_players : Model -> Html Msg
+render_players : Model -> List ( Html Msg )
 render_players model =
   let
     warning_notification =
-      if all_player_has_card_suit model then
-        span [ ] [ ]
-      else
+      if not ( all_player_has_card_suit model ) then
         span [ class "alert alert-warning" ] [ text "please select one card for each player!" ]
+      else
+        span [ ] [ ]
   in
-    div [ ] [
-      warning_notification,
-      div []
+    [
+      div [ class "row" ] [
+        warning_notification
+      ],
+      div [ class "row" ]
         ( Array.toList <| Array.indexedMap ( render_player model ) model.players ),
-      render_add_player_button model
+      div [ class "row" ] [
+        render_add_player_button model
+      ]
     ]
 
 
@@ -272,37 +323,52 @@ get_render_card_fn card_suit =
 
 -- question
 
-render_questions : Model -> Html Msg
+render_questions : Model -> List ( Html Msg )
 render_questions model =
-  case get_question model of
-    Just question -> render_question model question
-    Nothing -> render_error "unknown question!"
+  List.append [ render_questions_progress model ] ( render_question model )
 
-render_question : Model -> Question -> Html Msg
-render_question model question =
+render_questions_progress : Model -> Html Msg
+render_questions_progress model =
   let
-    classes =
-      if model.state.question_id == 1 then
-        "question first"
-      else
-        "question"
+    question_min = id_to_nb 0
+    question_now = id_to_nb model.state.question_id
+    question_max = id_to_nb ( ( Array.length model.questions ) - 1 )
+    progress_percent = ( ( ( question_now - question_min + 1 ) * 100 ) // ( question_max - question_min + 1 ) )
+    progress_style = ( "width: " ++ toString( progress_percent ) ++ "%;" )
   in
-    div [ class classes ] [
-      fieldset [ ] [
-        text question.theme
-      ],
-      fieldset [ ] [
-        text question.audio
-      ],
-      fieldset [ ]
-        ( Array.toList <| Array.indexedMap ( render_choice model ) question.choices ),
-      fieldset [ ] [
-        render_selected_cards model.state
-      ],
-      fieldset [ ] [
-        render_player_scores model
+    div [ class "row" ] [
+      text ( "Question " ++ ( toString question_now ) ++ " / " ++ ( toString question_max ) ),
+      div [ class "progress" ] [
+        div [ class "progress-bar", attribute "role" "progressbar", attribute "style" progress_style, attribute "aria-valuenow" ( toString question_now ), attribute "aria-valuemin" ( toString question_min ), attribute "aria-valuemax" ( toString question_max ) ] [ ]
       ]
     ]
+
+render_question : Model -> List ( Html Msg )
+render_question model =
+  case get_question model of
+    Just question ->
+      [
+        div [ class "row theme" ] [
+          text question.theme
+        ],
+        div [ class "row audio" ] [
+          text question.audio
+        ],
+        div [ class "row question" ]
+          ( Array.toList <| Array.indexedMap ( render_choice model ) question.choices ),
+        fieldset [ ] [
+          render_selected_cards model.state
+        ],
+        fieldset [ ] [
+          render_player_scores model
+        ]
+      ]
+    Nothing ->
+      [
+        div [ class "row question" ] [
+          render_error "unknown question!"
+        ]
+      ]
 
 -- choice
 
@@ -440,7 +506,7 @@ render_player_scores model =
 
 render_player_score : Int -> Player -> Html Msg
 render_player_score rank_id player =
-  div [ class ( "player rank-" ++ id_to_nb( rank_id ) ) ] [
+  div [ class ( "player rank-" ++ toString( id_to_nb( rank_id ) ) ) ] [
     div [ ] [
       text player.name
     ],

@@ -1,11 +1,3 @@
-var _gre_ory$amnezic_elm$Type$can_add_player = function (model) {
-	return _elm_lang$core$Native_Utils.cmp(
-		_elm_lang$core$Array$length(model.players),
-		A2(
-			_elm_lang$core$Basics$min,
-			8,
-			_elm_lang$core$Array$length(model.card_suits))) < 0;
-};
 var _gre_ory$amnezic_elm$Type$show_result = function (step) {
 	var _p0 = step;
 	switch (_p0.ctor) {
@@ -40,40 +32,6 @@ var _gre_ory$amnezic_elm$Type$can_go_to_next_step = function (model) {
 			return true;
 	}
 };
-var _gre_ory$amnezic_elm$Type$can_go_to_previous_page = function (model) {
-	var _p2 = model.state.page;
-	switch (_p2.ctor) {
-		case 'PageStart':
-			return false;
-		case 'PageThemes':
-			return false;
-		case 'PagePlayers':
-			return false;
-		case 'PageQuestions':
-			return true;
-		case 'PageScore':
-			return true;
-		default:
-			return true;
-	}
-};
-var _gre_ory$amnezic_elm$Type$can_go_to_start_page = function (model) {
-	var _p3 = model.state.page;
-	switch (_p3.ctor) {
-		case 'PageStart':
-			return false;
-		case 'PageThemes':
-			return false;
-		case 'PagePlayers':
-			return false;
-		case 'PageQuestions':
-			return false;
-		case 'PageScore':
-			return false;
-		default:
-			return true;
-	}
-};
 var _gre_ory$amnezic_elm$Type$match_selected_card = F3(
 	function (choice_id, player_id, selected_card) {
 		return _elm_lang$core$Native_Utils.eq(selected_card.choice_id, choice_id) && _elm_lang$core$Native_Utils.eq(selected_card.player_id, player_id);
@@ -94,13 +52,21 @@ var _gre_ory$amnezic_elm$Type$get_question = function (model) {
 };
 var _gre_ory$amnezic_elm$Type$get_choice = F2(
 	function (model, choice_id) {
-		var _p4 = _gre_ory$amnezic_elm$Type$get_question(model);
-		if (_p4.ctor === 'Just') {
-			return A2(_elm_lang$core$Array$get, choice_id, _p4._0.choices);
+		var _p2 = _gre_ory$amnezic_elm$Type$get_question(model);
+		if (_p2.ctor === 'Just') {
+			return A2(_elm_lang$core$Array$get, choice_id, _p2._0.choices);
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
+var _gre_ory$amnezic_elm$Type$can_add_player = function (model) {
+	return _elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$Array$length(model.players),
+		A2(
+			_elm_lang$core$Basics$min,
+			8,
+			_elm_lang$core$Array$length(model.card_suits))) < 0;
+};
 var _gre_ory$amnezic_elm$Type$get_player = F2(
 	function (model, player_id) {
 		return A2(_elm_lang$core$Array$get, player_id, model.players);
@@ -110,9 +76,9 @@ var _gre_ory$amnezic_elm$Type$can_deactivate_player = F2(
 		if (_elm_lang$core$Native_Utils.cmp(
 			_elm_lang$core$Array$length(model.players),
 			2) > 0) {
-			var _p5 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
-			if (_p5.ctor === 'Just') {
-				return _p5._0.active;
+			var _p3 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+			if (_p3.ctor === 'Just') {
+				return _p3._0.active;
 			} else {
 				return false;
 			}
@@ -122,9 +88,9 @@ var _gre_ory$amnezic_elm$Type$can_deactivate_player = F2(
 	});
 var _gre_ory$amnezic_elm$Type$can_activate_player = F2(
 	function (model, player_id) {
-		var _p6 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
-		if (_p6.ctor === 'Just') {
-			return !_p6._0.active;
+		var _p4 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+		if (_p4.ctor === 'Just') {
+			return !_p4._0.active;
 		} else {
 			return false;
 		}
@@ -134,9 +100,9 @@ var _gre_ory$amnezic_elm$Type$can_delete_player = F2(
 		if (_elm_lang$core$Native_Utils.cmp(
 			_elm_lang$core$Array$length(model.players),
 			2) > 0) {
-			var _p7 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
-			if (_p7.ctor === 'Just') {
-				return !_p7._0.active;
+			var _p5 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+			if (_p5.ctor === 'Just') {
+				return !_p5._0.active;
 			} else {
 				return false;
 			}
@@ -145,8 +111,8 @@ var _gre_ory$amnezic_elm$Type$can_delete_player = F2(
 		}
 	});
 var _gre_ory$amnezic_elm$Type$has_card_suit = function (player) {
-	var _p8 = player.maybe_card_suit_id;
-	if (_p8.ctor === 'Just') {
+	var _p6 = player.maybe_card_suit_id;
+	if (_p6.ctor === 'Just') {
 		return true;
 	} else {
 		return false;
@@ -158,28 +124,19 @@ var _gre_ory$amnezic_elm$Type$all_player_has_card_suit = function (model) {
 		_gre_ory$amnezic_elm$Type$has_card_suit,
 		_elm_lang$core$Array$toList(model.players));
 };
-var _gre_ory$amnezic_elm$Type$can_go_to_next_page = function (model) {
-	var _p9 = model.state.page;
-	switch (_p9.ctor) {
-		case 'PageStart':
-			return true;
-		case 'PageThemes':
-			return true;
-		case 'PagePlayers':
-			return _gre_ory$amnezic_elm$Type$all_player_has_card_suit(model);
-		case 'PageQuestions':
-			return _gre_ory$amnezic_elm$Type$can_go_to_next_step(model);
-		case 'PageScore':
-			return true;
-		default:
-			return false;
+var _gre_ory$amnezic_elm$Type$can_change_page = function (model) {
+	var _p7 = model.state.page;
+	if (_p7.ctor === 'PagePlayers') {
+		return _gre_ory$amnezic_elm$Type$all_player_has_card_suit(model);
+	} else {
+		return true;
 	}
 };
 var _gre_ory$amnezic_elm$Type$match_card_suit = F2(
 	function (card_suit_id, player) {
-		var _p10 = player.maybe_card_suit_id;
-		if (_p10.ctor === 'Just') {
-			return _elm_lang$core$Native_Utils.eq(_p10._0, card_suit_id);
+		var _p8 = player.maybe_card_suit_id;
+		if (_p8.ctor === 'Just') {
+			return _elm_lang$core$Native_Utils.eq(_p8._0, card_suit_id);
 		} else {
 			return false;
 		}
@@ -196,7 +153,7 @@ var _gre_ory$amnezic_elm$Type$get_card_suit = F2(
 		return A2(_elm_lang$core$Array$get, card_suit_id, model.card_suits);
 	});
 var _gre_ory$amnezic_elm$Type$id_to_nb = function (id) {
-	return _elm_lang$core$Basics$toString(id + 1);
+	return id + 1;
 };
 var _gre_ory$amnezic_elm$Type$Model = F4(
 	function (a, b, c, d) {
@@ -228,6 +185,166 @@ var _gre_ory$amnezic_elm$Type$PageQuestions = {ctor: 'PageQuestions'};
 var _gre_ory$amnezic_elm$Type$PagePlayers = {ctor: 'PagePlayers'};
 var _gre_ory$amnezic_elm$Type$PageThemes = {ctor: 'PageThemes'};
 var _gre_ory$amnezic_elm$Type$PageStart = {ctor: 'PageStart'};
+var _gre_ory$amnezic_elm$Type$previous_page = function (page) {
+	var _p9 = page;
+	switch (_p9.ctor) {
+		case 'PageStart':
+			return _gre_ory$amnezic_elm$Type$PageStart;
+		case 'PageThemes':
+			return _gre_ory$amnezic_elm$Type$PageStart;
+		case 'PagePlayers':
+			return _gre_ory$amnezic_elm$Type$PageThemes;
+		case 'PageQuestions':
+			return _gre_ory$amnezic_elm$Type$PagePlayers;
+		case 'PageScore':
+			return _gre_ory$amnezic_elm$Type$PageQuestions;
+		default:
+			return _gre_ory$amnezic_elm$Type$PageScore;
+	}
+};
+var _gre_ory$amnezic_elm$Type$next_page = function (page) {
+	var _p10 = page;
+	switch (_p10.ctor) {
+		case 'PageStart':
+			return _gre_ory$amnezic_elm$Type$PageThemes;
+		case 'PageThemes':
+			return _gre_ory$amnezic_elm$Type$PagePlayers;
+		case 'PagePlayers':
+			return _gre_ory$amnezic_elm$Type$PageQuestions;
+		case 'PageQuestions':
+			return _gre_ory$amnezic_elm$Type$PageScore;
+		case 'PageScore':
+			return _gre_ory$amnezic_elm$Type$PageEnd;
+		default:
+			return _gre_ory$amnezic_elm$Type$PageStart;
+	}
+};
+var _gre_ory$amnezic_elm$Type$can_go_to_page = F2(
+	function (model, target_page) {
+		if (_gre_ory$amnezic_elm$Type$can_change_page(model)) {
+			var _p11 = model.state.page;
+			switch (_p11.ctor) {
+				case 'PageStart':
+					return A2(
+						_elm_lang$core$List$member,
+						target_page,
+						{
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$Type$PageThemes,
+							_1: {ctor: '[]'}
+						});
+				case 'PageThemes':
+					return A2(
+						_elm_lang$core$List$member,
+						target_page,
+						{
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$Type$PagePlayers,
+							_1: {ctor: '[]'}
+						});
+				case 'PagePlayers':
+					return A2(
+						_elm_lang$core$List$member,
+						target_page,
+						{
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$Type$PagePlayers,
+							_1: {
+								ctor: '::',
+								_0: _gre_ory$amnezic_elm$Type$PageQuestions,
+								_1: {
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$Type$PageScore,
+									_1: {ctor: '[]'}
+								}
+							}
+						});
+				case 'PageQuestions':
+					return A2(
+						_elm_lang$core$List$member,
+						target_page,
+						{
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$Type$PagePlayers,
+							_1: {
+								ctor: '::',
+								_0: _gre_ory$amnezic_elm$Type$PageQuestions,
+								_1: {
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$Type$PageScore,
+									_1: {ctor: '[]'}
+								}
+							}
+						});
+				case 'PageScore':
+					return A2(
+						_elm_lang$core$List$member,
+						target_page,
+						{
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$Type$PagePlayers,
+							_1: {
+								ctor: '::',
+								_0: _gre_ory$amnezic_elm$Type$PageQuestions,
+								_1: {
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$Type$PageScore,
+									_1: {
+										ctor: '::',
+										_0: _gre_ory$amnezic_elm$Type$PageEnd,
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						});
+				default:
+					return A2(
+						_elm_lang$core$List$member,
+						target_page,
+						{
+							ctor: '::',
+							_0: _gre_ory$amnezic_elm$Type$PagePlayers,
+							_1: {
+								ctor: '::',
+								_0: _gre_ory$amnezic_elm$Type$PageQuestions,
+								_1: {
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$Type$PageScore,
+									_1: {
+										ctor: '::',
+										_0: _gre_ory$amnezic_elm$Type$PageEnd,
+										_1: {
+											ctor: '::',
+											_0: _gre_ory$amnezic_elm$Type$PageStart,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						});
+			}
+		} else {
+			return false;
+		}
+	});
+var _gre_ory$amnezic_elm$Type$can_go_to_previous_page = function (model) {
+	return A2(
+		_gre_ory$amnezic_elm$Type$can_go_to_page,
+		model,
+		_gre_ory$amnezic_elm$Type$previous_page(model.state.page));
+};
+var _gre_ory$amnezic_elm$Type$can_move_backward = function (model) {
+	return _gre_ory$amnezic_elm$Type$can_go_to_previous_page(model);
+};
+var _gre_ory$amnezic_elm$Type$can_go_to_next_page = function (model) {
+	return A2(
+		_gre_ory$amnezic_elm$Type$can_go_to_page,
+		model,
+		_gre_ory$amnezic_elm$Type$next_page(model.state.page));
+};
+var _gre_ory$amnezic_elm$Type$can_move_forward = function (model) {
+	return _elm_lang$core$Native_Utils.eq(model.state.page, _gre_ory$amnezic_elm$Type$PageQuestions) ? _gre_ory$amnezic_elm$Type$can_go_to_next_step(model) : _gre_ory$amnezic_elm$Type$can_go_to_next_page(model);
+};
 var _gre_ory$amnezic_elm$Type$StepShowScore = {ctor: 'StepShowScore'};
 var _gre_ory$amnezic_elm$Type$StepShowCards = {ctor: 'StepShowCards'};
 var _gre_ory$amnezic_elm$Type$StepShowCorrect = {ctor: 'StepShowCorrect'};
@@ -291,12 +408,8 @@ var _gre_ory$amnezic_elm$Type$DeactivatePlayer = function (a) {
 	return {ctor: 'DeactivatePlayer', _0: a};
 };
 var _gre_ory$amnezic_elm$Type$AddPlayer = {ctor: 'AddPlayer'};
-var _gre_ory$amnezic_elm$Type$GoToPreviousPage = function (a) {
-	return {ctor: 'GoToPreviousPage', _0: a};
-};
-var _gre_ory$amnezic_elm$Type$GoToNextPage = function (a) {
-	return {ctor: 'GoToNextPage', _0: a};
-};
-var _gre_ory$amnezic_elm$Type$GoToStartPage = function (a) {
-	return {ctor: 'GoToStartPage', _0: a};
+var _gre_ory$amnezic_elm$Type$GoToPreviousPage = {ctor: 'GoToPreviousPage'};
+var _gre_ory$amnezic_elm$Type$GoToNextPage = {ctor: 'GoToNextPage'};
+var _gre_ory$amnezic_elm$Type$GoToPage = function (a) {
+	return {ctor: 'GoToPage', _0: a};
 };

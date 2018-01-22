@@ -102,9 +102,9 @@ type Key
 -- messages
 
 type Msg =
-  GoToStartPage Model
-  | GoToNextPage Model
-  | GoToPreviousPage Model
+  GoToPage Page
+  | GoToNextPage
+  | GoToPreviousPage
   | AddPlayer
   | DeactivatePlayer Int
   | ActivatePlayer Int
@@ -117,11 +117,13 @@ type Msg =
   | OnKey KeyCode
   | NothingToDo
 
--- helper
+-- id
 
-id_to_nb : Int -> String
+id_to_nb : Int -> Int
 id_to_nb id =
-  toString( id + 1 )
+  id + 1
+
+-- card suit
 
 get_card_suit : Model -> Int -> Maybe CardSuit
 get_card_suit model card_suit_id =
@@ -147,81 +149,11 @@ all_player_has_card_suit : Model -> Bool
 all_player_has_card_suit model =
   List.all ( has_card_suit ) ( Array.toList model.players )
 
+-- player
+
 get_player : Model -> Int -> Maybe Player
 get_player model player_id =
   Array.get player_id model.players
-
-get_question : Model -> Maybe Question
-get_question model =
-  Array.get model.state.question_id model.questions
-
-get_choice : Model -> Int -> Maybe Choice
-get_choice model choice_id =
-  case get_question model of
-    Just question -> Array.get choice_id question.choices
-    Nothing -> Nothing
-
-match_selected_card : Int -> Int -> SelectedCard -> Bool
-match_selected_card choice_id player_id selected_card =
-  ( selected_card.choice_id == choice_id ) && ( selected_card.player_id == player_id )
-
-unmatch_selected_card : Int -> Int -> SelectedCard -> Bool
-unmatch_selected_card choice_id player_id selected_card =
-  not ( match_selected_card choice_id player_id selected_card )
-
-has_selected_card : Int -> Int -> Model -> Bool
-has_selected_card choice_id player_id model =
-  List.any ( match_selected_card choice_id player_id ) ( Array.toList model.state.selected_cards )
-
-can_go_to_start_page: Model -> Bool
-can_go_to_start_page model =
-  case model.state.page of
-    PageStart -> False
-    PageThemes -> False
-    PagePlayers -> False
-    PageQuestions -> False
-    PageScore -> False
-    PageEnd -> True
-
-can_go_to_previous_page: Model -> Bool
-can_go_to_previous_page model =
-  case model.state.page of
-    PageStart -> False
-    PageThemes -> False
-    PagePlayers -> False
-    PageQuestions -> True
-    PageScore -> True
-    PageEnd -> True
-
-can_go_to_next_page: Model -> Bool
-can_go_to_next_page model =
-  case model.state.page of
-    PageStart -> True
-    PageThemes -> True
-    PagePlayers -> all_player_has_card_suit model
-    PageQuestions -> can_go_to_next_step model
-    PageScore -> True
-    PageEnd -> False
-
-can_go_to_next_step: Model -> Bool
-can_go_to_next_step model =
-  case model.state.step of
-    StepNotReady -> True
-    StepShowChoices -> True
-    StepShowHints -> True
-    StepShowCorrect -> True
-    StepShowCards -> True
-    StepShowScore -> True
-
-show_result : Step -> Bool
-show_result step =
-  case step of
-    StepNotReady -> False
-    StepShowChoices -> False
-    StepShowHints -> False
-    StepShowCorrect -> True
-    StepShowCards -> True
-    StepShowScore -> True
 
 can_add_player : Model -> Bool
 can_add_player model =
@@ -250,3 +182,111 @@ can_delete_player model player_id =
       Nothing -> False
   else
     False
+
+-- question
+
+get_question : Model -> Maybe Question
+get_question model =
+  Array.get model.state.question_id model.questions
+
+-- choice
+
+get_choice : Model -> Int -> Maybe Choice
+get_choice model choice_id =
+  case get_question model of
+    Just question -> Array.get choice_id question.choices
+    Nothing -> Nothing
+
+-- selected card
+
+match_selected_card : Int -> Int -> SelectedCard -> Bool
+match_selected_card choice_id player_id selected_card =
+  ( selected_card.choice_id == choice_id ) && ( selected_card.player_id == player_id )
+
+unmatch_selected_card : Int -> Int -> SelectedCard -> Bool
+unmatch_selected_card choice_id player_id selected_card =
+  not ( match_selected_card choice_id player_id selected_card )
+
+has_selected_card : Int -> Int -> Model -> Bool
+has_selected_card choice_id player_id model =
+  List.any ( match_selected_card choice_id player_id ) ( Array.toList model.state.selected_cards )
+
+-- navigation
+
+previous_page: Page -> Page
+previous_page page =
+  case page of
+    PageStart -> PageStart
+    PageThemes -> PageStart
+    PagePlayers -> PageThemes
+    PageQuestions -> PagePlayers
+    PageScore -> PageQuestions
+    PageEnd -> PageScore
+
+next_page: Page -> Page
+next_page page =
+  case page of
+    PageStart -> PageThemes
+    PageThemes -> PagePlayers
+    PagePlayers -> PageQuestions
+    PageQuestions -> PageScore
+    PageScore -> PageEnd
+    PageEnd -> PageStart
+
+can_change_page: Model -> Bool
+can_change_page model =
+  case model.state.page of
+    PagePlayers -> all_player_has_card_suit model
+    _ -> True
+
+can_go_to_page: Model -> Page -> Bool
+can_go_to_page model target_page =
+  if can_change_page model then
+    case model.state.page of
+      PageStart -> List.member target_page [ PageThemes ]
+      PageThemes -> List.member target_page [ PagePlayers ]
+      PagePlayers -> List.member target_page [ PagePlayers, PageQuestions, PageScore ]
+      PageQuestions -> List.member target_page [ PagePlayers, PageQuestions, PageScore ]
+      PageScore -> List.member target_page [ PagePlayers, PageQuestions, PageScore, PageEnd ]
+      PageEnd -> List.member target_page [ PagePlayers, PageQuestions, PageScore, PageEnd, PageStart ]
+  else
+    False
+
+can_go_to_previous_page: Model -> Bool
+can_go_to_previous_page model =
+  can_go_to_page model ( previous_page model.state.page )
+
+can_go_to_next_page: Model -> Bool
+can_go_to_next_page model =
+  can_go_to_page model ( next_page model.state.page )
+
+can_move_forward: Model -> Bool
+can_move_forward model =
+  if model.state.page == PageQuestions then
+    can_go_to_next_step model
+  else
+    can_go_to_next_page model
+
+can_move_backward: Model -> Bool
+can_move_backward model =
+  can_go_to_previous_page model
+
+can_go_to_next_step: Model -> Bool
+can_go_to_next_step model =
+  case model.state.step of
+    StepNotReady -> True
+    StepShowChoices -> True
+    StepShowHints -> True
+    StepShowCorrect -> True
+    StepShowCards -> True
+    StepShowScore -> True
+
+show_result : Step -> Bool
+show_result step =
+  case step of
+    StepNotReady -> False
+    StepShowChoices -> False
+    StepShowHints -> False
+    StepShowCorrect -> True
+    StepShowCards -> True
+    StepShowScore -> True
