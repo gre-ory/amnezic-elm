@@ -46,35 +46,50 @@ render_error : String -> Html Msg
 render_error message =
   text message
 
-render_icon : String -> Html Msg
-render_icon icon_class =
-  if not ( String.isEmpty icon_class ) then
-    i [ class ( "icon fas fa-" ++ icon_class ) ] [ ]
-  else
+render_material_icon : String -> Html Msg
+render_material_icon icon_class =
+  if String.isEmpty icon_class then
     span [ ] [ ]
+  else
+    i [ class "icon material-icons" ] [ text icon_class ]
+
+render_button : String -> String -> String -> String -> Msg -> Html Msg
+render_button icon_class button_class button_text button_description on_click =
+  div [ class ( "button " ++ button_class ), title button_description, onClick on_click ] [
+    if String.isEmpty icon_class then
+      span [ ] [ ]
+    else
+      span [ class "button-icon" ] [ render_material_icon icon_class ],
+    span [ class "button-text" ] [ text button_text ]
+  ]
+
+render_activated_button : String -> String -> String -> String  -> Html Msg
+render_activated_button icon_class button_class button_text button_description =
+  render_button icon_class ( "activated " ++ button_class ) button_text button_description NothingToDo
+
+render_enabled_button : String -> String -> String -> String  -> Msg -> Html Msg
+render_enabled_button icon_class button_class button_text button_description on_click =
+  render_button icon_class ( "enabled " ++ button_class ) button_text button_description on_click
+
+render_disabled_button : String -> String -> String -> String  -> Html Msg
+render_disabled_button icon_class button_class button_text button_description =
+  render_button icon_class ( "disabled " ++ button_class ) button_text button_description NothingToDo
 
 render_nav_item : Model -> Page -> String -> String -> Html Msg
 render_nav_item model target_page icon_class page_name =
-  if model.state.page == target_page then
-    li [ class "navbar-item active" ] [
-      div [ class "navbar-link active", title page_name ] [
-        render_icon icon_class,
-        text page_name
-      ]
-    ]
-  else if can_go_to_page model target_page then
+  let
+    button_class = "go-to-" ++ page_name
+    button_text = page_name
+    button_description = "Go to " ++ page_name ++ "page"
+    on_click = GoToPage target_page
+  in
     li [ class "navbar-item" ] [
-      a [ class "navbar-link enabled", href "#", onClick ( GoToPage target_page ), title page_name ] [
-        render_icon icon_class,
-        text page_name
-      ]
-    ]
-  else
-    li [ class "navbar-item" ] [
-      div [ class "navbar-link disabled", title page_name ] [
-        render_icon icon_class,
-        text page_name
-      ]
+      if model.state.page == target_page then
+        render_activated_button icon_class button_class button_text button_description
+      else if can_go_to_page model target_page then
+        render_enabled_button icon_class button_class button_text button_description on_click
+      else
+        render_disabled_button icon_class button_class button_text button_description
     ]
 
 render_header : Model -> List ( Html Msg )
@@ -82,18 +97,15 @@ render_header model = [
     nav [ class "navbar" ] [
       div [ class "navbar-brand" ] [ text "@mnez!c" ],
       ul [ class "navbar-items" ] [
-        render_nav_item model PageStart "reply" "Start",
-        render_nav_item model PageThemes "sliders-h" "Themes",
-        render_nav_item model PagePlayers "users" "Players",
-        render_nav_item model PageQuestions "question" "Question",
-        render_nav_item model PageScore "star" "Score",
+        render_nav_item model PageStart "home" "Start",
+        render_nav_item model PageThemes "menu" "Themes",
+        render_nav_item model PagePlayers "people" "Players",
+        render_nav_item model PageQuestions "queue_music" "Question",
+        render_nav_item model PageScore "grade" "Score",
         render_nav_item model PageEnd "" "End"
       ],
       div [ class "navbar-nav" ] [
-        a [ class "navbar-link enabled", href "#", onClick MoveForward, title "Next step" ] [
-          render_icon "angle-right",
-          text "Next"
-        ]
+        render_enabled_button "keyboard_arrow_right" "move-forward" "Next" "Next step" MoveForward
       ]
     ]
   ]
@@ -120,68 +132,33 @@ render_page_skeleton model page_id html_elements =
 
 -- button
 
-render_start_button : Model -> Html Msg
-render_start_button model =
-  let
-    maybe_on_click = if can_go_to_page model PageStart then Just ( GoToPage PageStart ) else Nothing
-  in
-    render_button "repeat" "navigation start" "Start" maybe_on_click
-
-render_previous_button : Model -> Html Msg
-render_previous_button model =
-  let
-    maybe_on_click = if can_go_to_previous_page model then Just ( GoToPreviousPage ) else Nothing
-  in
-    render_button "angle-left" "navigation previous" "Previous" maybe_on_click
-
-render_next_button : Model -> Html Msg
-render_next_button model =
-  let
-    maybe_on_click = if can_go_to_next_page model then Just ( GoToNextPage ) else Nothing
-  in
-    render_button "angle-right" "navigation next" "Next" maybe_on_click
-
 render_add_player_button : Model -> Html Msg
 render_add_player_button model =
-  let
-    maybe_on_click = if ( can_add_player model ) then Just ( AddPlayer ) else Nothing
-  in
-    render_button "plus" "player add" "Add player" maybe_on_click
+  if ( can_add_player model ) then
+    render_enabled_button "person_add" "player-add" "Add" "Add player" ( AddPlayer )
+  else
+    span [] []
 
 render_deactivate_player_button : Model -> Int -> Html Msg
 render_deactivate_player_button model player_id =
   if ( can_deactivate_player model player_id ) then
-    render_button "pause" "player deactivate" "Deactivate player" ( Just ( DeactivatePlayer player_id ) )
+    render_enabled_button "" "player-deactivate" "Deactivate" "Deactivate player" ( DeactivatePlayer player_id )
   else
     span [] []
 
 render_activate_player_button : Model -> Int -> Html Msg
 render_activate_player_button model player_id =
   if ( can_activate_player model player_id ) then
-    render_button "play" "player activate" "Activate player" ( Just ( ActivatePlayer player_id ) )
+    render_enabled_button "" "player-activate" "Activate" "Activate player" ( ActivatePlayer player_id )
   else
     span [] []
 
 render_delete_player_button : Model -> Int -> Html Msg
 render_delete_player_button model player_id =
-  let
-    maybe_on_click = if ( can_delete_player model player_id ) then Just ( DeletePlayer player_id ) else Nothing
-  in
-    render_button "trash" "player delete" "Delete player" maybe_on_click
-
-render_button : String -> String -> String -> Maybe Msg -> Html Msg
-render_button icon_class button_class button_text maybe_on_click =
-  case maybe_on_click of
-    Just on_click ->
-      button [ class ( "button " ++ button_class ), onClick on_click, title button_text ] [
-        render_icon icon_class,
-        text button_text
-      ]
-    Nothing ->
-      button [ class ( "button disabled " ++ button_class ), title button_text ] [
-        render_icon icon_class,
-        text button_text
-      ]
+  if ( can_delete_player model player_id ) then
+    render_enabled_button "" "player-delete" "Delete" "Delete player" ( DeletePlayer player_id )
+  else
+    render_disabled_button "" "player-delete" "Delete" "Delete player"
 
 -- player
 
@@ -193,23 +170,31 @@ render_players model =
         span [ class "alert alert-warning" ] [ text "please select one card for each player!" ]
       else
         span [ ] [ ]
+    html_add_player =
+        if can_add_player model then
+          div [ class "player" ] [ render_add_player_button model ]
+        else
+          span [ ] [ ]
+    html_players = List.append ( Array.toList <| Array.indexedMap ( render_player model ) model.players ) [ html_add_player ]
   in
     [
       div [ class "row" ] [
         warning_notification
       ],
-      div [ class "row" ]
-        ( Array.toList <| Array.indexedMap ( render_player model ) model.players ),
-      div [ class "row" ] [
-        render_add_player_button model
-      ]
+      div [ class "players" ]
+        html_players
     ]
-
 
 render_player : Model -> Int -> Player -> Html Msg
 render_player model player_id player =
   let
-    classes = "player"
+    classes =
+      if player.active then
+        case player.maybe_card_suit_id of
+          Just card_suit_id -> "player active valid"
+          Nothing -> "player active invalid"
+      else
+        "player inactive"
   in
     div [ class classes ] [
       render_id_to_nb( player_id ),

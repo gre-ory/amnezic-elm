@@ -355,53 +355,148 @@ var _gre_ory$amnezic_elm$View$render_footer = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
-var _gre_ory$amnezic_elm$View$render_icon = function (icon_class) {
-	return (!_elm_lang$core$String$isEmpty(icon_class)) ? A2(
+var _gre_ory$amnezic_elm$View$render_material_icon = function (icon_class) {
+	return _elm_lang$core$String$isEmpty(icon_class) ? A2(
+		_elm_lang$html$Html$span,
+		{ctor: '[]'},
+		{ctor: '[]'}) : A2(
 		_elm_lang$html$Html$i,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class(
-				A2(_elm_lang$core$Basics_ops['++'], 'icon fas fa-', icon_class)),
+			_0: _elm_lang$html$Html_Attributes$class('icon material-icons'),
 			_1: {ctor: '[]'}
 		},
-		{ctor: '[]'}) : A2(
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(icon_class),
+			_1: {ctor: '[]'}
+		});
+};
+var _gre_ory$amnezic_elm$View$render_button = F5(
+	function (icon_class, button_class, button_text, button_description, on_click) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(
+					A2(_elm_lang$core$Basics_ops['++'], 'button ', button_class)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$title(button_description),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(on_click),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$core$String$isEmpty(icon_class) ? A2(
+					_elm_lang$html$Html$span,
+					{ctor: '[]'},
+					{ctor: '[]'}) : A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('button-icon'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _gre_ory$amnezic_elm$View$render_material_icon(icon_class),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('button-text'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(button_text),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _gre_ory$amnezic_elm$View$render_activated_button = F4(
+	function (icon_class, button_class, button_text, button_description) {
+		return A5(
+			_gre_ory$amnezic_elm$View$render_button,
+			icon_class,
+			A2(_elm_lang$core$Basics_ops['++'], 'activated ', button_class),
+			button_text,
+			button_description,
+			_gre_ory$amnezic_elm$Type$NothingToDo);
+	});
+var _gre_ory$amnezic_elm$View$render_enabled_button = F5(
+	function (icon_class, button_class, button_text, button_description, on_click) {
+		return A5(
+			_gre_ory$amnezic_elm$View$render_button,
+			icon_class,
+			A2(_elm_lang$core$Basics_ops['++'], 'enabled ', button_class),
+			button_text,
+			button_description,
+			on_click);
+	});
+var _gre_ory$amnezic_elm$View$render_add_player_button = function (model) {
+	return _gre_ory$amnezic_elm$Type$can_add_player(model) ? A5(_gre_ory$amnezic_elm$View$render_enabled_button, 'person_add', 'player-add', 'Add', 'Add player', _gre_ory$amnezic_elm$Type$AddPlayer) : A2(
 		_elm_lang$html$Html$span,
 		{ctor: '[]'},
 		{ctor: '[]'});
 };
+var _gre_ory$amnezic_elm$View$render_deactivate_player_button = F2(
+	function (model, player_id) {
+		return A2(_gre_ory$amnezic_elm$Type$can_deactivate_player, model, player_id) ? A5(
+			_gre_ory$amnezic_elm$View$render_enabled_button,
+			'',
+			'player-deactivate',
+			'Deactivate',
+			'Deactivate player',
+			_gre_ory$amnezic_elm$Type$DeactivatePlayer(player_id)) : A2(
+			_elm_lang$html$Html$span,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	});
+var _gre_ory$amnezic_elm$View$render_activate_player_button = F2(
+	function (model, player_id) {
+		return A2(_gre_ory$amnezic_elm$Type$can_activate_player, model, player_id) ? A5(
+			_gre_ory$amnezic_elm$View$render_enabled_button,
+			'',
+			'player-activate',
+			'Activate',
+			'Activate player',
+			_gre_ory$amnezic_elm$Type$ActivatePlayer(player_id)) : A2(
+			_elm_lang$html$Html$span,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	});
+var _gre_ory$amnezic_elm$View$render_disabled_button = F4(
+	function (icon_class, button_class, button_text, button_description) {
+		return A5(
+			_gre_ory$amnezic_elm$View$render_button,
+			icon_class,
+			A2(_elm_lang$core$Basics_ops['++'], 'disabled ', button_class),
+			button_text,
+			button_description,
+			_gre_ory$amnezic_elm$Type$NothingToDo);
+	});
 var _gre_ory$amnezic_elm$View$render_nav_item = F4(
 	function (model, target_page, icon_class, page_name) {
-		return _elm_lang$core$Native_Utils.eq(model.state.page, target_page) ? A2(
-			_elm_lang$html$Html$li,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('navbar-item active'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('navbar-link active'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$title(page_name),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(page_name),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}) : (A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, target_page) ? A2(
+		var on_click = _gre_ory$amnezic_elm$Type$GoToPage(target_page);
+		var button_description = A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Go to ',
+			A2(_elm_lang$core$Basics_ops['++'], page_name, 'page'));
+		var button_text = page_name;
+		var button_class = A2(_elm_lang$core$Basics_ops['++'], 'go-to-', page_name);
+		return A2(
 			_elm_lang$html$Html$li,
 			{
 				ctor: '::',
@@ -410,67 +505,9 @@ var _gre_ory$amnezic_elm$View$render_nav_item = F4(
 			},
 			{
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$a,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('navbar-link enabled'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$href('#'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(
-									_gre_ory$amnezic_elm$Type$GoToPage(target_page)),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$title(page_name),
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(page_name),
-							_1: {ctor: '[]'}
-						}
-					}),
+				_0: _elm_lang$core$Native_Utils.eq(model.state.page, target_page) ? A4(_gre_ory$amnezic_elm$View$render_activated_button, icon_class, button_class, button_text, button_description) : (A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, target_page) ? A5(_gre_ory$amnezic_elm$View$render_enabled_button, icon_class, button_class, button_text, button_description, on_click) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, icon_class, button_class, button_text, button_description)),
 				_1: {ctor: '[]'}
-			}) : A2(
-			_elm_lang$html$Html$li,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('navbar-item'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('navbar-link disabled'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$title(page_name),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(page_name),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}));
+			});
 	});
 var _gre_ory$amnezic_elm$View$render_header = function (model) {
 	return {
@@ -507,19 +544,19 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 						},
 						{
 							ctor: '::',
-							_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageStart, 'reply', 'Start'),
+							_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageStart, 'home', 'Start'),
 							_1: {
 								ctor: '::',
-								_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageThemes, 'sliders-h', 'Themes'),
+								_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageThemes, 'menu', 'Themes'),
 								_1: {
 									ctor: '::',
-									_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PagePlayers, 'users', 'Players'),
+									_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PagePlayers, 'people', 'Players'),
 									_1: {
 										ctor: '::',
-										_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageQuestions, 'question', 'Question'),
+										_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageQuestions, 'queue_music', 'Question'),
 										_1: {
 											ctor: '::',
-											_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageScore, 'star', 'Score'),
+											_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageScore, 'grade', 'Score'),
 											_1: {
 												ctor: '::',
 												_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageEnd, '', 'End'),
@@ -541,34 +578,7 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 							},
 							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$a,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('navbar-link enabled'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$href('#'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(_gre_ory$amnezic_elm$Type$MoveForward),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$title('Next step'),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{
-										ctor: '::',
-										_0: _gre_ory$amnezic_elm$View$render_icon('angle-right'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Next'),
-											_1: {ctor: '[]'}
-										}
-									}),
+								_0: A5(_gre_ory$amnezic_elm$View$render_enabled_button, 'keyboard_arrow_right', 'move-forward', 'Next', 'Next step', _gre_ory$amnezic_elm$Type$MoveForward),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -578,107 +588,15 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
-var _gre_ory$amnezic_elm$View$render_button = F4(
-	function (icon_class, button_class, button_text, maybe_on_click) {
-		var _p8 = maybe_on_click;
-		if (_p8.ctor === 'Just') {
-			return A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(_elm_lang$core$Basics_ops['++'], 'button ', button_class)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_p8._0),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$title(button_text),
-							_1: {ctor: '[]'}
-						}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(button_text),
-						_1: {ctor: '[]'}
-					}
-				});
-		} else {
-			return A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(_elm_lang$core$Basics_ops['++'], 'button disabled ', button_class)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$title(button_text),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _gre_ory$amnezic_elm$View$render_icon(icon_class),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(button_text),
-						_1: {ctor: '[]'}
-					}
-				});
-		}
-	});
-var _gre_ory$amnezic_elm$View$render_start_button = function (model) {
-	var maybe_on_click = A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, _gre_ory$amnezic_elm$Type$PageStart) ? _elm_lang$core$Maybe$Just(
-		_gre_ory$amnezic_elm$Type$GoToPage(_gre_ory$amnezic_elm$Type$PageStart)) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'repeat', 'navigation start', 'Start', maybe_on_click);
-};
-var _gre_ory$amnezic_elm$View$render_previous_button = function (model) {
-	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_go_to_previous_page(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$GoToPreviousPage) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'angle-left', 'navigation previous', 'Previous', maybe_on_click);
-};
-var _gre_ory$amnezic_elm$View$render_next_button = function (model) {
-	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_go_to_next_page(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$GoToNextPage) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'angle-right', 'navigation next', 'Next', maybe_on_click);
-};
-var _gre_ory$amnezic_elm$View$render_add_player_button = function (model) {
-	var maybe_on_click = _gre_ory$amnezic_elm$Type$can_add_player(model) ? _elm_lang$core$Maybe$Just(_gre_ory$amnezic_elm$Type$AddPlayer) : _elm_lang$core$Maybe$Nothing;
-	return A4(_gre_ory$amnezic_elm$View$render_button, 'plus', 'player add', 'Add player', maybe_on_click);
-};
-var _gre_ory$amnezic_elm$View$render_deactivate_player_button = F2(
-	function (model, player_id) {
-		return A2(_gre_ory$amnezic_elm$Type$can_deactivate_player, model, player_id) ? A4(
-			_gre_ory$amnezic_elm$View$render_button,
-			'pause',
-			'player deactivate',
-			'Deactivate player',
-			_elm_lang$core$Maybe$Just(
-				_gre_ory$amnezic_elm$Type$DeactivatePlayer(player_id))) : A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{ctor: '[]'});
-	});
-var _gre_ory$amnezic_elm$View$render_activate_player_button = F2(
-	function (model, player_id) {
-		return A2(_gre_ory$amnezic_elm$Type$can_activate_player, model, player_id) ? A4(
-			_gre_ory$amnezic_elm$View$render_button,
-			'play',
-			'player activate',
-			'Activate player',
-			_elm_lang$core$Maybe$Just(
-				_gre_ory$amnezic_elm$Type$ActivatePlayer(player_id))) : A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{ctor: '[]'});
-	});
 var _gre_ory$amnezic_elm$View$render_delete_player_button = F2(
 	function (model, player_id) {
-		var maybe_on_click = A2(_gre_ory$amnezic_elm$Type$can_delete_player, model, player_id) ? _elm_lang$core$Maybe$Just(
-			_gre_ory$amnezic_elm$Type$DeletePlayer(player_id)) : _elm_lang$core$Maybe$Nothing;
-		return A4(_gre_ory$amnezic_elm$View$render_button, 'trash', 'player delete', 'Delete player', maybe_on_click);
+		return A2(_gre_ory$amnezic_elm$Type$can_delete_player, model, player_id) ? A5(
+			_gre_ory$amnezic_elm$View$render_enabled_button,
+			'',
+			'player-delete',
+			'Delete',
+			'Delete player',
+			_gre_ory$amnezic_elm$Type$DeletePlayer(player_id)) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, '', 'player-delete', 'Delete', 'Delete player');
 	});
 var _gre_ory$amnezic_elm$View$render_error = function (message) {
 	return _elm_lang$html$Html$text(message);
@@ -752,7 +670,18 @@ var _gre_ory$amnezic_elm$View$render_id_to_nb = function (id) {
 };
 var _gre_ory$amnezic_elm$View$render_player = F3(
 	function (model, player_id, player) {
-		var classes = 'player';
+		var classes = function () {
+			if (player.active) {
+				var _p8 = player.maybe_card_suit_id;
+				if (_p8.ctor === 'Just') {
+					return 'player active valid';
+				} else {
+					return 'player active invalid';
+				}
+			} else {
+				return 'player inactive';
+			}
+		}();
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -824,6 +753,33 @@ var _gre_ory$amnezic_elm$View$render_player = F3(
 			});
 	});
 var _gre_ory$amnezic_elm$View$render_players = function (model) {
+	var html_add_player = _gre_ory$amnezic_elm$Type$can_add_player(model) ? A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('player'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _gre_ory$amnezic_elm$View$render_add_player_button(model),
+			_1: {ctor: '[]'}
+		}) : A2(
+		_elm_lang$html$Html$span,
+		{ctor: '[]'},
+		{ctor: '[]'});
+	var html_players = A2(
+		_elm_lang$core$List$append,
+		_elm_lang$core$Array$toList(
+			A2(
+				_elm_lang$core$Array$indexedMap,
+				_gre_ory$amnezic_elm$View$render_player(model),
+				model.players)),
+		{
+			ctor: '::',
+			_0: html_add_player,
+			_1: {ctor: '[]'}
+		});
 	var warning_notification = (!_gre_ory$amnezic_elm$Type$all_player_has_card_suit(model)) ? A2(
 		_elm_lang$html$Html$span,
 		{
@@ -859,30 +815,11 @@ var _gre_ory$amnezic_elm$View$render_players = function (model) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('row'),
+					_0: _elm_lang$html$Html_Attributes$class('players'),
 					_1: {ctor: '[]'}
 				},
-				_elm_lang$core$Array$toList(
-					A2(
-						_elm_lang$core$Array$indexedMap,
-						_gre_ory$amnezic_elm$View$render_player(model),
-						model.players))),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('row'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _gre_ory$amnezic_elm$View$render_add_player_button(model),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
+				html_players),
+			_1: {ctor: '[]'}
 		}
 	};
 };
