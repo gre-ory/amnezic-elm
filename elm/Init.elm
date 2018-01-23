@@ -14,7 +14,8 @@ init_model =
   { questions = init_default_questions
   , players = init_default_players
   , state = init_state
-  , card_suits = Array.fromList [ Heart, Diamond, Club, Spade, TarotHeart, TarotTrump, UnoBlue, UnoYellow ]
+  , available_card_types = Array.fromList [ "club", "spade", "heart", "diamond", "trump", "uno" ]
+  , available_card_colors = Array.fromList [ "black", "red", "yellow", "blue", "green" ]
   }
 
 init_state : State
@@ -29,14 +30,15 @@ init_state =
 
 init_default_players : Array Player
 init_default_players =
-  Array.initialize 2 ( init_default_player True )
+  Array.fromList [ ( init_default_player "heart" "red" 0 ), ( init_default_player "uno" "blue" 1 ) ]
 
-init_default_player : Bool -> Int -> Player
-init_default_player with_card_suit player_id =
+init_default_player : String -> String -> Int -> Player
+init_default_player card_type card_color player_id =
   { name = ( "Player " ++ toString( id_to_nb player_id ) )
   , score = 0
   , active = True
-  , maybe_card_suit_id = ( if with_card_suit then Just ( player_id ) else Nothing )
+  , card_type = card_type
+  , card_color = card_color
   }
 
 init_default_questions: Array Question

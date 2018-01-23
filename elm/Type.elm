@@ -10,8 +10,9 @@ import Keyboard exposing (..)
 type alias Model = {
   questions: Array Question,
   players: Array Player,
-  card_suits: Array CardSuit,
-  state: State
+  state: State,
+  available_card_types: Array String,
+  available_card_colors: Array String
 }
 
 type alias State = {
@@ -39,7 +40,8 @@ type alias Player = {
   name: String,
   score: Int,
   active: Bool,
-  maybe_card_suit_id: Maybe Int
+  card_type: String,
+  card_color: String
 }
 
 type alias SelectedCard = {
@@ -76,21 +78,6 @@ type ScoreMode =
   ScoreByVelocity
   | ScoreByVelocityCappedByRank
 
-type CardSuit =
-  Heart
-  | Diamond
-  | Club
-  | Spade
-  | TarotHeart
-  | TarotDiamond
-  | TarotClub
-  | TarotSpade
-  | TarotTrump
-  | UnoRed
-  | UnoBlue
-  | UnoGreen
-  | UnoYellow
-
 -- key
 
 type Key
@@ -111,8 +98,10 @@ type Msg =
   | ActivatePlayer Int
   | DeletePlayer Int
   | UpdatePlayerName Int String
-  | UnselectCardSuit Int
-  | SelectCardSuit Int Int
+  | UnselectCardColor Int
+  | SelectCardColor Int String
+  | UnselectCardType Int
+  | SelectCardType Int String
   | SelectCard Int Int
   | UnselectCard Int Int
   | OnKey KeyCode
@@ -126,29 +115,28 @@ id_to_nb id =
 
 -- card suit
 
-get_card_suit : Model -> Int -> Maybe CardSuit
-get_card_suit model card_suit_id =
-  Array.get card_suit_id model.card_suits
+-- get_card_suit : Model -> Int -> Maybe CardSuit
+-- get_card_suit model card_suit_id =
+--   Array.get card_suit_id model.card_suits
 
-match_card_suit : Int -> Player -> Bool
-match_card_suit card_suit_id player =
-  case player.maybe_card_suit_id of
-    Just player_card_suit_id -> ( player_card_suit_id == card_suit_id )
-    Nothing -> False
+match_card_type_and_color : String -> String -> Player -> Bool
+match_card_type_and_color card_type card_color player =
+  if not ( String.isEmpty card_type ) && not ( String.isEmpty card_color ) then
+    ( player.card_type == card_type ) && ( player.card_color == card_color )
+  else
+    False
 
-is_card_suit_already_selected : Int -> Model -> Bool
-is_card_suit_already_selected card_suit_id model =
-  List.any ( match_card_suit card_suit_id ) ( Array.toList model.players )
+is_card_type_and_color_already_selected : String -> String -> Model -> Bool
+is_card_type_and_color_already_selected card_type card_color model =
+  List.any ( match_card_type_and_color card_type card_color ) ( Array.toList model.players )
 
-has_card_suit : Player -> Bool
-has_card_suit player =
-  case player.maybe_card_suit_id of
-    Just card_suit_id -> True
-    Nothing -> False
+has_card_type_and_color : Player -> Bool
+has_card_type_and_color player =
+  not ( String.isEmpty player.card_type ) && not ( String.isEmpty player.card_color )
 
-all_player_has_card_suit : Model -> Bool
-all_player_has_card_suit model =
-  List.all ( has_card_suit ) ( Array.toList model.players )
+all_player_has_card_type_and_color : Model -> Bool
+all_player_has_card_type_and_color model =
+  List.all ( has_card_type_and_color ) ( Array.toList model.players )
 
 -- player
 
@@ -158,7 +146,7 @@ get_player model player_id =
 
 can_add_player : Model -> Bool
 can_add_player model =
-  Array.length model.players < min 8 ( Array.length model.card_suits )
+  Array.length model.players < 8
 
 can_deactivate_player : Model -> Int -> Bool
 can_deactivate_player model player_id =
@@ -237,7 +225,7 @@ next_page page =
 can_change_page: Model -> Bool
 can_change_page model =
   case model.state.page of
-    PagePlayers -> all_player_has_card_suit model
+    PagePlayers -> all_player_has_card_type_and_color model
     _ -> True
 
 can_go_to_page: Model -> Page -> Bool

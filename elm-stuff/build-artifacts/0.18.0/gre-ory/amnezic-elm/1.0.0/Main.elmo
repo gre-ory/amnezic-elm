@@ -79,25 +79,44 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						_gre_ory$amnezic_elm$Update$update_player_name(_p0._1)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'UnselectCardSuit':
+			case 'UnselectCardType':
 				return {
 					ctor: '_Tuple2',
 					_0: A3(
 						_gre_ory$amnezic_elm$Update$update_player,
 						model,
 						_p0._0,
-						_gre_ory$amnezic_elm$Update$update_player_card_suit_id(_elm_lang$core$Maybe$Nothing)),
+						_gre_ory$amnezic_elm$Update$update_player_card_type('')),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'SelectCardSuit':
+			case 'SelectCardType':
 				return {
 					ctor: '_Tuple2',
 					_0: A3(
 						_gre_ory$amnezic_elm$Update$update_player,
 						model,
 						_p0._0,
-						_gre_ory$amnezic_elm$Update$update_player_card_suit_id(
-							_elm_lang$core$Maybe$Just(_p0._1))),
+						_gre_ory$amnezic_elm$Update$update_player_card_type(_p0._1)),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'UnselectCardColor':
+				return {
+					ctor: '_Tuple2',
+					_0: A3(
+						_gre_ory$amnezic_elm$Update$update_player,
+						model,
+						_p0._0,
+						_gre_ory$amnezic_elm$Update$update_player_card_color('')),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SelectCardColor':
+				return {
+					ctor: '_Tuple2',
+					_0: A3(
+						_gre_ory$amnezic_elm$Update$update_player,
+						model,
+						_p0._0,
+						_gre_ory$amnezic_elm$Update$update_player_card_color(_p0._1)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SelectCard':

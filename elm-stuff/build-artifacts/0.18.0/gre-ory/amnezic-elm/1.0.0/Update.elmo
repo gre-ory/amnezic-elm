@@ -118,11 +118,17 @@ var _gre_ory$amnezic_elm$Update$update_player_name = F2(
 			player,
 			{name: name});
 	});
-var _gre_ory$amnezic_elm$Update$update_player_card_suit_id = F2(
-	function (maybe_card_suit_id, player) {
+var _gre_ory$amnezic_elm$Update$update_player_card_color = F2(
+	function (card_color, player) {
 		return _elm_lang$core$Native_Utils.update(
 			player,
-			{maybe_card_suit_id: maybe_card_suit_id});
+			{card_color: card_color});
+	});
+var _gre_ory$amnezic_elm$Update$update_player_card_type = F2(
+	function (card_type, player) {
+		return _elm_lang$core$Native_Utils.update(
+			player,
+			{card_type: card_type});
 	});
 var _gre_ory$amnezic_elm$Update$update_player = F3(
 	function (model, player_id, update_player_fn) {
@@ -243,9 +249,10 @@ var _gre_ory$amnezic_elm$Update$add_player = function (model) {
 		{
 			players: A2(
 				_elm_lang$core$Array$push,
-				A2(
+				A3(
 					_gre_ory$amnezic_elm$Init$init_default_player,
-					false,
+					'',
+					'',
 					_elm_lang$core$Array$length(model.players)),
 				model.players)
 		}) : model;

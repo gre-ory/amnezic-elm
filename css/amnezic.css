@@ -6,6 +6,13 @@
   --header-brand-width: 100px;
   --header-link-width: 100px;
   --header-nav-width: 100px;
+  --color-grey: #d1d8e0;
+  --color-black: black;
+  --color-white: white;
+  --color-red: #fc5c65;
+  --color-green: #26de81;
+  --color-blue: #45aaf2;
+  --color-yellow: #fed330;
 }
 
 /* ---------- font ---------- */
@@ -113,6 +120,7 @@ body, html, #amnezic, .page {
 }
 
 .button {
+  cursor: pointer;
   padding: 5px 15px;
   display: inline-block;
   line-height: normal;
@@ -126,7 +134,7 @@ body, html, #amnezic, .page {
   margin-right: 10px;
 }
 
-.button.active {
+.button.activated {
   background-color: rgba(255,255,255,0.2);
 }
 
@@ -164,6 +172,138 @@ body, html, #amnezic, .page {
   display: inline-block;
 }
 
+.players .player {
+  color: black;
+}
+
+.players .player.inactive .status {
+  color: grey;
+}
+
+.players .player.active.valid .status {
+  color: green;
+}
+
+.players .player.active.invalid .status {
+  color: red
+}
+
+/* ---------- cards ---------- */
+
+.card {
+  cursor: pointer;
+  display: inline-block;
+  border: 1px solid #eee;
+  width: 40px;
+  height: 60px;
+  text-align: center;
+  vertical-align: middle;
+  margin: auto 2px;
+  border-bottom: 2px solid rgba(0, 0, 0, .3);
+  border-radius: 6px;
+  -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .3);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .3);
+  background-color: white;
+  color: var(--color-grey);
+}
+
+.player.valid .card.selectable {
+  -webkit-transform: scale(0.8,0.8);
+  -ms-transform: scale(0.8,0.8);
+  transform: scale(0.8,0.8);
+}
+
+.player.valid .card.selectable:hover {
+  -webkit-transform: scale(1,1);
+  -ms-transform: scale(1,1);
+  transform: scale(1,1);
+}
+
+.player .card {
+  width: 20px;
+  height: 20px;
+}
+
+.card.card-no-rank .rank {
+  content: "-";
+}
+
+.card.card .rank:after,
+.card.card-no-type .rank:after {
+  content: " ?";
+}
+
+.card.card-type-spade .rank:after {
+  content: " ♠";
+}
+
+.card.card-type-heart .rank:after {
+  content: " ♥";
+}
+
+.card.card-type-diamond .rank:after {
+  content: " ♦";
+}
+
+.card.card-type-club .rank:after {
+  content: " ♣";
+}
+
+.card.card-type-trump .rank:after {
+  content: " ★";
+}
+
+.card.card-type-uno .rank:after {
+  content: " ⚫";
+}
+
+.card,
+.card.card-no-color {
+  color: var(--color-grey);
+}
+
+.card.card-color-black {
+  color: var(--color-black);
+}
+
+.card.card-color-red {
+  color: var(--color-red);
+}
+
+.card.card-color-yellow {
+  color: var(--color-yellow);
+}
+
+.card.card-color-blue {
+  color: var(--color-blue);
+}
+
+.card.card-color-green {
+  color: var(--color-green);
+}
+
+.card.selected,
+.card.not-selectable {
+  opacity: 0.2;
+}
+
+.card.selected-by-player {
+  background-color: #eee !important;
+}
+
+.card.selectable:hover {
+  opacity: 1 !important;
+  background-color: #eee !important;
+}
+
+.card.correct {
+  /*background-color: #1abc9c; */
+}
+
+.card.incorrect {
+  /*background-color: #e67e22; */
+}
+
 /* ---------- choice ---------- */
 
 .choice {
@@ -179,20 +319,27 @@ body, html, #amnezic, .page {
   /*color: white;*/
 }
 
-.choice.correct {
-  /*background-*/color: #1abc9c;
+.choice.correct .answer,
+.choice.correct .hint {
+  /*background-*/color: var(--color-green);
 }
 
-.choice.incorrect {
-  /*background-*/color: #e67e22;
+.choice.incorrect .answer,
+.choice.incorrect .hint, {
+  /*background-*/color: var(--color-red);
+}
+
+.choice .cards {
+  float: right;
+  width: auto;
+  text-align: right;
 }
 
 /* ---------- card ---------- */
 
+/*
+
 .cards {
-  float: right;
-  width: auto;
-  text-align: right;
 }
 
 .card.selected,
@@ -224,6 +371,8 @@ body, html, #amnezic, .page {
   background-color: white;
   color: black;
 }
+
+*/
 
 .card.correct {
   /*background-*/color: #1abc9c;
@@ -368,7 +517,7 @@ body, html, #amnezic, .page {
 
 .card.suit-uno-yellow {
   color: white;
-  /* background-*/color: yellow;
+  /* background-*/color: --color-yellow;
 }
 
 .card.suit-uno-green {

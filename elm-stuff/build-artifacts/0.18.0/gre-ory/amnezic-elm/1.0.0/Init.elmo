@@ -54,8 +54,8 @@ var _gre_ory$amnezic_elm$Init$init_default_question = function (question_id) {
 	};
 };
 var _gre_ory$amnezic_elm$Init$init_default_questions = A2(_elm_lang$core$Array$initialize, 4, _gre_ory$amnezic_elm$Init$init_default_question);
-var _gre_ory$amnezic_elm$Init$init_default_player = F2(
-	function (with_card_suit, player_id) {
+var _gre_ory$amnezic_elm$Init$init_default_player = F3(
+	function (card_type, card_color, player_id) {
 		return {
 			name: A2(
 				_elm_lang$core$Basics_ops['++'],
@@ -64,13 +64,20 @@ var _gre_ory$amnezic_elm$Init$init_default_player = F2(
 					_gre_ory$amnezic_elm$Type$id_to_nb(player_id))),
 			score: 0,
 			active: true,
-			maybe_card_suit_id: with_card_suit ? _elm_lang$core$Maybe$Just(player_id) : _elm_lang$core$Maybe$Nothing
+			card_type: card_type,
+			card_color: card_color
 		};
 	});
-var _gre_ory$amnezic_elm$Init$init_default_players = A2(
-	_elm_lang$core$Array$initialize,
-	2,
-	_gre_ory$amnezic_elm$Init$init_default_player(true));
+var _gre_ory$amnezic_elm$Init$init_default_players = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: A3(_gre_ory$amnezic_elm$Init$init_default_player, 'heart', 'red', 0),
+		_1: {
+			ctor: '::',
+			_0: A3(_gre_ory$amnezic_elm$Init$init_default_player, 'uno', 'blue', 1),
+			_1: {ctor: '[]'}
+		}
+	});
 var _gre_ory$amnezic_elm$Init$init_state = {
 	page: _gre_ory$amnezic_elm$Type$PageStart,
 	question_id: 0,
@@ -84,35 +91,49 @@ var _gre_ory$amnezic_elm$Init$init_model = {
 	questions: _gre_ory$amnezic_elm$Init$init_default_questions,
 	players: _gre_ory$amnezic_elm$Init$init_default_players,
 	state: _gre_ory$amnezic_elm$Init$init_state,
-	card_suits: _elm_lang$core$Array$fromList(
+	available_card_types: _elm_lang$core$Array$fromList(
 		{
 			ctor: '::',
-			_0: _gre_ory$amnezic_elm$Type$Heart,
+			_0: 'club',
 			_1: {
 				ctor: '::',
-				_0: _gre_ory$amnezic_elm$Type$Diamond,
+				_0: 'spade',
 				_1: {
 					ctor: '::',
-					_0: _gre_ory$amnezic_elm$Type$Club,
+					_0: 'heart',
 					_1: {
 						ctor: '::',
-						_0: _gre_ory$amnezic_elm$Type$Spade,
+						_0: 'diamond',
 						_1: {
 							ctor: '::',
-							_0: _gre_ory$amnezic_elm$Type$TarotHeart,
+							_0: 'trump',
 							_1: {
 								ctor: '::',
-								_0: _gre_ory$amnezic_elm$Type$TarotTrump,
-								_1: {
-									ctor: '::',
-									_0: _gre_ory$amnezic_elm$Type$UnoBlue,
-									_1: {
-										ctor: '::',
-										_0: _gre_ory$amnezic_elm$Type$UnoYellow,
-										_1: {ctor: '[]'}
-									}
-								}
+								_0: 'uno',
+								_1: {ctor: '[]'}
 							}
+						}
+					}
+				}
+			}
+		}),
+	available_card_colors: _elm_lang$core$Array$fromList(
+		{
+			ctor: '::',
+			_0: 'black',
+			_1: {
+				ctor: '::',
+				_0: 'red',
+				_1: {
+					ctor: '::',
+					_0: 'yellow',
+					_1: {
+						ctor: '::',
+						_0: 'blue',
+						_1: {
+							ctor: '::',
+							_0: 'green',
+							_1: {ctor: '[]'}
 						}
 					}
 				}

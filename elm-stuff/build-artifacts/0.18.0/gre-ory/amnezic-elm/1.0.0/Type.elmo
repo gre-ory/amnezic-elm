@@ -62,10 +62,7 @@ var _gre_ory$amnezic_elm$Type$get_choice = F2(
 var _gre_ory$amnezic_elm$Type$can_add_player = function (model) {
 	return _elm_lang$core$Native_Utils.cmp(
 		_elm_lang$core$Array$length(model.players),
-		A2(
-			_elm_lang$core$Basics$min,
-			8,
-			_elm_lang$core$Array$length(model.card_suits))) < 0;
+		8) < 0;
 };
 var _gre_ory$amnezic_elm$Type$get_player = F2(
 	function (model, player_id) {
@@ -110,54 +107,40 @@ var _gre_ory$amnezic_elm$Type$can_delete_player = F2(
 			return false;
 		}
 	});
-var _gre_ory$amnezic_elm$Type$has_card_suit = function (player) {
-	var _p6 = player.maybe_card_suit_id;
-	if (_p6.ctor === 'Just') {
-		return true;
-	} else {
-		return false;
-	}
+var _gre_ory$amnezic_elm$Type$has_card_type_and_color = function (player) {
+	return (!_elm_lang$core$String$isEmpty(player.card_type)) && (!_elm_lang$core$String$isEmpty(player.card_color));
 };
-var _gre_ory$amnezic_elm$Type$all_player_has_card_suit = function (model) {
+var _gre_ory$amnezic_elm$Type$all_player_has_card_type_and_color = function (model) {
 	return A2(
 		_elm_lang$core$List$all,
-		_gre_ory$amnezic_elm$Type$has_card_suit,
+		_gre_ory$amnezic_elm$Type$has_card_type_and_color,
 		_elm_lang$core$Array$toList(model.players));
 };
 var _gre_ory$amnezic_elm$Type$can_change_page = function (model) {
-	var _p7 = model.state.page;
-	if (_p7.ctor === 'PagePlayers') {
-		return _gre_ory$amnezic_elm$Type$all_player_has_card_suit(model);
+	var _p6 = model.state.page;
+	if (_p6.ctor === 'PagePlayers') {
+		return _gre_ory$amnezic_elm$Type$all_player_has_card_type_and_color(model);
 	} else {
 		return true;
 	}
 };
-var _gre_ory$amnezic_elm$Type$match_card_suit = F2(
-	function (card_suit_id, player) {
-		var _p8 = player.maybe_card_suit_id;
-		if (_p8.ctor === 'Just') {
-			return _elm_lang$core$Native_Utils.eq(_p8._0, card_suit_id);
-		} else {
-			return false;
-		}
+var _gre_ory$amnezic_elm$Type$match_card_type_and_color = F3(
+	function (card_type, card_color, player) {
+		return ((!_elm_lang$core$String$isEmpty(card_type)) && (!_elm_lang$core$String$isEmpty(card_color))) ? (_elm_lang$core$Native_Utils.eq(player.card_type, card_type) && _elm_lang$core$Native_Utils.eq(player.card_color, card_color)) : false;
 	});
-var _gre_ory$amnezic_elm$Type$is_card_suit_already_selected = F2(
-	function (card_suit_id, model) {
+var _gre_ory$amnezic_elm$Type$is_card_type_and_color_already_selected = F3(
+	function (card_type, card_color, model) {
 		return A2(
 			_elm_lang$core$List$any,
-			_gre_ory$amnezic_elm$Type$match_card_suit(card_suit_id),
+			A2(_gre_ory$amnezic_elm$Type$match_card_type_and_color, card_type, card_color),
 			_elm_lang$core$Array$toList(model.players));
-	});
-var _gre_ory$amnezic_elm$Type$get_card_suit = F2(
-	function (model, card_suit_id) {
-		return A2(_elm_lang$core$Array$get, card_suit_id, model.card_suits);
 	});
 var _gre_ory$amnezic_elm$Type$id_to_nb = function (id) {
 	return id + 1;
 };
-var _gre_ory$amnezic_elm$Type$Model = F4(
-	function (a, b, c, d) {
-		return {questions: a, players: b, card_suits: c, state: d};
+var _gre_ory$amnezic_elm$Type$Model = F5(
+	function (a, b, c, d, e) {
+		return {questions: a, players: b, state: c, available_card_types: d, available_card_colors: e};
 	});
 var _gre_ory$amnezic_elm$Type$State = F6(
 	function (a, b, c, d, e, f) {
@@ -171,9 +154,9 @@ var _gre_ory$amnezic_elm$Type$Choice = F3(
 	function (a, b, c) {
 		return {answer: a, hint: b, correct: c};
 	});
-var _gre_ory$amnezic_elm$Type$Player = F4(
-	function (a, b, c, d) {
-		return {name: a, score: b, active: c, maybe_card_suit_id: d};
+var _gre_ory$amnezic_elm$Type$Player = F5(
+	function (a, b, c, d, e) {
+		return {name: a, score: b, active: c, card_type: d, card_color: e};
 	});
 var _gre_ory$amnezic_elm$Type$SelectedCard = F4(
 	function (a, b, c, d) {
@@ -186,8 +169,8 @@ var _gre_ory$amnezic_elm$Type$PagePlayers = {ctor: 'PagePlayers'};
 var _gre_ory$amnezic_elm$Type$PageThemes = {ctor: 'PageThemes'};
 var _gre_ory$amnezic_elm$Type$PageStart = {ctor: 'PageStart'};
 var _gre_ory$amnezic_elm$Type$previous_page = function (page) {
-	var _p9 = page;
-	switch (_p9.ctor) {
+	var _p7 = page;
+	switch (_p7.ctor) {
 		case 'PageStart':
 			return _gre_ory$amnezic_elm$Type$PageStart;
 		case 'PageThemes':
@@ -203,8 +186,8 @@ var _gre_ory$amnezic_elm$Type$previous_page = function (page) {
 	}
 };
 var _gre_ory$amnezic_elm$Type$next_page = function (page) {
-	var _p10 = page;
-	switch (_p10.ctor) {
+	var _p8 = page;
+	switch (_p8.ctor) {
 		case 'PageStart':
 			return _gre_ory$amnezic_elm$Type$PageThemes;
 		case 'PageThemes':
@@ -222,8 +205,8 @@ var _gre_ory$amnezic_elm$Type$next_page = function (page) {
 var _gre_ory$amnezic_elm$Type$can_go_to_page = F2(
 	function (model, target_page) {
 		if (_gre_ory$amnezic_elm$Type$can_change_page(model)) {
-			var _p11 = model.state.page;
-			switch (_p11.ctor) {
+			var _p9 = model.state.page;
+			switch (_p9.ctor) {
 				case 'PageStart':
 					return A2(
 						_elm_lang$core$List$member,
@@ -358,19 +341,6 @@ var _gre_ory$amnezic_elm$Type$MediaReady = {ctor: 'MediaReady'};
 var _gre_ory$amnezic_elm$Type$MediaNotReady = {ctor: 'MediaNotReady'};
 var _gre_ory$amnezic_elm$Type$ScoreByVelocityCappedByRank = {ctor: 'ScoreByVelocityCappedByRank'};
 var _gre_ory$amnezic_elm$Type$ScoreByVelocity = {ctor: 'ScoreByVelocity'};
-var _gre_ory$amnezic_elm$Type$UnoYellow = {ctor: 'UnoYellow'};
-var _gre_ory$amnezic_elm$Type$UnoGreen = {ctor: 'UnoGreen'};
-var _gre_ory$amnezic_elm$Type$UnoBlue = {ctor: 'UnoBlue'};
-var _gre_ory$amnezic_elm$Type$UnoRed = {ctor: 'UnoRed'};
-var _gre_ory$amnezic_elm$Type$TarotTrump = {ctor: 'TarotTrump'};
-var _gre_ory$amnezic_elm$Type$TarotSpade = {ctor: 'TarotSpade'};
-var _gre_ory$amnezic_elm$Type$TarotClub = {ctor: 'TarotClub'};
-var _gre_ory$amnezic_elm$Type$TarotDiamond = {ctor: 'TarotDiamond'};
-var _gre_ory$amnezic_elm$Type$TarotHeart = {ctor: 'TarotHeart'};
-var _gre_ory$amnezic_elm$Type$Spade = {ctor: 'Spade'};
-var _gre_ory$amnezic_elm$Type$Club = {ctor: 'Club'};
-var _gre_ory$amnezic_elm$Type$Diamond = {ctor: 'Diamond'};
-var _gre_ory$amnezic_elm$Type$Heart = {ctor: 'Heart'};
 var _gre_ory$amnezic_elm$Type$Unknown = {ctor: 'Unknown'};
 var _gre_ory$amnezic_elm$Type$ArrowRight = {ctor: 'ArrowRight'};
 var _gre_ory$amnezic_elm$Type$ArrowLeft = {ctor: 'ArrowLeft'};
@@ -387,12 +357,19 @@ var _gre_ory$amnezic_elm$Type$SelectCard = F2(
 	function (a, b) {
 		return {ctor: 'SelectCard', _0: a, _1: b};
 	});
-var _gre_ory$amnezic_elm$Type$SelectCardSuit = F2(
+var _gre_ory$amnezic_elm$Type$SelectCardType = F2(
 	function (a, b) {
-		return {ctor: 'SelectCardSuit', _0: a, _1: b};
+		return {ctor: 'SelectCardType', _0: a, _1: b};
 	});
-var _gre_ory$amnezic_elm$Type$UnselectCardSuit = function (a) {
-	return {ctor: 'UnselectCardSuit', _0: a};
+var _gre_ory$amnezic_elm$Type$UnselectCardType = function (a) {
+	return {ctor: 'UnselectCardType', _0: a};
+};
+var _gre_ory$amnezic_elm$Type$SelectCardColor = F2(
+	function (a, b) {
+		return {ctor: 'SelectCardColor', _0: a, _1: b};
+	});
+var _gre_ory$amnezic_elm$Type$UnselectCardColor = function (a) {
+	return {ctor: 'UnselectCardColor', _0: a};
 };
 var _gre_ory$amnezic_elm$Type$UpdatePlayerName = F2(
 	function (a, b) {

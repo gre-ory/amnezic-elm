@@ -96,7 +96,7 @@ go_to_question model question_id =
 add_player : Model -> Model
 add_player model =
   if can_add_player model then
-    { model | players = Array.push ( init_default_player False ( Array.length model.players ) ) model.players }
+    { model | players = Array.push ( init_default_player "" "" ( Array.length model.players ) ) model.players }
   else
     model
 
@@ -167,9 +167,13 @@ update_player model player_id update_player_fn =
     Nothing ->
       model
 
-update_player_card_suit_id : Maybe Int -> Player -> Player
-update_player_card_suit_id maybe_card_suit_id player =
-  { player | maybe_card_suit_id = maybe_card_suit_id }
+update_player_card_type : String -> Player -> Player
+update_player_card_type card_type player =
+  { player | card_type = card_type }
+
+update_player_card_color : String -> Player -> Player
+update_player_card_color card_color player =
+  { player | card_color = card_color }
 
 update_player_name : String -> Player -> Player
 update_player_name name player =

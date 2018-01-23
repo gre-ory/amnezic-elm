@@ -54,10 +54,14 @@ update msg model =
       ( delete_player model player_id, Cmd.none )
     UpdatePlayerName player_id player_name ->
       ( update_player model player_id ( update_player_name player_name ), Cmd.none )
-    UnselectCardSuit player_id ->
-      ( update_player model player_id ( update_player_card_suit_id Nothing ), Cmd.none )
-    SelectCardSuit player_id card_suit_id ->
-      ( update_player model player_id ( update_player_card_suit_id ( Just card_suit_id ) ), Cmd.none )
+    UnselectCardType player_id ->
+      ( update_player model player_id ( update_player_card_type "" ), Cmd.none )
+    SelectCardType player_id card_type ->
+      ( update_player model player_id ( update_player_card_type card_type ), Cmd.none )
+    UnselectCardColor player_id ->
+      ( update_player model player_id ( update_player_card_color "" ), Cmd.none )
+    SelectCardColor player_id card_color ->
+      ( update_player model player_id ( update_player_card_color card_color ), Cmd.none )
     SelectCard choice_id player_id ->
       ( select_card model choice_id player_id, Cmd.none )
     UnselectCard choice_id player_id ->
