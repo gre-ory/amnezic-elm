@@ -118,17 +118,45 @@ var _gre_ory$amnezic_elm$Update$update_player_name = F2(
 			player,
 			{name: name});
 	});
+var _gre_ory$amnezic_elm$Update$toggle_inverted_color = function (card) {
+	return _elm_lang$core$Native_Utils.update(
+		card,
+		{inverted_color: !card.inverted_color});
+};
+var _gre_ory$amnezic_elm$Update$toggle_player_inverted_color = function (player) {
+	return _elm_lang$core$Native_Utils.update(
+		player,
+		{
+			card: _gre_ory$amnezic_elm$Update$toggle_inverted_color(player.card)
+		});
+};
+var _gre_ory$amnezic_elm$Update$update_card_color = F2(
+	function (card_color, card) {
+		return _elm_lang$core$Native_Utils.update(
+			card,
+			{card_color: card_color});
+	});
 var _gre_ory$amnezic_elm$Update$update_player_card_color = F2(
 	function (card_color, player) {
 		return _elm_lang$core$Native_Utils.update(
 			player,
-			{card_color: card_color});
+			{
+				card: A2(_gre_ory$amnezic_elm$Update$update_card_color, card_color, player.card)
+			});
 	});
-var _gre_ory$amnezic_elm$Update$update_player_card_type = F2(
-	function (card_type, player) {
+var _gre_ory$amnezic_elm$Update$update_card_suit = F2(
+	function (card_suit, card) {
+		return _elm_lang$core$Native_Utils.update(
+			card,
+			{card_suit: card_suit});
+	});
+var _gre_ory$amnezic_elm$Update$update_player_card_suit = F2(
+	function (card_suit, player) {
 		return _elm_lang$core$Native_Utils.update(
 			player,
-			{card_type: card_type});
+			{
+				card: A2(_gre_ory$amnezic_elm$Update$update_card_suit, card_suit, player.card)
+			});
 	});
 var _gre_ory$amnezic_elm$Update$update_player = F3(
 	function (model, player_id, update_player_fn) {
@@ -251,8 +279,8 @@ var _gre_ory$amnezic_elm$Update$add_player = function (model) {
 				_elm_lang$core$Array$push,
 				A3(
 					_gre_ory$amnezic_elm$Init$init_default_player,
-					'',
-					'',
+					_gre_ory$amnezic_elm$Type$NoSuit,
+					_gre_ory$amnezic_elm$Type$NoColor,
 					_elm_lang$core$Array$length(model.players)),
 				model.players)
 		}) : model;

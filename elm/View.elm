@@ -9,6 +9,7 @@ import Html.Events exposing (..)
 import Array exposing (..)
 
 import Type exposing (..)
+import Init exposing (..)
 
 -- helper
 
@@ -23,7 +24,7 @@ render_id_to_nb id =
 render_page : Model -> Html Msg
 render_page model =
   case model.state.page of
-    PageStart -> render_default_page model "start"
+    PageStart -> render_page_skeleton model "start" [ render_test_cards ]
     PageThemes -> render_default_page model "themes"
     PagePlayers -> render_players_page model "players"
     PageQuestions -> render_questions_page model "questions"
@@ -168,7 +169,7 @@ render_players : Model -> List ( Html Msg )
 render_players model =
   let
     warning_notification =
-      if not ( all_player_has_card_type_and_color model ) then
+      if not ( all_player_has_card model ) then
         span [ class "alert alert-warning" ] [ text "please select one card type and color for each player!" ]
       else
         span [ ] [ ]
@@ -190,17 +191,12 @@ render_players model =
 render_player : Model -> Int -> Player -> Html Msg
 render_player model player_id player =
   let
-    classes =
-      if player.active then
-        if has_card_type_and_color player then
-          "player active valid"
-        else
-          "player active invalid"
-      else
-        if has_card_type_and_color player then
-          "player inactive valid"
-        else
-          "player inactive invalid"
+    classes = String.join " " <|
+      ( "player" ) ::
+      ( if player.active then "active" else "inactive" ) ::
+      ( if has_card player then "valid" else "invalid" ) ::
+      ( if has_card player then "valid" else "invalid" ) ::
+      []
   in
     div [ class classes ] [
       render_id_to_nb( player_id ),
@@ -214,103 +210,11 @@ render_player model player_id player =
         text ( ", status: " ++ ( classes ) )
       ],
       div [] [
-        render_card_types model player_id,
-        text " | ",
+        render_card_suits model player_id
+      ],
+      div [] [
         render_card_colors model player_id
       ]
-    ]
-
--- card colors
-
-render_card_colors : Model -> Int -> Html Msg
-render_card_colors model player_id =
-  span [ ]
-    ( Array.toList <| Array.indexedMap ( render_card_color model player_id ) model.available_card_colors )
-
-render_card_color : Model -> Int -> Int -> String -> Html Msg
-render_card_color model player_id card_color_id card_color =
-  case get_player model player_id of
-    Just player ->
-      let
-        is_owned_by_player = ( player.card_color == card_color )
-        is_owned_by_other = ( not is_owned_by_player ) && ( is_card_type_and_color_already_selected player.card_type card_color model )
-        on_click =
-          if is_owned_by_player then
-            UnselectCardColor player_id
-          else if is_owned_by_other  then
-            NothingToDo
-          else
-            SelectCardColor player_id card_color
-        extra_class =
-          if is_owned_by_player then
-            "selected-by-player"
-          else if is_owned_by_other then
-            "not-selectable"
-          else
-            "selectable"
-      in
-        ( render_playing_card player.card_type card_color ) Nothing extra_class on_click
-    Nothing ->
-      span [ ] [ ]
-
--- card types
-
-render_card_types : Model -> Int -> Html Msg
-render_card_types model player_id =
-  span [ ]
-    ( Array.toList <| Array.indexedMap ( render_card_type model player_id ) model.available_card_types )
-
-render_card_type : Model -> Int -> Int -> String -> Html Msg
-render_card_type model player_id card_type_id card_type =
-  case get_player model player_id of
-    Just player ->
-      let
-        is_owned_by_player = ( player.card_type == card_type )
-        is_owned_by_other = ( not is_owned_by_player ) && ( is_card_type_and_color_already_selected card_type player.card_color model )
-        on_click =
-          if is_owned_by_player then
-            UnselectCardType player_id
-          else if is_owned_by_other  then
-            NothingToDo
-          else
-            SelectCardType player_id card_type
-        extra_class =
-          if is_owned_by_player then
-            "selected-by-player"
-          else if is_owned_by_other then
-            "not-selectable"
-          else
-            "selectable"
-      in
-        ( render_playing_card card_type player.card_color ) Nothing extra_class on_click
-    Nothing ->
-      span [ ] [ ]
-
-render_playing_card : String -> String -> Maybe Int -> String -> Msg -> Html Msg
-render_playing_card card_type card_color maybe_card_rank extra_class on_click =
-  let
-    card_type_class =
-      if String.isEmpty card_type then
-        "card-no-type"
-      else
-        ( "card-type-" ++ card_type )
-    card_color_class =
-      if String.isEmpty card_color then
-        "card-no-color"
-      else
-        ( "card-color-" ++ card_color )
-    card_rank_class =
-      case maybe_card_rank of
-        Just card_rank -> "card-rank-" ++ ( toString card_rank )
-        Nothing -> "card-no-rank"
-    classes = String.join " " [ "card", card_type_class, card_color_class, card_rank_class, extra_class ]
-  in
-    div [ class classes, onClick on_click ] [
-      case maybe_card_rank of
-        Just card_rank ->
-          span [ class "rank" ] [ text ( toString card_rank ) ]
-        Nothing ->
-          span [ class "rank" ] [  ]
     ]
 
 -- question
@@ -442,6 +346,125 @@ render_choice model choice_id choice =
           ]
         ]
 
+-- playing card
+
+render_selected_card_ : Maybe Int -> Msg -> Card -> Html Msg
+render_selected_card_ maybe_card_rank on_click card =
+  render_card_ card maybe_card_rank [ "selected" ] on_click
+
+render_selectable_card_ : Maybe Int -> Msg -> Card -> Html Msg
+render_selectable_card_ maybe_card_rank on_click card =
+  render_card_ card maybe_card_rank [ "selectable" ] on_click
+
+render_not_selectable_card_ : Maybe Int -> Card -> Html Msg
+render_not_selectable_card_ maybe_card_rank card =
+  render_card_ card maybe_card_rank [ "not-selectable" ] NothingToDo
+
+render_card_ : Card -> Maybe Int -> List String -> Msg -> Html Msg
+render_card_ card maybe_card_rank card_classes on_click =
+  let
+    card_suit_class =
+      case card.card_suit of
+        NoSuit -> "no-suit"
+        Club -> "suit-club"
+        Spade -> "suit-spade"
+        Heart -> "suit-heart"
+        Diamond -> "suit-diamond"
+        Star -> "suit-star"
+        Dot -> "suit-dot"
+    card_color_class =
+      case card.card_color of
+        NoColor -> "no-color"
+        Black -> "color-black"
+        Red -> "color-red"
+        Yellow -> "color-yellow"
+        Blue -> "color-blue"
+        Green -> "color-green"
+    card_inverted_class =
+      if card.inverted_color then
+        "inverted-color"
+      else
+        ""
+    card_rank_class =
+      case maybe_card_rank of
+        Just card_rank -> "rank-" ++ ( toString card_rank )
+        Nothing -> "no-rank"
+    classes = String.join " " ( "card" :: card_suit_class :: card_color_class :: card_inverted_class :: card_rank_class :: card_classes )
+  in
+    div [ class classes, onClick on_click ] [
+      div [ class "card-content" ] [
+        div [ class "card-rank" ] [ ]
+      ]
+    ]
+
+-- card colors
+
+render_card_colors : Model -> Int -> Html Msg
+render_card_colors model player_id =
+  span [ ] [
+    span [ ]
+      ( Array.toList <| Array.indexedMap ( render_card_color model player_id ) model.available_card_colors ),
+    render_invert_card_color model player_id      
+  ]
+
+render_card_color : Model -> Int -> Int -> CardColor -> Html Msg
+render_card_color model player_id card_color_id card_color =
+  case get_player model player_id of
+    Just player ->
+      let
+        new_card = init_card player.card.card_suit card_color player.card.inverted_color
+        is_owned_by_player = ( match_card_color card_color player )
+        is_owned_by_other = ( not is_owned_by_player ) && ( is_card_already_selected new_card model )
+      in
+        if is_owned_by_player then
+          render_selected_card_ Nothing ( UnselectCardColor player_id ) new_card
+        else if is_owned_by_other  then
+          render_not_selectable_card_ Nothing new_card
+        else
+          render_selectable_card_ Nothing ( SelectCardColor player_id card_color ) new_card
+    Nothing ->
+      span [ ] [ ]
+
+render_invert_card_color : Model -> Int -> Html Msg
+render_invert_card_color model player_id =
+  case get_player model player_id of
+    Just player ->
+      let
+        new_card = init_card player.card.card_suit player.card.card_color ( not player.card.inverted_color )
+        is_owned_by_other = ( is_card_already_selected new_card model )
+      in
+        if is_owned_by_other  then
+          render_not_selectable_card_ Nothing new_card
+        else
+          render_selectable_card_ Nothing ( InvertCardColor player_id ) new_card
+    Nothing ->
+      span [ ] [ ]
+
+-- card suits
+
+render_card_suits : Model -> Int -> Html Msg
+render_card_suits model player_id =
+  span [ ]
+    ( Array.toList <| Array.indexedMap ( render_card_suit model player_id ) model.available_card_suits )
+
+render_card_suit : Model -> Int -> Int -> CardSuit -> Html Msg
+render_card_suit model player_id card_suit_id card_suit =
+  case get_player model player_id of
+    Just player ->
+      let
+        new_card = init_card card_suit player.card.card_color player.card.inverted_color
+        is_owned_by_player = ( match_card_suit card_suit player )
+        is_owned_by_other = ( not is_owned_by_player ) && ( is_card_already_selected new_card model )
+      in
+        if is_owned_by_player then
+          render_selected_card_ Nothing ( UnselectCardSuit player_id ) new_card
+        else if is_owned_by_other  then
+          render_not_selectable_card_ Nothing new_card
+        else
+          render_selectable_card_ Nothing ( SelectCardSuit player_id card_suit ) new_card
+    Nothing ->
+      span [ ] [ ]
+
 -- card
 
 render_cards : Model -> Int -> Html Msg
@@ -452,18 +475,13 @@ render_cards model choice_id =
 render_card : Model -> Int -> Int -> Player -> Html Msg
 render_card model choice_id player_id player =
   let
-    selected = has_selected_card choice_id player_id model
-    on_click = if not selected then SelectCard choice_id player_id else UnselectCard choice_id player_id
-    -- classes = "card " ++ ( render_choice_class model choice_id ) ++ ( if selected then " selected" else "" )
-    classes = ( if selected then " selected" else "" )
-    card_rank = Just( id_to_nb choice_id )
+    card_rank = id_to_nb choice_id
   in
     if player.active then
-      -- div [ class classes, onClick on_click ] [
-      --   text "P",
-      --   render_id_to_nb( player_id )
-      -- ]
-      render_playing_card player.card_type player.card_color card_rank classes on_click
+      if has_selected_card choice_id player_id model then
+        render_selected_card_ ( Just card_rank ) ( UnselectCard choice_id player_id ) player.card
+      else
+        render_selectable_card_ ( Just card_rank ) ( SelectCard choice_id player_id ) player.card
     else
       span [ ] [ ]
 
@@ -509,3 +527,45 @@ render_player_score rank_id player =
       text ( toString player.score )
     ]
   ]
+
+-- test
+
+render_test_cards : Html Msg
+render_test_cards =
+  let
+    cards =
+      ( init_card NoSuit NoColor False ) ::
+      ( init_card Dot NoColor False ) ::
+      ( init_card Dot Blue False ) ::
+      ( init_card Spade Green False ) ::
+      ( init_card Star Yellow False ) ::
+      ( init_card Club Black False ) ::
+      ( init_card Diamond Red False ) ::
+      ( init_card NoSuit NoColor True ) ::
+      ( init_card Dot NoColor True ) ::
+      ( init_card Dot Blue True ) ::
+      ( init_card Spade Green True ) ::
+      ( init_card Star Yellow True ) ::
+      ( init_card Club Black True ) ::
+      ( init_card Diamond Red True ) ::
+      []
+  in
+    div [ class "tmp" ] [
+      div [ class "players" ]
+        ( List.map ( render_selectable_card_ Nothing NothingToDo ) cards )
+      ,
+      div [ class "players" ]
+        ( List.map ( render_selectable_card_ ( Just 2 ) NothingToDo ) cards )
+      ,
+      div [ class "players correct" ]
+        ( List.map ( render_selectable_card_ ( Just 2 ) NothingToDo ) cards )
+      ,
+      div [ class "players incorrect" ]
+        ( List.map ( render_selectable_card_ ( Just 2 ) NothingToDo ) cards )
+      ,
+      div [ class "players" ]
+        ( List.map ( render_selected_card_ ( Just 2 ) NothingToDo ) cards )
+      ,
+      div [ class "players" ]
+        ( List.map ( render_not_selectable_card_ ( Just 2 ) ) cards )
+    ]

@@ -14,8 +14,8 @@ init_model =
   { questions = init_default_questions
   , players = init_default_players
   , state = init_state
-  , available_card_types = Array.fromList [ "club", "spade", "heart", "diamond", "trump", "uno" ]
-  , available_card_colors = Array.fromList [ "black", "red", "yellow", "blue", "green" ]
+  , available_card_suits = Array.fromList [ Club, Spade, Heart, Diamond, Star, Dot ]
+  , available_card_colors = Array.fromList [ Black, Red, Yellow, Blue, Green ]
   }
 
 init_state : State
@@ -30,15 +30,14 @@ init_state =
 
 init_default_players : Array Player
 init_default_players =
-  Array.fromList [ ( init_default_player "heart" "red" 0 ), ( init_default_player "uno" "blue" 1 ) ]
+  Array.fromList [ ( init_default_player Heart Red 0 ), ( init_default_player Dot Blue 1 ) ]
 
-init_default_player : String -> String -> Int -> Player
-init_default_player card_type card_color player_id =
+init_default_player : CardSuit -> CardColor -> Int -> Player
+init_default_player card_suit card_color player_id =
   { name = ( "Player " ++ toString( id_to_nb player_id ) )
   , score = 0
   , active = True
-  , card_type = card_type
-  , card_color = card_color
+  , card = ( init_card card_suit card_color False )
   }
 
 init_default_questions: Array Question
@@ -65,3 +64,10 @@ init_selected_card choice_id player_id correct =
   , player_id = player_id
   , engaged_point = 0
   , correct = correct }
+
+init_card : CardSuit -> CardColor -> Bool -> Card
+init_card card_suit card_color inverted_color =
+  { card_suit = card_suit
+  , card_color = card_color
+  , inverted_color = inverted_color
+  }

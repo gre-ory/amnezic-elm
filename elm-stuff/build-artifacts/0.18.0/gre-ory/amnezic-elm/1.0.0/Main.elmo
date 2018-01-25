@@ -79,24 +79,24 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						_gre_ory$amnezic_elm$Update$update_player_name(_p0._1)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'UnselectCardType':
+			case 'UnselectCardSuit':
 				return {
 					ctor: '_Tuple2',
 					_0: A3(
 						_gre_ory$amnezic_elm$Update$update_player,
 						model,
 						_p0._0,
-						_gre_ory$amnezic_elm$Update$update_player_card_type('')),
+						_gre_ory$amnezic_elm$Update$update_player_card_suit(_gre_ory$amnezic_elm$Type$NoSuit)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'SelectCardType':
+			case 'SelectCardSuit':
 				return {
 					ctor: '_Tuple2',
 					_0: A3(
 						_gre_ory$amnezic_elm$Update$update_player,
 						model,
 						_p0._0,
-						_gre_ory$amnezic_elm$Update$update_player_card_type(_p0._1)),
+						_gre_ory$amnezic_elm$Update$update_player_card_suit(_p0._1)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'UnselectCardColor':
@@ -106,7 +106,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						_gre_ory$amnezic_elm$Update$update_player,
 						model,
 						_p0._0,
-						_gre_ory$amnezic_elm$Update$update_player_card_color('')),
+						_gre_ory$amnezic_elm$Update$update_player_card_color(_gre_ory$amnezic_elm$Type$NoColor)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SelectCardColor':
@@ -117,6 +117,12 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						model,
 						_p0._0,
 						_gre_ory$amnezic_elm$Update$update_player_card_color(_p0._1)),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'InvertCardColor':
+				return {
+					ctor: '_Tuple2',
+					_0: A3(_gre_ory$amnezic_elm$Update$update_player, model, _p0._0, _gre_ory$amnezic_elm$Update$toggle_player_inverted_color),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SelectCard':

@@ -11,8 +11,8 @@ type alias Model = {
   questions: Array Question,
   players: Array Player,
   state: State,
-  available_card_types: Array String,
-  available_card_colors: Array String
+  available_card_suits: Array CardSuit,
+  available_card_colors: Array CardColor
 }
 
 type alias State = {
@@ -40,11 +40,40 @@ type alias Player = {
   name: String,
   score: Int,
   active: Bool,
-  card_type: String,
-  card_color: String
+  card: Card
 }
 
 type alias SelectedCard = {
+  choice_id: Int,
+  player_id: Int,
+  engaged_point: Int,
+  correct: Bool
+}
+
+type CardSuit =
+  NoSuit
+  | Club
+  | Spade
+  | Heart
+  | Diamond
+  | Star
+  | Dot
+
+type CardColor =
+  NoColor
+  | Black
+  | Red
+  | Yellow
+  | Blue
+  | Green
+
+type alias Card = {
+  card_suit: CardSuit,
+  card_color: CardColor,
+  inverted_color: Bool
+}
+
+type alias PlayingCard = {
   choice_id: Int,
   player_id: Int,
   engaged_point: Int,
@@ -99,9 +128,10 @@ type Msg =
   | DeletePlayer Int
   | UpdatePlayerName Int String
   | UnselectCardColor Int
-  | SelectCardColor Int String
-  | UnselectCardType Int
-  | SelectCardType Int String
+  | SelectCardColor Int CardColor
+  | UnselectCardSuit Int
+  | SelectCardSuit Int CardSuit
+  | InvertCardColor Int
   | SelectCard Int Int
   | UnselectCard Int Int
   | OnKey KeyCode
@@ -115,28 +145,43 @@ id_to_nb id =
 
 -- card suit
 
--- get_card_suit : Model -> Int -> Maybe CardSuit
--- get_card_suit model card_suit_id =
---   Array.get card_suit_id model.card_suits
+has_card_suit : Player -> Bool
+has_card_suit player =
+  player.card.card_suit /= NoSuit
 
-match_card_type_and_color : String -> String -> Player -> Bool
-match_card_type_and_color card_type card_color player =
-  if not ( String.isEmpty card_type ) && not ( String.isEmpty card_color ) then
-    ( player.card_type == card_type ) && ( player.card_color == card_color )
+match_card_suit : CardSuit -> Player -> Bool
+match_card_suit card_suit player =
+  if has_card_suit player then
+    player.card.card_suit == card_suit
   else
     False
 
-is_card_type_and_color_already_selected : String -> String -> Model -> Bool
-is_card_type_and_color_already_selected card_type card_color model =
-  List.any ( match_card_type_and_color card_type card_color ) ( Array.toList model.players )
+has_card_color : Player -> Bool
+has_card_color player =
+  player.card.card_color /= NoColor
 
-has_card_type_and_color : Player -> Bool
-has_card_type_and_color player =
-  not ( String.isEmpty player.card_type ) && not ( String.isEmpty player.card_color )
+match_card_color : CardColor -> Player -> Bool
+match_card_color card_color player =
+  if has_card_color player then
+    player.card.card_color == card_color
+  else
+    False
 
-all_player_has_card_type_and_color : Model -> Bool
-all_player_has_card_type_and_color model =
-  List.all ( has_card_type_and_color ) ( Array.toList model.players )
+match_card : Card -> Player -> Bool
+match_card card player =
+  ( match_card_suit card.card_suit player ) && ( match_card_color card.card_color player ) && ( card.inverted_color == player.card.inverted_color )
+
+is_card_already_selected : Card -> Model -> Bool
+is_card_already_selected card model =
+  List.any ( match_card card ) ( Array.toList model.players )
+
+has_card : Player -> Bool
+has_card player =
+  ( has_card_suit player ) && ( has_card_color player )
+
+all_player_has_card : Model -> Bool
+all_player_has_card model =
+  List.all ( has_card ) ( Array.toList model.players )
 
 -- player
 
@@ -225,7 +270,7 @@ next_page page =
 can_change_page: Model -> Bool
 can_change_page model =
   case model.state.page of
-    PagePlayers -> all_player_has_card_type_and_color model
+    PagePlayers -> all_player_has_card model
     _ -> True
 
 can_go_to_page: Model -> Page -> Bool
