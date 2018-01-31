@@ -1,0 +1,100 @@
+var _rjbma$elm_modal$Modal$maintainableCssConfig = F3(
+	function (moduleName, pullDirection, closeMsg) {
+		var direction = function () {
+			var _p0 = pullDirection;
+			switch (_p0.ctor) {
+				case 'Top':
+					return '--top';
+				case 'Right':
+					return '--right';
+				case 'Bottom':
+					return '--bottom';
+				default:
+					return '--left';
+			}
+		}();
+		return {
+			mainClass: A2(
+				_elm_lang$core$Basics_ops['++'],
+				moduleName,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' ',
+					A2(_elm_lang$core$Basics_ops['++'], moduleName, direction))),
+			direction: pullDirection,
+			openClass: A2(_elm_lang$core$Basics_ops['++'], moduleName, '-isOpen'),
+			containerClass: A2(_elm_lang$core$Basics_ops['++'], moduleName, '-container'),
+			backdropClass: A2(_elm_lang$core$Basics_ops['++'], moduleName, '-backdrop'),
+			closeMsg: closeMsg
+		};
+	});
+var _rjbma$elm_modal$Modal$view = F4(
+	function (cfg, isOpen, attributes, children) {
+		var isOpenClass = isOpen ? _elm_lang$html$Html_Attributes$class(cfg.openClass) : _elm_lang$html$Html_Attributes$class('');
+		var allAttrs = {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class(cfg.mainClass),
+			_1: {ctor: '::', _0: isOpenClass, _1: attributes}
+		};
+		return A2(
+			_elm_lang$html$Html$aside,
+			allAttrs,
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(cfg.containerClass),
+						_1: {ctor: '[]'}
+					},
+					children),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class(cfg.backdropClass),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(cfg.closeMsg),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _rjbma$elm_modal$Modal$maybeView = F4(
+	function (cfg, val, attrs, childrenFn) {
+		var _p1 = val;
+		if (_p1.ctor === 'Nothing') {
+			return A4(
+				_rjbma$elm_modal$Modal$view,
+				cfg,
+				false,
+				attrs,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(''),
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return A4(
+				_rjbma$elm_modal$Modal$view,
+				cfg,
+				true,
+				attrs,
+				childrenFn(_p1._0));
+		}
+	});
+var _rjbma$elm_modal$Modal$Config = F6(
+	function (a, b, c, d, e, f) {
+		return {mainClass: a, openClass: b, containerClass: c, backdropClass: d, direction: e, closeMsg: f};
+	});
+var _rjbma$elm_modal$Modal$Left = {ctor: 'Left'};
+var _rjbma$elm_modal$Modal$Bottom = {ctor: 'Bottom'};
+var _rjbma$elm_modal$Modal$Right = {ctor: 'Right'};
+var _rjbma$elm_modal$Modal$Top = {ctor: 'Top'};

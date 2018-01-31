@@ -1,0 +1,49 @@
+
+/* ========================= page ========================= */
+
+.page {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 70px 1fr 30px;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.page .page-header  { grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2; }
+.page .page-content { grid-column-start: 1; grid-column-end: 2; grid-row-start: 2; grid-row-end: 3; }
+.page .page-footer  { grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4; }
+
+/* ========================= players ========================= */
+
+.page-players .page-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 50px 1fr 1fr 1fr 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  grid-auto-flow: row;
+}
+
+.page-players .page-content .alert    { grid-column-start: 1; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2; }
+.page-players .page-content .player-1 { grid-column-start: 1; grid-column-end: 2; grid-row-start: 2; grid-row-end: 3; }
+.page-players .page-content .player-2 { grid-column-start: 2; grid-column-end: 3; grid-row-start: 2; grid-row-end: 3; }
+.page-players .page-content .player-3 { grid-column-start: 1; grid-column-end: 2; grid-row-start: 3; grid-row-end: 4; }
+.page-players .page-content .player-4 { grid-column-start: 2; grid-column-end: 3; grid-row-start: 3; grid-row-end: 4; }
+.page-players .page-content .player-5 { grid-column-start: 1; grid-column-end: 2; grid-row-start: 4; grid-row-end: 5; }
+.page-players .page-content .player-6 { grid-column-start: 2; grid-column-end: 3; grid-row-start: 4; grid-row-end: 5; }
+.page-players .page-content .player-7 { grid-column-start: 1; grid-column-end: 2; grid-row-start: 5; grid-row-end: 6; }
+.page-players .page-content .player-8 { grid-column-start: 2; grid-column-end: 3; grid-row-start: 5; grid-row-end: 6; }
+
+/* ========================= player ========================= */
+
+.page-players .page-content .player {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  grid-auto-flow: row;
+}
+
+.page-players .page-content .player-card { grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2; }
+.page-players .page-content .player-info { grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2; }

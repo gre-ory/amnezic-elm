@@ -1,0 +1,197 @@
+
+/* ========================= card ========================= */
+
+.card {
+  --card-width: 40px;
+  --card-height: 60px;
+  --card-border-width: 5px;
+  --card-border-radius: 6px;
+  --card-shadow-depth: 4px;
+  --card-shadow-color: rgba( 0, 0, 0, .3 );
+  --stripped-rotation: 225deg;
+  --stripped-width: 5px;
+}
+
+.card {
+  cursor: default;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: var( --card-border-radius );
+  border: 1px solid var( --card-shadow-color );
+  -webkit-box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-color );
+  box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-color );
+}
+
+.card .card-content {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid var( --card-shadow-color );
+  border-radius: calc( var( --card-border-radius ) - 2px );
+  margin: var( --card-border-width );
+  width: calc( 100% - ( 2 * var( --card-border-width ) ) - 2px );
+  height: calc( 100% - ( 2 * var( --card-border-width ) ) - 2px );
+}
+
+.card .card-rank {
+  display: inline-block;
+  margin-top: 16px;
+}
+
+.card {
+  margin: 5px;
+}
+
+/* ========================= card size ========================= */
+
+.card {
+  width: 45px;
+  height: 65px;
+}
+
+/* ========================= card selection ========================= */
+
+.card {
+  background-color: var( --color-white );
+}
+
+.correct .card {
+  background-color: var( --color-green );
+}
+
+.incorrect .card {
+  background-color: var( --color-red );
+}
+
+.card.selected {
+  background-color: var( --color-yellow );
+}
+
+.card.selected:hover,
+.card.selectable:hover {
+  cursor: pointer;
+  -webkit-transform: scale( 1.1, 1.1 );
+      -ms-transform: scale( 1.1, 1.1 );
+          transform: scale( 1.1, 1.1 );
+}
+
+.card.not-selectable {
+  opacity: 0.3;
+}
+
+/* ========================= card rank ========================= */
+
+.card         .card-rank:before ,
+.card.no-rank .card-rank:before { content: " "; }
+.card.rank-1  .card-rank:before { content: "1"; }
+.card.rank-2  .card-rank:before { content: "2"; }
+.card.rank-3  .card-rank:before { content: "3"; }
+.card.rank-4  .card-rank:before { content: "4"; }
+.card.rank-5  .card-rank:before { content: "5"; }
+.card.rank-6  .card-rank:before { content: "6"; }
+.card.rank-7  .card-rank:before { content: "7"; }
+.card.rank-8  .card-rank:before { content: "8"; }
+.card.rank-9  .card-rank:before { content: "9"; }
+
+/* ========================= card suit ========================= */
+
+.card              .card-rank:after ,
+.card.no-suit      .card-rank:after { content: "?"; }
+.card.suit-spade   .card-rank:after { content: "♠"; }
+.card.suit-heart   .card-rank:after { content: "♥"; }
+.card.suit-diamond .card-rank:after { content: "♦"; }
+.card.suit-club    .card-rank:after { content: "♣"; }
+.card.suit-star    .card-rank:after { content: "★"; }
+.card.suit-dot     .card-rank:after { content: "⚫"; }
+.card.suit-square  .card-rank:after { content: "∎"; }
+
+/* ========================= card color ========================= */
+
+.card .card-content {
+  color: black;
+  background: white;
+}
+
+.card.no-color     .card-content { color: var( --color-light-grey   ); }
+.card.color-black  .card-content { color: var( --color-black  ); }
+.card.color-red    .card-content { color: var( --color-dark-red    ); }
+.card.color-yellow .card-content { color: var( --color-dark-yellow ); }
+.card.color-blue   .card-content { color: var( --color-dark-blue   ); }
+.card.color-green  .card-content { color: var( --color-dark-green  ); }
+
+/*
+.card.inverted-color              .card-content { background-color: var( --color-grey   ); }
+.card.inverted-color.no-color     .card-content { background-color: var( --color-grey   ); }
+.card.inverted-color.color-black  .card-content { background-color: var( --color-black  ); }
+.card.inverted-color.color-red    .card-content { background-color: var( --color-red    ); }
+.card.inverted-color.color-yellow .card-content { background-color: var( --color-yellow ); }
+.card.inverted-color.color-blue   .card-content { background-color: var( --color-blue   ); }
+.card.inverted-color.color-green  .card-content { background-color: var( --color-green  ); }
+*/
+
+.card.inverted-color              .card-content {
+  color: white;
+  background: repeating-linear-gradient( var( --stripped-rotation ),
+    #ddd,
+    #ddd var( --stripped-width ),
+    #bbb var( --stripped-width ),
+    #bbb calc( 2 * var( --stripped-width ) )
+  );
+}
+
+.card.inverted-color.color-blue   .card-content {
+  background: repeating-linear-gradient( var( --stripped-rotation ),
+    var( --color-light-blue ),
+    var( --color-light-blue ) var( --stripped-width ),
+    var( --color-dark-light-blue ) var( --stripped-width ),
+    var( --color-dark-light-blue ) calc( 2 * var( --stripped-width ) )
+  );
+}
+
+.card.inverted-color.color-yellow   .card-content {
+  background: repeating-linear-gradient( var( --stripped-rotation ),
+    var( --color-yellow ),
+    var( --color-yellow ) var( --stripped-width ),
+    var( --color-dark-yellow ) var( --stripped-width ),
+    var( --color-dark-yellow ) calc( 2 * var( --stripped-width ) )
+  );
+}
+
+.card.inverted-color.color-green   .card-content {
+  background: repeating-linear-gradient( var( --stripped-rotation ),
+    var( --color-green ),
+    var( --color-green ) var( --stripped-width ),
+    var( --color-dark-green ) var( --stripped-width ),
+    var( --color-dark-green ) calc( 2 * var( --stripped-width ) )
+  );
+}
+
+.card.inverted-color.color-red   .card-content {
+  background: repeating-linear-gradient( var( --stripped-rotation ),
+    var( --color-red ),
+    var( --color-red ) var( --stripped-width ),
+    var( --color-dark-red ) var( --stripped-width ),
+    var( --color-dark-red ) calc( 2 * var( --stripped-width ) )
+  );
+}
+
+.card.inverted-color.color-black   .card-content {
+  background: repeating-linear-gradient( var( --stripped-rotation ),
+    #444,
+    #444 var( --stripped-width ),
+    #222 var( --stripped-width ),
+    #222 calc( 2 * var( --stripped-width ) )
+  );
+}
+
+/* ========================= card text shadow ========================= */
+
+.card {
+  text-shadow: 1px 1px rgba( 0, 0, 0, 0.2 );
+}
+
+.card.color-yellow .card-content,
+.card.inverted-color .card-content {
+  text-shadow: 1px 1px rgba( 0, 0, 0, 0.7 );
+}
