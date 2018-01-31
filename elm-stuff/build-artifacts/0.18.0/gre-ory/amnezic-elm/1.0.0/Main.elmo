@@ -43,6 +43,18 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 					_0: _gre_ory$amnezic_elm$Update$move_forward(model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'SetModalPlayerId':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_gre_ory$amnezic_elm$Update$set_modal_player_id, model, _p0._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'UnsetModalPlayerId':
+				return {
+					ctor: '_Tuple2',
+					_0: _gre_ory$amnezic_elm$Update$unset_modal_player_id(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'NothingToDo':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'AddPlayer':
@@ -106,7 +118,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						_gre_ory$amnezic_elm$Update$update_player,
 						model,
 						_p0._0,
-						_gre_ory$amnezic_elm$Update$update_player_card_color(_gre_ory$amnezic_elm$Type$NoColor)),
+						A2(_gre_ory$amnezic_elm$Update$update_player_card_color, _gre_ory$amnezic_elm$Type$NoColor, false)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SelectCardColor':
@@ -116,13 +128,7 @@ var _gre_ory$amnezic_elm$Main$update = F2(
 						_gre_ory$amnezic_elm$Update$update_player,
 						model,
 						_p0._0,
-						_gre_ory$amnezic_elm$Update$update_player_card_color(_p0._1)),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'InvertCardColor':
-				return {
-					ctor: '_Tuple2',
-					_0: A3(_gre_ory$amnezic_elm$Update$update_player, model, _p0._0, _gre_ory$amnezic_elm$Update$toggle_player_inverted_color),
+						A2(_gre_ory$amnezic_elm$Update$update_player_card_color, _p0._1, _p0._2)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SelectCard':

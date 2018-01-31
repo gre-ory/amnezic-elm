@@ -41,6 +41,11 @@ update msg model =
       ( go_to_page model ( next_page model.state.page ), Cmd.none )
     MoveForward ->
       ( move_forward model, Cmd.none )
+    -- modal
+    SetModalPlayerId player_id ->
+      ( set_modal_player_id model player_id, Cmd.none )
+    UnsetModalPlayerId ->
+      ( unset_modal_player_id model, Cmd.none )
     -- update
     NothingToDo ->
       ( model, Cmd.none )
@@ -59,11 +64,9 @@ update msg model =
     SelectCardSuit player_id card_suit ->
       ( update_player model player_id ( update_player_card_suit card_suit ), Cmd.none )
     UnselectCardColor player_id ->
-      ( update_player model player_id ( update_player_card_color NoColor ), Cmd.none )
-    SelectCardColor player_id card_color ->
-      ( update_player model player_id ( update_player_card_color card_color ), Cmd.none )
-    InvertCardColor player_id ->
-      ( update_player model player_id ( toggle_player_inverted_color ), Cmd.none )
+      ( update_player model player_id ( update_player_card_color NoColor False ), Cmd.none )
+    SelectCardColor player_id card_color inverted_color ->
+      ( update_player model player_id ( update_player_card_color card_color inverted_color ), Cmd.none )
     SelectCard choice_id player_id ->
       ( select_card model choice_id player_id, Cmd.none )
     UnselectCard choice_id player_id ->

@@ -77,18 +77,19 @@ var _gre_ory$amnezic_elm$Init$init_default_players = _elm_lang$core$Array$fromLi
 		_0: A3(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Heart, _gre_ory$amnezic_elm$Type$Red, 0),
 		_1: {
 			ctor: '::',
-			_0: A3(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Dot, _gre_ory$amnezic_elm$Type$Blue, 1),
+			_0: A3(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Spade, _gre_ory$amnezic_elm$Type$Black, 1),
 			_1: {ctor: '[]'}
 		}
 	});
 var _gre_ory$amnezic_elm$Init$init_state = {
-	page: _gre_ory$amnezic_elm$Type$PageStart,
+	page: _gre_ory$amnezic_elm$Type$PagePlayers,
 	question_id: 0,
 	step: _gre_ory$amnezic_elm$Type$StepNotReady,
 	media_status: _gre_ory$amnezic_elm$Type$MediaNotReady,
 	selected_cards: _elm_lang$core$Array$fromList(
 		{ctor: '[]'}),
-	score_mode: _gre_ory$amnezic_elm$Type$ScoreByVelocity
+	score_mode: _gre_ory$amnezic_elm$Type$ScoreByVelocity,
+	maybe_modal_player_id: _elm_lang$core$Maybe$Nothing
 };
 var _gre_ory$amnezic_elm$Init$init_model = {
 	questions: _gre_ory$amnezic_elm$Init$init_default_questions,
@@ -113,7 +114,11 @@ var _gre_ory$amnezic_elm$Init$init_model = {
 							_1: {
 								ctor: '::',
 								_0: _gre_ory$amnezic_elm$Type$Dot,
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _gre_ory$amnezic_elm$Type$Square,
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}

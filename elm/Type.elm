@@ -2,6 +2,7 @@ module Type exposing (..)
 
 -- import
 
+import Html exposing (..)
 import Array exposing (..)
 import Keyboard exposing (..)
 
@@ -21,7 +22,8 @@ type alias State = {
   step: Step,
   media_status: MediaStatus,
   selected_cards: Array SelectedCard,
-  score_mode: ScoreMode
+  score_mode: ScoreMode,
+  maybe_modal_player_id: Maybe Int
 }
 
 type alias Question = {
@@ -58,6 +60,7 @@ type CardSuit =
   | Diamond
   | Star
   | Dot
+  | Square
 
 type CardColor =
   NoColor
@@ -128,12 +131,13 @@ type Msg =
   | DeletePlayer Int
   | UpdatePlayerName Int String
   | UnselectCardColor Int
-  | SelectCardColor Int CardColor
+  | SelectCardColor Int CardColor Bool
   | UnselectCardSuit Int
   | SelectCardSuit Int CardSuit
-  | InvertCardColor Int
   | SelectCard Int Int
   | UnselectCard Int Int
+  | SetModalPlayerId Int
+  | UnsetModalPlayerId
   | OnKey KeyCode
   | NothingToDo
 
@@ -160,16 +164,16 @@ has_card_color : Player -> Bool
 has_card_color player =
   player.card.card_color /= NoColor
 
-match_card_color : CardColor -> Player -> Bool
-match_card_color card_color player =
+match_card_color : CardColor -> Bool -> Player -> Bool
+match_card_color card_color inverted_color player =
   if has_card_color player then
-    player.card.card_color == card_color
+    ( player.card.card_color == card_color ) && ( player.card.inverted_color == inverted_color )
   else
     False
 
 match_card : Card -> Player -> Bool
 match_card card player =
-  ( match_card_suit card.card_suit player ) && ( match_card_color card.card_color player ) && ( card.inverted_color == player.card.inverted_color )
+  ( match_card_suit card.card_suit player ) && ( match_card_color card.card_color card.inverted_color player )
 
 is_card_already_selected : Card -> Model -> Bool
 is_card_already_selected card model =

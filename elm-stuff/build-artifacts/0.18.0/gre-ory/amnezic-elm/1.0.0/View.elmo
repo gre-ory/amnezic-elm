@@ -56,7 +56,7 @@ var _gre_ory$amnezic_elm$View$render_player_scores = function (model) {
 					},
 					_elm_lang$core$Array$toList(model.players)))));
 };
-var _gre_ory$amnezic_elm$View$render_card_ = F4(
+var _gre_ory$amnezic_elm$View$render_playing_card = F4(
 	function (card, maybe_card_rank, card_classes, on_click) {
 		var card_rank_class = function () {
 			var _p0 = maybe_card_rank;
@@ -102,8 +102,10 @@ var _gre_ory$amnezic_elm$View$render_card_ = F4(
 					return 'suit-diamond';
 				case 'Star':
 					return 'suit-star';
-				default:
+				case 'Dot':
 					return 'suit-dot';
+				default:
+					return 'suit-square';
 			}
 		}();
 		var classes = A2(
@@ -161,10 +163,10 @@ var _gre_ory$amnezic_elm$View$render_card_ = F4(
 				_1: {ctor: '[]'}
 			});
 	});
-var _gre_ory$amnezic_elm$View$render_not_selectable_card_ = F2(
+var _gre_ory$amnezic_elm$View$render_not_selectable_playing_card = F2(
 	function (maybe_card_rank, card) {
 		return A4(
-			_gre_ory$amnezic_elm$View$render_card_,
+			_gre_ory$amnezic_elm$View$render_playing_card,
 			card,
 			maybe_card_rank,
 			{
@@ -174,10 +176,10 @@ var _gre_ory$amnezic_elm$View$render_not_selectable_card_ = F2(
 			},
 			_gre_ory$amnezic_elm$Type$NothingToDo);
 	});
-var _gre_ory$amnezic_elm$View$render_selectable_card_ = F3(
+var _gre_ory$amnezic_elm$View$render_selectable_playing_card = F3(
 	function (maybe_card_rank, on_click, card) {
 		return A4(
-			_gre_ory$amnezic_elm$View$render_card_,
+			_gre_ory$amnezic_elm$View$render_playing_card,
 			card,
 			maybe_card_rank,
 			{
@@ -187,128 +189,14 @@ var _gre_ory$amnezic_elm$View$render_selectable_card_ = F3(
 			},
 			on_click);
 	});
-var _gre_ory$amnezic_elm$View$render_invert_card_color = F2(
-	function (model, player_id) {
-		var _p3 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
-		if (_p3.ctor === 'Just') {
-			var _p4 = _p3._0;
-			var new_card = A3(_gre_ory$amnezic_elm$Init$init_card, _p4.card.card_suit, _p4.card.card_color, !_p4.card.inverted_color);
-			var is_owned_by_other = A2(_gre_ory$amnezic_elm$Type$is_card_already_selected, new_card, model);
-			return is_owned_by_other ? A2(_gre_ory$amnezic_elm$View$render_not_selectable_card_, _elm_lang$core$Maybe$Nothing, new_card) : A3(
-				_gre_ory$amnezic_elm$View$render_selectable_card_,
-				_elm_lang$core$Maybe$Nothing,
-				_gre_ory$amnezic_elm$Type$InvertCardColor(player_id),
-				new_card);
-		} else {
-			return A2(
-				_elm_lang$html$Html$span,
-				{ctor: '[]'},
-				{ctor: '[]'});
-		}
-	});
-var _gre_ory$amnezic_elm$View$render_selected_card_ = F3(
-	function (maybe_card_rank, on_click, card) {
-		return A4(
-			_gre_ory$amnezic_elm$View$render_card_,
-			card,
-			maybe_card_rank,
-			{
-				ctor: '::',
-				_0: 'selected',
-				_1: {ctor: '[]'}
-			},
-			on_click);
-	});
-var _gre_ory$amnezic_elm$View$render_card_color = F4(
-	function (model, player_id, card_color_id, card_color) {
-		var _p5 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
-		if (_p5.ctor === 'Just') {
-			var _p6 = _p5._0;
-			var is_owned_by_player = A2(_gre_ory$amnezic_elm$Type$match_card_color, card_color, _p6);
-			var new_card = A3(_gre_ory$amnezic_elm$Init$init_card, _p6.card.card_suit, card_color, _p6.card.inverted_color);
-			var is_owned_by_other = (!is_owned_by_player) && A2(_gre_ory$amnezic_elm$Type$is_card_already_selected, new_card, model);
-			return is_owned_by_player ? A3(
-				_gre_ory$amnezic_elm$View$render_selected_card_,
-				_elm_lang$core$Maybe$Nothing,
-				_gre_ory$amnezic_elm$Type$UnselectCardColor(player_id),
-				new_card) : (is_owned_by_other ? A2(_gre_ory$amnezic_elm$View$render_not_selectable_card_, _elm_lang$core$Maybe$Nothing, new_card) : A3(
-				_gre_ory$amnezic_elm$View$render_selectable_card_,
-				_elm_lang$core$Maybe$Nothing,
-				A2(_gre_ory$amnezic_elm$Type$SelectCardColor, player_id, card_color),
-				new_card));
-		} else {
-			return A2(
-				_elm_lang$html$Html$span,
-				{ctor: '[]'},
-				{ctor: '[]'});
-		}
-	});
-var _gre_ory$amnezic_elm$View$render_card_colors = F2(
-	function (model, player_id) {
-		return A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$span,
-					{ctor: '[]'},
-					_elm_lang$core$Array$toList(
-						A2(
-							_elm_lang$core$Array$indexedMap,
-							A2(_gre_ory$amnezic_elm$View$render_card_color, model, player_id),
-							model.available_card_colors))),
-				_1: {
-					ctor: '::',
-					_0: A2(_gre_ory$amnezic_elm$View$render_invert_card_color, model, player_id),
-					_1: {ctor: '[]'}
-				}
-			});
-	});
-var _gre_ory$amnezic_elm$View$render_card_suit = F4(
-	function (model, player_id, card_suit_id, card_suit) {
-		var _p7 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
-		if (_p7.ctor === 'Just') {
-			var _p8 = _p7._0;
-			var is_owned_by_player = A2(_gre_ory$amnezic_elm$Type$match_card_suit, card_suit, _p8);
-			var new_card = A3(_gre_ory$amnezic_elm$Init$init_card, card_suit, _p8.card.card_color, _p8.card.inverted_color);
-			var is_owned_by_other = (!is_owned_by_player) && A2(_gre_ory$amnezic_elm$Type$is_card_already_selected, new_card, model);
-			return is_owned_by_player ? A3(
-				_gre_ory$amnezic_elm$View$render_selected_card_,
-				_elm_lang$core$Maybe$Nothing,
-				_gre_ory$amnezic_elm$Type$UnselectCardSuit(player_id),
-				new_card) : (is_owned_by_other ? A2(_gre_ory$amnezic_elm$View$render_not_selectable_card_, _elm_lang$core$Maybe$Nothing, new_card) : A3(
-				_gre_ory$amnezic_elm$View$render_selectable_card_,
-				_elm_lang$core$Maybe$Nothing,
-				A2(_gre_ory$amnezic_elm$Type$SelectCardSuit, player_id, card_suit),
-				new_card));
-		} else {
-			return A2(
-				_elm_lang$html$Html$span,
-				{ctor: '[]'},
-				{ctor: '[]'});
-		}
-	});
-var _gre_ory$amnezic_elm$View$render_card_suits = F2(
-	function (model, player_id) {
-		return A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			_elm_lang$core$Array$toList(
-				A2(
-					_elm_lang$core$Array$indexedMap,
-					A2(_gre_ory$amnezic_elm$View$render_card_suit, model, player_id),
-					model.available_card_suits)));
-	});
-var _gre_ory$amnezic_elm$View$render_card = F4(
+var _gre_ory$amnezic_elm$View$render_choice_card = F4(
 	function (model, choice_id, player_id, player) {
 		var card_rank = _gre_ory$amnezic_elm$Type$id_to_nb(choice_id);
-		return player.active ? (A3(_gre_ory$amnezic_elm$Type$has_selected_card, choice_id, player_id, model) ? A3(
-			_gre_ory$amnezic_elm$View$render_selected_card_,
+		return player.active ? (A3(_gre_ory$amnezic_elm$Type$has_selected_card, choice_id, player_id, model) ? A2(
+			_gre_ory$amnezic_elm$View$render_not_selectable_playing_card,
 			_elm_lang$core$Maybe$Just(card_rank),
-			A2(_gre_ory$amnezic_elm$Type$UnselectCard, choice_id, player_id),
 			player.card) : A3(
-			_gre_ory$amnezic_elm$View$render_selectable_card_,
+			_gre_ory$amnezic_elm$View$render_selectable_playing_card,
 			_elm_lang$core$Maybe$Just(card_rank),
 			A2(_gre_ory$amnezic_elm$Type$SelectCard, choice_id, player_id),
 			player.card)) : A2(
@@ -316,7 +204,7 @@ var _gre_ory$amnezic_elm$View$render_card = F4(
 			{ctor: '[]'},
 			{ctor: '[]'});
 	});
-var _gre_ory$amnezic_elm$View$render_cards = F2(
+var _gre_ory$amnezic_elm$View$render_choice_cards = F2(
 	function (model, choice_id) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -328,67 +216,80 @@ var _gre_ory$amnezic_elm$View$render_cards = F2(
 			_elm_lang$core$Array$toList(
 				A2(
 					_elm_lang$core$Array$indexedMap,
-					A2(_gre_ory$amnezic_elm$View$render_card, model, choice_id),
+					A2(_gre_ory$amnezic_elm$View$render_choice_card, model, choice_id),
 					model.players)));
 	});
-var _gre_ory$amnezic_elm$View$render_test_cards = function () {
-	var cards = {
-		ctor: '::',
-		_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$NoSuit, _gre_ory$amnezic_elm$Type$NoColor, false),
-		_1: {
-			ctor: '::',
-			_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Dot, _gre_ory$amnezic_elm$Type$NoColor, false),
-			_1: {
+var _gre_ory$amnezic_elm$View$render_not_selected_playing_card = F2(
+	function (maybe_card_rank, card) {
+		return A4(
+			_gre_ory$amnezic_elm$View$render_playing_card,
+			card,
+			maybe_card_rank,
+			{
 				ctor: '::',
-				_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Dot, _gre_ory$amnezic_elm$Type$Blue, false),
-				_1: {
-					ctor: '::',
-					_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Spade, _gre_ory$amnezic_elm$Type$Green, false),
-					_1: {
-						ctor: '::',
-						_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Star, _gre_ory$amnezic_elm$Type$Yellow, false),
-						_1: {
-							ctor: '::',
-							_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Club, _gre_ory$amnezic_elm$Type$Black, false),
-							_1: {
-								ctor: '::',
-								_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Diamond, _gre_ory$amnezic_elm$Type$Red, false),
-								_1: {
-									ctor: '::',
-									_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$NoSuit, _gre_ory$amnezic_elm$Type$NoColor, true),
-									_1: {
-										ctor: '::',
-										_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Dot, _gre_ory$amnezic_elm$Type$NoColor, true),
-										_1: {
-											ctor: '::',
-											_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Dot, _gre_ory$amnezic_elm$Type$Blue, true),
-											_1: {
-												ctor: '::',
-												_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Spade, _gre_ory$amnezic_elm$Type$Green, true),
-												_1: {
-													ctor: '::',
-													_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Star, _gre_ory$amnezic_elm$Type$Yellow, true),
-													_1: {
-														ctor: '::',
-														_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Club, _gre_ory$amnezic_elm$Type$Black, true),
-														_1: {
-															ctor: '::',
-															_0: A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Diamond, _gre_ory$amnezic_elm$Type$Red, true),
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	};
+				_0: 'not-selected',
+				_1: {ctor: '[]'}
+			},
+			_gre_ory$amnezic_elm$Type$NothingToDo);
+	});
+var _gre_ory$amnezic_elm$View$render_selected_playing_card = F3(
+	function (maybe_card_rank, on_click, card) {
+		return A4(
+			_gre_ory$amnezic_elm$View$render_playing_card,
+			card,
+			maybe_card_rank,
+			{
+				ctor: '::',
+				_0: 'selected',
+				_1: {ctor: '[]'}
+			},
+			on_click);
+	});
+var _gre_ory$amnezic_elm$View$render_all_cards = function (model) {
+	var card_by_suit = A2(
+		_elm_lang$core$List$append,
+		A2(
+			_elm_lang$core$List$map,
+			function (s) {
+				return A3(_gre_ory$amnezic_elm$Init$init_card, s, _gre_ory$amnezic_elm$Type$NoColor, false);
+			},
+			{
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$Type$NoSuit,
+				_1: _elm_lang$core$Array$toList(model.available_card_suits)
+			}),
+		A2(
+			_elm_lang$core$List$map,
+			function (s) {
+				return A3(_gre_ory$amnezic_elm$Init$init_card, s, _gre_ory$amnezic_elm$Type$NoColor, true);
+			},
+			{
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$Type$NoSuit,
+				_1: _elm_lang$core$Array$toList(model.available_card_suits)
+			}));
+	var card_by_color = A2(
+		_elm_lang$core$List$append,
+		A2(
+			_elm_lang$core$List$map,
+			function (c) {
+				return A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Dot, c, false);
+			},
+			{
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$Type$NoColor,
+				_1: _elm_lang$core$Array$toList(model.available_card_colors)
+			}),
+		A2(
+			_elm_lang$core$List$map,
+			function (c) {
+				return A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$Dot, c, true);
+			},
+			{
+				ctor: '::',
+				_0: _gre_ory$amnezic_elm$Type$NoColor,
+				_1: _elm_lang$core$Array$toList(model.available_card_colors)
+			}));
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -407,56 +308,56 @@ var _gre_ory$amnezic_elm$View$render_test_cards = function () {
 				},
 				A2(
 					_elm_lang$core$List$map,
-					A2(_gre_ory$amnezic_elm$View$render_selectable_card_, _elm_lang$core$Maybe$Nothing, _gre_ory$amnezic_elm$Type$NothingToDo),
-					cards)),
+					A2(_gre_ory$amnezic_elm$View$render_selectable_playing_card, _elm_lang$core$Maybe$Nothing, _gre_ory$amnezic_elm$Type$NothingToDo),
+					card_by_suit)),
 			_1: {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('players'),
+						_0: _elm_lang$html$Html_Attributes$class('players correct'),
 						_1: {ctor: '[]'}
 					},
 					A2(
 						_elm_lang$core$List$map,
 						A2(
-							_gre_ory$amnezic_elm$View$render_selectable_card_,
+							_gre_ory$amnezic_elm$View$render_selectable_playing_card,
 							_elm_lang$core$Maybe$Just(2),
 							_gre_ory$amnezic_elm$Type$NothingToDo),
-						cards)),
+						card_by_color)),
 				_1: {
 					ctor: '::',
 					_0: A2(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('players correct'),
+							_0: _elm_lang$html$Html_Attributes$class('players incorrect'),
 							_1: {ctor: '[]'}
 						},
 						A2(
 							_elm_lang$core$List$map,
 							A2(
-								_gre_ory$amnezic_elm$View$render_selectable_card_,
+								_gre_ory$amnezic_elm$View$render_selectable_playing_card,
 								_elm_lang$core$Maybe$Just(2),
 								_gre_ory$amnezic_elm$Type$NothingToDo),
-							cards)),
+							card_by_color)),
 					_1: {
 						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('players incorrect'),
+								_0: _elm_lang$html$Html_Attributes$class('players'),
 								_1: {ctor: '[]'}
 							},
 							A2(
 								_elm_lang$core$List$map,
 								A2(
-									_gre_ory$amnezic_elm$View$render_selectable_card_,
+									_gre_ory$amnezic_elm$View$render_selected_playing_card,
 									_elm_lang$core$Maybe$Just(2),
 									_gre_ory$amnezic_elm$Type$NothingToDo),
-								cards)),
+								card_by_color)),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -468,47 +369,30 @@ var _gre_ory$amnezic_elm$View$render_test_cards = function () {
 								},
 								A2(
 									_elm_lang$core$List$map,
-									A2(
-										_gre_ory$amnezic_elm$View$render_selected_card_,
-										_elm_lang$core$Maybe$Just(2),
-										_gre_ory$amnezic_elm$Type$NothingToDo),
-									cards)),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('players'),
-										_1: {ctor: '[]'}
-									},
-									A2(
-										_elm_lang$core$List$map,
-										_gre_ory$amnezic_elm$View$render_not_selectable_card_(
-											_elm_lang$core$Maybe$Just(2)),
-										cards)),
-								_1: {ctor: '[]'}
-							}
+									_gre_ory$amnezic_elm$View$render_not_selectable_playing_card(
+										_elm_lang$core$Maybe$Just(2)),
+									card_by_color)),
+							_1: {ctor: '[]'}
 						}
 					}
 				}
 			}
 		});
-}();
+};
 var _gre_ory$amnezic_elm$View$render_correct_class = function (maybe_is_correct) {
-	var _p9 = maybe_is_correct;
-	if (_p9.ctor === 'Just') {
-		return _p9._0 ? 'correct' : 'incorrect';
+	var _p3 = maybe_is_correct;
+	if (_p3.ctor === 'Just') {
+		return _p3._0 ? 'correct' : 'incorrect';
 	} else {
 		return '';
 	}
 };
 var _gre_ory$amnezic_elm$View$render_choice_class = F2(
 	function (model, choice_id) {
-		var _p10 = A2(_gre_ory$amnezic_elm$Type$get_choice, model, choice_id);
-		if (_p10.ctor === 'Just') {
+		var _p4 = A2(_gre_ory$amnezic_elm$Type$get_choice, model, choice_id);
+		if (_p4.ctor === 'Just') {
 			return _gre_ory$amnezic_elm$View$render_correct_class(
-				_elm_lang$core$Maybe$Just(_p10._0.correct));
+				_elm_lang$core$Maybe$Just(_p4._0.correct));
 		} else {
 			return _gre_ory$amnezic_elm$View$render_correct_class(_elm_lang$core$Maybe$Nothing);
 		}
@@ -519,8 +403,8 @@ var _gre_ory$amnezic_elm$View$render_choice = F3(
 			_elm_lang$core$Basics_ops['++'],
 			'choice ',
 			A2(_gre_ory$amnezic_elm$View$render_choice_class, model, choice_id)) : 'choice';
-		var _p11 = model.state.step;
-		switch (_p11.ctor) {
+		var _p5 = model.state.step;
+		switch (_p5.ctor) {
 			case 'StepNotReady':
 				return A2(
 					_elm_lang$html$Html$div,
@@ -661,7 +545,7 @@ var _gre_ory$amnezic_elm$View$render_choice = F3(
 					},
 					{
 						ctor: '::',
-						_0: A2(_gre_ory$amnezic_elm$View$render_cards, model, choice_id),
+						_0: A2(_gre_ory$amnezic_elm$View$render_choice_cards, model, choice_id),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -734,6 +618,77 @@ var _gre_ory$amnezic_elm$View$render_choice = F3(
 						}
 					});
 		}
+	});
+var _gre_ory$amnezic_elm$View$render_selected_card = F3(
+	function (model, selected_card_id, selected_card) {
+		var on_click = A2(_gre_ory$amnezic_elm$Type$UnselectCard, selected_card.choice_id, selected_card.player_id);
+		var card_rank = _elm_lang$core$Maybe$Just(
+			_gre_ory$amnezic_elm$Type$id_to_nb(selected_card.choice_id));
+		var classes = A2(
+			_elm_lang$core$Basics_ops['++'],
+			'selected_card ',
+			_gre_ory$amnezic_elm$View$render_correct_class(
+				_elm_lang$core$Maybe$Just(selected_card.correct)));
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(classes),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: function () {
+							var _p6 = A2(_gre_ory$amnezic_elm$Type$get_player, model, selected_card.player_id);
+							if (_p6.ctor === 'Just') {
+								return A3(_gre_ory$amnezic_elm$View$render_selectable_playing_card, card_rank, on_click, _p6._0.card);
+							} else {
+								return A2(
+									_elm_lang$html$Html$span,
+									{ctor: '[]'},
+									{ctor: '[]'});
+							}
+						}(),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: selected_card.correct ? _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'+',
+									_elm_lang$core$Basics$toString(selected_card.engaged_point))) : _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(selected_card.engaged_point)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _gre_ory$amnezic_elm$View$render_selected_cards = F2(
+	function (model, state) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('selected_cards'),
+				_1: {ctor: '[]'}
+			},
+			_elm_lang$core$Array$toList(
+				A2(
+					_elm_lang$core$Array$indexedMap,
+					_gre_ory$amnezic_elm$View$render_selected_card(model),
+					state.selected_cards)));
 	});
 var _gre_ory$amnezic_elm$View$render_questions_progress = function (model) {
 	var question_max = _gre_ory$amnezic_elm$Type$id_to_nb(
@@ -822,6 +777,179 @@ var _gre_ory$amnezic_elm$View$render_questions_progress = function (model) {
 			}
 		});
 };
+var _gre_ory$amnezic_elm$View$render_card_color = F4(
+	function (model, player_id, inverted_color, card_color) {
+		var _p7 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+		if (_p7.ctor === 'Just') {
+			var _p8 = _p7._0;
+			var display_card = A3(_gre_ory$amnezic_elm$Init$init_card, _gre_ory$amnezic_elm$Type$NoSuit, card_color, inverted_color);
+			var target_card = A2(
+				_gre_ory$amnezic_elm$Update$update_inverted_color,
+				inverted_color,
+				A2(_gre_ory$amnezic_elm$Update$update_card_color, card_color, _p8.card));
+			var not_selectable = (!A2(_gre_ory$amnezic_elm$Type$match_card, target_card, _p8)) && A2(_gre_ory$amnezic_elm$Type$is_card_already_selected, target_card, model);
+			var selected = A3(_gre_ory$amnezic_elm$Type$match_card_color, card_color, inverted_color, _p8);
+			return selected ? A3(
+				_gre_ory$amnezic_elm$View$render_selected_playing_card,
+				_elm_lang$core$Maybe$Nothing,
+				_gre_ory$amnezic_elm$Type$UnselectCardColor(player_id),
+				display_card) : (not_selectable ? A2(_gre_ory$amnezic_elm$View$render_not_selectable_playing_card, _elm_lang$core$Maybe$Nothing, display_card) : A3(
+				_gre_ory$amnezic_elm$View$render_selectable_playing_card,
+				_elm_lang$core$Maybe$Nothing,
+				A3(_gre_ory$amnezic_elm$Type$SelectCardColor, player_id, card_color, inverted_color),
+				display_card));
+		} else {
+			return A2(
+				_elm_lang$html$Html$span,
+				{ctor: '[]'},
+				{ctor: '[]'});
+		}
+	});
+var _gre_ory$amnezic_elm$View$render_card_suit = F3(
+	function (model, player_id, card_suit) {
+		var _p9 = A2(_gre_ory$amnezic_elm$Type$get_player, model, player_id);
+		if (_p9.ctor === 'Just') {
+			var _p10 = _p9._0;
+			var display_card = A3(_gre_ory$amnezic_elm$Init$init_card, card_suit, _gre_ory$amnezic_elm$Type$Black, false);
+			var target_card = A2(_gre_ory$amnezic_elm$Update$update_card_suit, card_suit, _p10.card);
+			var not_selectable = (!A2(_gre_ory$amnezic_elm$Type$match_card, target_card, _p10)) && A2(_gre_ory$amnezic_elm$Type$is_card_already_selected, target_card, model);
+			var selected = A2(_gre_ory$amnezic_elm$Type$match_card_suit, card_suit, _p10);
+			return selected ? A3(
+				_gre_ory$amnezic_elm$View$render_selected_playing_card,
+				_elm_lang$core$Maybe$Nothing,
+				_gre_ory$amnezic_elm$Type$UnselectCardSuit(player_id),
+				display_card) : (not_selectable ? A2(_gre_ory$amnezic_elm$View$render_not_selectable_playing_card, _elm_lang$core$Maybe$Nothing, display_card) : A3(
+				_gre_ory$amnezic_elm$View$render_selectable_playing_card,
+				_elm_lang$core$Maybe$Nothing,
+				A2(_gre_ory$amnezic_elm$Type$SelectCardSuit, player_id, card_suit),
+				display_card));
+		} else {
+			return A2(
+				_elm_lang$html$Html$span,
+				{ctor: '[]'},
+				{ctor: '[]'});
+		}
+	});
+var _gre_ory$amnezic_elm$View$render_modal_player_card_selector = F3(
+	function (model, player_id, player) {
+		var modal_cfg = A3(_rjbma$elm_modal$Modal$maintainableCssConfig, 'modal', _rjbma$elm_modal$Modal$Top, _gre_ory$amnezic_elm$Type$UnsetModalPlayerId);
+		var show_modal = function () {
+			var _p11 = model.state.maybe_modal_player_id;
+			if (_p11.ctor === 'Just') {
+				return _elm_lang$core$Native_Utils.eq(_p11._0, player_id);
+			} else {
+				return false;
+			}
+		}();
+		var modal_view = A2(_rjbma$elm_modal$Modal$view, modal_cfg, show_modal);
+		return A2(
+			modal_view,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$fieldset,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$legend,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(player.name),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(_gre_ory$amnezic_elm$View$render_not_selected_playing_card, _elm_lang$core$Maybe$Nothing, player.card),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$fieldset,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$legend,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('symbols'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									A2(
+										_elm_lang$core$List$map,
+										A2(_gre_ory$amnezic_elm$View$render_card_suit, model, player_id),
+										_elm_lang$core$Array$toList(model.available_card_suits))),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$fieldset,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$legend,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('colors'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{ctor: '[]'},
+										A2(
+											_elm_lang$core$List$map,
+											A3(_gre_ory$amnezic_elm$View$render_card_color, model, player_id, false),
+											_elm_lang$core$Array$toList(model.available_card_colors))),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{ctor: '[]'},
+											A2(
+												_elm_lang$core$List$map,
+												A3(_gre_ory$amnezic_elm$View$render_card_color, model, player_id, true),
+												_elm_lang$core$Array$toList(model.available_card_colors))),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(_gre_ory$amnezic_elm$Type$UnsetModalPlayerId),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Close'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			});
+	});
 var _gre_ory$amnezic_elm$View$render_footer = function (model) {
 	return {
 		ctor: '::',
@@ -868,8 +996,16 @@ var _gre_ory$amnezic_elm$View$render_button = F5(
 				ctor: '::',
 				_0: _elm_lang$core$String$isEmpty(icon_class) ? A2(
 					_elm_lang$html$Html$span,
-					{ctor: '[]'},
-					{ctor: '[]'}) : A2(
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('button-text'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(button_text),
+						_1: {ctor: '[]'}
+					}) : A2(
 					_elm_lang$html$Html$span,
 					{
 						ctor: '::',
@@ -881,22 +1017,7 @@ var _gre_ory$amnezic_elm$View$render_button = F5(
 						_0: _gre_ory$amnezic_elm$View$render_material_icon(icon_class),
 						_1: {ctor: '[]'}
 					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$span,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('button-text'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(button_text),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			});
 	});
 var _gre_ory$amnezic_elm$View$render_activated_button = F4(
@@ -918,38 +1039,6 @@ var _gre_ory$amnezic_elm$View$render_enabled_button = F5(
 			button_text,
 			button_description,
 			on_click);
-	});
-var _gre_ory$amnezic_elm$View$render_add_player_button = function (model) {
-	return _gre_ory$amnezic_elm$Type$can_add_player(model) ? A5(_gre_ory$amnezic_elm$View$render_enabled_button, 'person_add', 'player-add', 'Add', 'Add player', _gre_ory$amnezic_elm$Type$AddPlayer) : A2(
-		_elm_lang$html$Html$span,
-		{ctor: '[]'},
-		{ctor: '[]'});
-};
-var _gre_ory$amnezic_elm$View$render_deactivate_player_button = F2(
-	function (model, player_id) {
-		return A2(_gre_ory$amnezic_elm$Type$can_deactivate_player, model, player_id) ? A5(
-			_gre_ory$amnezic_elm$View$render_enabled_button,
-			'',
-			'player-deactivate',
-			'Deactivate',
-			'Deactivate player',
-			_gre_ory$amnezic_elm$Type$DeactivatePlayer(player_id)) : A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{ctor: '[]'});
-	});
-var _gre_ory$amnezic_elm$View$render_activate_player_button = F2(
-	function (model, player_id) {
-		return A2(_gre_ory$amnezic_elm$Type$can_activate_player, model, player_id) ? A5(
-			_gre_ory$amnezic_elm$View$render_enabled_button,
-			'',
-			'player-activate',
-			'Activate',
-			'Activate player',
-			_gre_ory$amnezic_elm$Type$ActivatePlayer(player_id)) : A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{ctor: '[]'});
 	});
 var _gre_ory$amnezic_elm$View$render_disabled_button = F4(
 	function (icon_class, button_class, button_text, button_description) {
@@ -1062,15 +1151,35 @@ var _gre_ory$amnezic_elm$View$render_header = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
+var _gre_ory$amnezic_elm$View$render_deactivate_player_button = F2(
+	function (model, player_id) {
+		return A2(_gre_ory$amnezic_elm$Type$can_deactivate_player, model, player_id) ? A5(
+			_gre_ory$amnezic_elm$View$render_enabled_button,
+			'pause_circle_outline',
+			'player-deactivate',
+			'Deactivate',
+			'Deactivate player',
+			_gre_ory$amnezic_elm$Type$DeactivatePlayer(player_id)) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, 'pause_circle_outline', 'player-deactivate', 'Deactivate', 'Deactivate player');
+	});
+var _gre_ory$amnezic_elm$View$render_activate_player_button = F2(
+	function (model, player_id) {
+		return A2(_gre_ory$amnezic_elm$Type$can_activate_player, model, player_id) ? A5(
+			_gre_ory$amnezic_elm$View$render_enabled_button,
+			'play_circle_outline',
+			'player-activate',
+			'Activate',
+			'Activate player',
+			_gre_ory$amnezic_elm$Type$ActivatePlayer(player_id)) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, 'play_circle_outline', 'player-activate', 'Activate', 'Activate player');
+	});
 var _gre_ory$amnezic_elm$View$render_delete_player_button = F2(
 	function (model, player_id) {
 		return A2(_gre_ory$amnezic_elm$Type$can_delete_player, model, player_id) ? A5(
 			_gre_ory$amnezic_elm$View$render_enabled_button,
-			'',
+			'delete',
 			'player-delete',
 			'Delete',
 			'Delete player',
-			_gre_ory$amnezic_elm$Type$DeletePlayer(player_id)) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, '', 'player-delete', 'Delete', 'Delete player');
+			_gre_ory$amnezic_elm$Type$DeletePlayer(player_id)) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, 'delete', 'player-delete', 'Delete', 'Delete player');
 	});
 var _gre_ory$amnezic_elm$View$render_error = function (message) {
 	return _elm_lang$html$Html$text(message);
@@ -1091,7 +1200,7 @@ var _gre_ory$amnezic_elm$View$render_page_skeleton = F3(
 			{
 				ctor: '::',
 				_0: _elm_lang$html$Html_Attributes$class(
-					A2(_elm_lang$core$Basics_ops['++'], 'page ', page_id)),
+					A2(_elm_lang$core$Basics_ops['++'], 'page page-', page_id)),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -1129,281 +1238,6 @@ var _gre_ory$amnezic_elm$View$render_page_skeleton = F3(
 				}
 			});
 	});
-var _gre_ory$amnezic_elm$View$render_default_page = F2(
-	function (model, page_id) {
-		return A3(
-			_gre_ory$amnezic_elm$View$render_page_skeleton,
-			model,
-			page_id,
-			{ctor: '[]'});
-	});
-var _gre_ory$amnezic_elm$View$render_id_to_nb = function (id) {
-	return _elm_lang$html$Html$text(
-		_elm_lang$core$Basics$toString(
-			_gre_ory$amnezic_elm$Type$id_to_nb(id)));
-};
-var _gre_ory$amnezic_elm$View$render_player = F3(
-	function (model, player_id, player) {
-		var classes = A2(
-			_elm_lang$core$String$join,
-			' ',
-			{
-				ctor: '::',
-				_0: 'player',
-				_1: {
-					ctor: '::',
-					_0: player.active ? 'active' : 'inactive',
-					_1: {
-						ctor: '::',
-						_0: _gre_ory$amnezic_elm$Type$has_card(player) ? 'valid' : 'invalid',
-						_1: {
-							ctor: '::',
-							_0: _gre_ory$amnezic_elm$Type$has_card(player) ? 'valid' : 'invalid',
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			});
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class(classes),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _gre_ory$amnezic_elm$View$render_id_to_nb(player_id),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(' - '),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$placeholder('player name'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(
-										_gre_ory$amnezic_elm$Type$UpdatePlayerName(player_id)),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$value(player.name),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(_gre_ory$amnezic_elm$View$render_deactivate_player_button, model, player_id),
-							_1: {
-								ctor: '::',
-								_0: A2(_gre_ory$amnezic_elm$View$render_activate_player_button, model, player_id),
-								_1: {
-									ctor: '::',
-									_0: A2(_gre_ory$amnezic_elm$View$render_delete_player_button, model, player_id),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('status'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text(
-													A2(
-														_elm_lang$core$Basics_ops['++'],
-														'score: ',
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															_elm_lang$core$Basics$toString(player.score),
-															' pt(s)'))),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														A2(_elm_lang$core$Basics_ops['++'], ', status: ', classes)),
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$div,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: A2(_gre_ory$amnezic_elm$View$render_card_suits, model, player_id),
-													_1: {ctor: '[]'}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$div,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: A2(_gre_ory$amnezic_elm$View$render_card_colors, model, player_id),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			});
-	});
-var _gre_ory$amnezic_elm$View$render_players = function (model) {
-	var html_add_player = _gre_ory$amnezic_elm$Type$can_add_player(model) ? A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('player'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _gre_ory$amnezic_elm$View$render_add_player_button(model),
-			_1: {ctor: '[]'}
-		}) : A2(
-		_elm_lang$html$Html$span,
-		{ctor: '[]'},
-		{ctor: '[]'});
-	var html_players = A2(
-		_elm_lang$core$List$append,
-		_elm_lang$core$Array$toList(
-			A2(
-				_elm_lang$core$Array$indexedMap,
-				_gre_ory$amnezic_elm$View$render_player(model),
-				model.players)),
-		{
-			ctor: '::',
-			_0: html_add_player,
-			_1: {ctor: '[]'}
-		});
-	var warning_notification = (!_gre_ory$amnezic_elm$Type$all_player_has_card(model)) ? A2(
-		_elm_lang$html$Html$span,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('alert alert-warning'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('please select one card type and color for each player!'),
-			_1: {ctor: '[]'}
-		}) : A2(
-		_elm_lang$html$Html$span,
-		{ctor: '[]'},
-		{ctor: '[]'});
-	return {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('row'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: warning_notification,
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('players'),
-					_1: {ctor: '[]'}
-				},
-				html_players),
-			_1: {ctor: '[]'}
-		}
-	};
-};
-var _gre_ory$amnezic_elm$View$render_players_page = F2(
-	function (model, page_id) {
-		return A3(
-			_gre_ory$amnezic_elm$View$render_page_skeleton,
-			model,
-			page_id,
-			_gre_ory$amnezic_elm$View$render_players(model));
-	});
-var _gre_ory$amnezic_elm$View$render_selected_card = F2(
-	function (selected_card_id, selected_card) {
-		var classes = A2(
-			_elm_lang$core$Basics_ops['++'],
-			'selected_card ',
-			_gre_ory$amnezic_elm$View$render_correct_class(
-				_elm_lang$core$Maybe$Just(selected_card.correct)));
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class(classes),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						A2(_gre_ory$amnezic_elm$Type$UnselectCard, selected_card.choice_id, selected_card.player_id)),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('P'),
-						_1: {
-							ctor: '::',
-							_0: _gre_ory$amnezic_elm$View$render_id_to_nb(selected_card.player_id),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: selected_card.correct ? _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'+',
-									_elm_lang$core$Basics$toString(selected_card.engaged_point))) : _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(selected_card.engaged_point)),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
-	});
-var _gre_ory$amnezic_elm$View$render_selected_cards = function (state) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('selected_cards'),
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Array$toList(
-			A2(_elm_lang$core$Array$indexedMap, _gre_ory$amnezic_elm$View$render_selected_card, state.selected_cards)));
-};
 var _gre_ory$amnezic_elm$View$render_question = function (model) {
 	var _p12 = _gre_ory$amnezic_elm$Type$get_question(model);
 	if (_p12.ctor === 'Just') {
@@ -1457,7 +1291,7 @@ var _gre_ory$amnezic_elm$View$render_question = function (model) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _gre_ory$amnezic_elm$View$render_selected_cards(model.state),
+								_0: A2(_gre_ory$amnezic_elm$View$render_selected_cards, model, model.state),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -1513,6 +1347,264 @@ var _gre_ory$amnezic_elm$View$render_questions_page = F2(
 			page_id,
 			_gre_ory$amnezic_elm$View$render_questions(model));
 	});
+var _gre_ory$amnezic_elm$View$render_default_page = F2(
+	function (model, page_id) {
+		return A3(
+			_gre_ory$amnezic_elm$View$render_page_skeleton,
+			model,
+			page_id,
+			{ctor: '[]'});
+	});
+var _gre_ory$amnezic_elm$View$render_id_to_nb = function (id) {
+	return _elm_lang$html$Html$text(
+		_elm_lang$core$Basics$toString(
+			_gre_ory$amnezic_elm$Type$id_to_nb(id)));
+};
+var _gre_ory$amnezic_elm$View$render_player = F3(
+	function (model, player_id, player) {
+		var player_status = player.active ? 'player-active' : 'player-inactive';
+		var card_status = _gre_ory$amnezic_elm$Type$has_card(player) ? 'player-with-card' : 'player-without-card';
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'player player-',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Basics$toString(
+								_gre_ory$amnezic_elm$Type$id_to_nb(player_id)),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									player_status,
+									A2(_elm_lang$core$Basics_ops['++'], ' ', card_status)))))),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('player-card'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A3(
+							_gre_ory$amnezic_elm$View$render_selectable_playing_card,
+							_elm_lang$core$Maybe$Nothing,
+							_gre_ory$amnezic_elm$Type$SetModalPlayerId(player_id),
+							player.card),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('player-info'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('player-id'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Player #'),
+									_1: {
+										ctor: '::',
+										_0: _gre_ory$amnezic_elm$View$render_id_to_nb(player_id),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(' / '),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(player.name),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(' / '),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(player_status),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html$text(' / '),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html$text(card_status),
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('player-name'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: player.active ? A2(
+											_elm_lang$html$Html$input,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$placeholder('player name'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onInput(
+														_gre_ory$amnezic_elm$Type$UpdatePlayerName(player_id)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$value(player.name),
+														_1: {ctor: '[]'}
+													}
+												}
+											},
+											{ctor: '[]'}) : _elm_lang$html$Html$text(player.name),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('player-score'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													'score: ',
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														_elm_lang$core$Basics$toString(player.score),
+														' pt(s)'))),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('player-buttons'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: A2(_gre_ory$amnezic_elm$View$render_deactivate_player_button, model, player_id),
+												_1: {
+													ctor: '::',
+													_0: A2(_gre_ory$amnezic_elm$View$render_activate_player_button, model, player_id),
+													_1: {
+														ctor: '::',
+														_0: A2(_gre_ory$amnezic_elm$View$render_delete_player_button, model, player_id),
+														_1: {ctor: '[]'}
+													}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A3(_gre_ory$amnezic_elm$View$render_modal_player_card_selector, model, player_id, player),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _gre_ory$amnezic_elm$View$render_players = function (model) {
+	var html_add_player = A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('player player-add'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_gre_ory$amnezic_elm$Type$AddPlayer),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _gre_ory$amnezic_elm$View$render_material_icon('person_add'),
+			_1: {ctor: '[]'}
+		});
+	var warning_notification = (!_gre_ory$amnezic_elm$Type$all_player_has_card(model)) ? A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('alert alert-warning'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('at least one player has no card!'),
+			_1: {ctor: '[]'}
+		}) : A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('alert alert-info'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('all players have cards!'),
+			_1: {ctor: '[]'}
+		});
+	return {
+		ctor: '::',
+		_0: warning_notification,
+		_1: A2(
+			_elm_lang$core$List$append,
+			_elm_lang$core$Array$toList(
+				A2(
+					_elm_lang$core$Array$indexedMap,
+					_gre_ory$amnezic_elm$View$render_player(model),
+					model.players)),
+			_gre_ory$amnezic_elm$Type$can_add_player(model) ? {
+				ctor: '::',
+				_0: html_add_player,
+				_1: {ctor: '[]'}
+			} : {ctor: '[]'})
+	};
+};
+var _gre_ory$amnezic_elm$View$render_players_page = F2(
+	function (model, page_id) {
+		return A3(
+			_gre_ory$amnezic_elm$View$render_page_skeleton,
+			model,
+			page_id,
+			_gre_ory$amnezic_elm$View$render_players(model));
+	});
 var _gre_ory$amnezic_elm$View$render_page = function (model) {
 	var _p14 = model.state.page;
 	switch (_p14.ctor) {
@@ -1523,7 +1615,7 @@ var _gre_ory$amnezic_elm$View$render_page = function (model) {
 				'start',
 				{
 					ctor: '::',
-					_0: _gre_ory$amnezic_elm$View$render_test_cards,
+					_0: _gre_ory$amnezic_elm$View$render_all_cards(model),
 					_1: {ctor: '[]'}
 				});
 		case 'PageThemes':

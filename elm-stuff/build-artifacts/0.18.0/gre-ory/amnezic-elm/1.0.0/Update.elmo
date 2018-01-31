@@ -118,30 +118,27 @@ var _gre_ory$amnezic_elm$Update$update_player_name = F2(
 			player,
 			{name: name});
 	});
-var _gre_ory$amnezic_elm$Update$toggle_inverted_color = function (card) {
-	return _elm_lang$core$Native_Utils.update(
-		card,
-		{inverted_color: !card.inverted_color});
-};
-var _gre_ory$amnezic_elm$Update$toggle_player_inverted_color = function (player) {
-	return _elm_lang$core$Native_Utils.update(
-		player,
-		{
-			card: _gre_ory$amnezic_elm$Update$toggle_inverted_color(player.card)
-		});
-};
+var _gre_ory$amnezic_elm$Update$update_inverted_color = F2(
+	function (inverted_color, card) {
+		return _elm_lang$core$Native_Utils.update(
+			card,
+			{inverted_color: inverted_color});
+	});
 var _gre_ory$amnezic_elm$Update$update_card_color = F2(
 	function (card_color, card) {
 		return _elm_lang$core$Native_Utils.update(
 			card,
 			{card_color: card_color});
 	});
-var _gre_ory$amnezic_elm$Update$update_player_card_color = F2(
-	function (card_color, player) {
+var _gre_ory$amnezic_elm$Update$update_player_card_color = F3(
+	function (card_color, inverted_color, player) {
 		return _elm_lang$core$Native_Utils.update(
 			player,
 			{
-				card: A2(_gre_ory$amnezic_elm$Update$update_card_color, card_color, player.card)
+				card: A2(
+					_gre_ory$amnezic_elm$Update$update_inverted_color,
+					inverted_color,
+					A2(_gre_ory$amnezic_elm$Update$update_card_color, card_color, player.card))
 			});
 	});
 var _gre_ory$amnezic_elm$Update$update_card_suit = F2(
@@ -215,6 +212,30 @@ var _gre_ory$amnezic_elm$Update$update_page = F2(
 				state: A2(_gre_ory$amnezic_elm$Update$update_state_page, page, model.state)
 			});
 	});
+var _gre_ory$amnezic_elm$Update$update_modal_player_id = F2(
+	function (maybe_modal_player_id, state) {
+		return _elm_lang$core$Native_Utils.update(
+			state,
+			{maybe_modal_player_id: maybe_modal_player_id});
+	});
+var _gre_ory$amnezic_elm$Update$set_modal_player_id = F2(
+	function (model, player_id) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				state: A2(
+					_gre_ory$amnezic_elm$Update$update_modal_player_id,
+					_elm_lang$core$Maybe$Just(player_id),
+					model.state)
+			});
+	});
+var _gre_ory$amnezic_elm$Update$unset_modal_player_id = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			state: A2(_gre_ory$amnezic_elm$Update$update_modal_player_id, _elm_lang$core$Maybe$Nothing, model.state)
+		});
+};
 var _gre_ory$amnezic_elm$Update$delete_player = F2(
 	function (model, player_id) {
 		if (A2(_gre_ory$amnezic_elm$Type$can_delete_player, model, player_id)) {

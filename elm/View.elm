@@ -7,9 +7,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Array exposing (..)
+import Modal exposing (..)
 
 import Type exposing (..)
 import Init exposing (..)
+import Update exposing (..)
 
 -- helper
 
@@ -23,13 +25,13 @@ render_id_to_nb id =
 
 render_page : Model -> Html Msg
 render_page model =
-  case model.state.page of
-    PageStart -> render_page_skeleton model "start" [ render_test_cards ]
-    PageThemes -> render_default_page model "themes"
-    PagePlayers -> render_players_page model "players"
-    PageQuestions -> render_questions_page model "questions"
-    PageScore -> render_default_page model "score"
-    PageEnd -> render_default_page model "end"
+    case model.state.page of
+      PageStart -> render_page_skeleton model "start" [ render_all_cards model ]
+      PageThemes -> render_default_page model "themes"
+      PagePlayers -> render_players_page model "players"
+      PageQuestions -> render_questions_page model "questions"
+      PageScore -> render_default_page model "score"
+      PageEnd -> render_default_page model "end"
 
 render_default_page : Model -> String -> Html Msg
 render_default_page model page_id =
@@ -60,10 +62,9 @@ render_button : String -> String -> String -> String -> Msg -> Html Msg
 render_button icon_class button_class button_text button_description on_click =
   div [ class ( "button " ++ button_class ), title button_description, onClick on_click ] [
     if String.isEmpty icon_class then
-      span [ ] [ ]
+      span [ class "button-text" ] [ text button_text ]
     else
-      span [ class "button-icon" ] [ render_material_icon icon_class ],
-    span [ class "button-text" ] [ text button_text ]
+      span [ class "button-icon" ] [ render_material_icon icon_class ]
   ]
 
 render_activated_button : String -> String -> String -> String  -> Html Msg
@@ -127,7 +128,7 @@ render_page_skeleton model page_id html_elements =
       else
         html_elements
   in
-    div [ class ( "page " ++ page_id ) ] [
+    div [ class ( "page page-" ++ page_id ) ] [
       div [ class "page-header" ] ( render_header model ),
       div [ class "page-content" ] ( html_content ),
       div [ class "page-footer" ] ( render_footer model )
@@ -135,33 +136,26 @@ render_page_skeleton model page_id html_elements =
 
 -- button
 
-render_add_player_button : Model -> Html Msg
-render_add_player_button model =
-  if ( can_add_player model ) then
-    render_enabled_button "person_add" "player-add" "Add" "Add player" ( AddPlayer )
-  else
-    span [] []
-
 render_deactivate_player_button : Model -> Int -> Html Msg
 render_deactivate_player_button model player_id =
   if ( can_deactivate_player model player_id ) then
-    render_enabled_button "" "player-deactivate" "Deactivate" "Deactivate player" ( DeactivatePlayer player_id )
+    render_enabled_button "pause_circle_outline" "player-deactivate" "Deactivate" "Deactivate player" ( DeactivatePlayer player_id )
   else
-    span [] []
+    render_disabled_button "pause_circle_outline" "player-deactivate" "Deactivate" "Deactivate player"
 
 render_activate_player_button : Model -> Int -> Html Msg
 render_activate_player_button model player_id =
   if ( can_activate_player model player_id ) then
-    render_enabled_button "" "player-activate" "Activate" "Activate player" ( ActivatePlayer player_id )
+    render_enabled_button "play_circle_outline" "player-activate" "Activate" "Activate player" ( ActivatePlayer player_id )
   else
-    span [] []
+    render_disabled_button "play_circle_outline" "player-activate" "Activate" "Activate player"
 
 render_delete_player_button : Model -> Int -> Html Msg
 render_delete_player_button model player_id =
   if ( can_delete_player model player_id ) then
-    render_enabled_button "" "player-delete" "Delete" "Delete player" ( DeletePlayer player_id )
+    render_enabled_button "delete" "player-delete" "Delete" "Delete player" ( DeletePlayer player_id )
   else
-    render_disabled_button "" "player-delete" "Delete" "Delete player"
+    render_disabled_button "delete" "player-delete" "Delete" "Delete player"
 
 -- player
 
@@ -170,52 +164,130 @@ render_players model =
   let
     warning_notification =
       if not ( all_player_has_card model ) then
-        span [ class "alert alert-warning" ] [ text "please select one card type and color for each player!" ]
+        div [ class "alert alert-warning" ] [ text "at least one player has no card!" ]
       else
-        span [ ] [ ]
+        div [ class "alert alert-info" ] [ text "all players have cards!" ]
+    -- next_player_id = "player-" ++ ( toString ( id_to_nb ( Array.length model.players ) ) )
     html_add_player =
-        if can_add_player model then
-          div [ class "player" ] [ render_add_player_button model ]
-        else
-          span [ ] [ ]
-    html_players = List.append ( Array.toList <| Array.indexedMap ( render_player model ) model.players ) [ html_add_player ]
+      div [ class "player player-add", onClick AddPlayer ] [
+        render_material_icon "person_add"
+      ]
   in
-    [
-      div [ class "row" ] [
-        warning_notification
-      ],
-      div [ class "players" ]
-        html_players
-    ]
+    warning_notification ::
+        List.append
+          ( Array.toList <| Array.indexedMap ( render_player model ) model.players )
+          ( if can_add_player model then [ html_add_player ] else [] )
 
 render_player : Model -> Int -> Player -> Html Msg
 render_player model player_id player =
   let
-    classes = String.join " " <|
-      ( "player" ) ::
-      ( if player.active then "active" else "inactive" ) ::
-      ( if has_card player then "valid" else "invalid" ) ::
-      ( if has_card player then "valid" else "invalid" ) ::
-      []
+    card_status = if has_card player then "player-with-card" else "player-without-card"
+    player_status = if player.active then "player-active" else "player-inactive"
   in
-    div [ class classes ] [
-      render_id_to_nb( player_id ),
-      text " - ",
-      input [ placeholder "player name", onInput ( UpdatePlayerName player_id ), value player.name ] [ ],
-      render_deactivate_player_button model player_id,
-      render_activate_player_button model player_id,
-      render_delete_player_button model player_id,
-      div [ class "status" ] [
-        text ( "score: " ++ ( toString player.score ) ++ " pt(s)" ),
-        text ( ", status: " ++ ( classes ) )
+    div [ class ( "player player-" ++ ( toString ( id_to_nb player_id ) )++ " " ++ player_status ++ " " ++ card_status ) ] [
+      div [ class ( "player-card" ) ] [
+        render_selectable_playing_card Nothing ( SetModalPlayerId player_id ) player.card
       ],
-      div [] [
-        render_card_suits model player_id
+      div [ class "player-info" ] [
+        div [ class "player-id" ] [
+          text ( "Player #" ),
+          render_id_to_nb( player_id ),
+          text " / ",
+          text player.name,
+          text " / ",
+          text player_status,
+          text " / ",
+          text card_status
+        ],
+        div [ class "player-name" ] [
+          if player.active then
+            input [ placeholder "player name", onInput ( UpdatePlayerName player_id ), value player.name ] [ ]
+          else
+            text player.name
+        ],
+        div [ class "player-score" ] [
+          text ( "score: " ++ ( toString player.score ) ++ " pt(s)" )
+        ],
+        div [ class "player-buttons" ] [
+            render_deactivate_player_button model player_id,
+            render_activate_player_button model player_id,
+            render_delete_player_button model player_id
+        ]
       ],
-      div [] [
-        render_card_colors model player_id
-      ]
+      -- modal for card selection
+      render_modal_player_card_selector model player_id player
     ]
+
+render_modal_player_card_selector : Model -> Int -> Player -> Html Msg
+render_modal_player_card_selector model player_id player =
+  let
+    show_modal =
+      case model.state.maybe_modal_player_id of
+        Just modal_player_id -> modal_player_id == player_id
+        Nothing -> False
+    modal_cfg = Modal.maintainableCssConfig "modal" Top UnsetModalPlayerId
+    modal_view = Modal.view modal_cfg show_modal
+  in
+    modal_view [ ] [
+      fieldset [ ] [
+        legend [ ] [ text ( player.name ) ],
+        render_not_selected_playing_card Nothing player.card
+      ]
+      ,
+      fieldset [ ] [
+        legend [ ] [ text ( "symbols" ) ],
+        div [ ]
+          ( List.map ( render_card_suit model player_id ) <| Array.toList model.available_card_suits )
+      ]
+      ,
+      fieldset [ ] [
+        legend [ ] [ text ( "colors" ) ],
+        div [ ]
+          ( List.map ( render_card_color model player_id False ) <| Array.toList model.available_card_colors ),
+        div [ ]
+          ( List.map ( render_card_color model player_id True ) <| Array.toList model.available_card_colors )
+      ]
+      ,
+      button [ onClick UnsetModalPlayerId ] [ text "Close" ]
+    ]
+
+render_card_suit : Model -> Int -> CardSuit -> Html Msg
+render_card_suit model player_id card_suit =
+  case get_player model player_id of
+    Just player ->
+      let
+        selected = match_card_suit card_suit player
+        target_card = update_card_suit card_suit player.card
+        not_selectable = ( not ( match_card target_card player ) ) && ( is_card_already_selected target_card model )
+        display_card = init_card card_suit Black False
+      in
+        if selected then
+          render_selected_playing_card Nothing ( UnselectCardSuit player_id ) display_card
+        else if not_selectable then
+          render_not_selectable_playing_card Nothing display_card
+        else
+          render_selectable_playing_card Nothing ( SelectCardSuit player_id card_suit ) display_card
+    Nothing ->
+      span [ ] [ ]
+
+render_card_color : Model -> Int -> Bool -> CardColor -> Html Msg
+render_card_color model player_id inverted_color card_color =
+  case get_player model player_id of
+    Just player ->
+      let
+        selected = match_card_color card_color inverted_color player
+        target_card = update_inverted_color inverted_color <| update_card_color card_color player.card
+        not_selectable = ( not ( match_card target_card player ) ) && ( is_card_already_selected target_card model )
+        display_card = init_card NoSuit card_color inverted_color
+      in
+        if selected then
+          render_selected_playing_card Nothing ( UnselectCardColor player_id ) display_card
+        else if not_selectable  then
+          render_not_selectable_playing_card Nothing display_card
+        else
+          render_selectable_playing_card Nothing ( SelectCardColor player_id card_color inverted_color ) display_card
+    Nothing ->
+      span [ ] [ ]
 
 -- question
 
@@ -253,7 +325,7 @@ render_question model =
         div [ class "row question" ]
           ( Array.toList <| Array.indexedMap ( render_choice model ) question.choices ),
         fieldset [ ] [
-          render_selected_cards model.state
+          render_selected_cards model model.state
         ],
         fieldset [ ] [
           render_player_scores model
@@ -328,7 +400,7 @@ render_choice model choice_id choice =
         ]
       StepShowCards ->
         div [ class classes ] [
-          render_cards model choice_id,
+          render_choice_cards model choice_id,
           div [ class "answer" ] [
             text choice.answer
           ],
@@ -348,20 +420,24 @@ render_choice model choice_id choice =
 
 -- playing card
 
-render_selected_card_ : Maybe Int -> Msg -> Card -> Html Msg
-render_selected_card_ maybe_card_rank on_click card =
-  render_card_ card maybe_card_rank [ "selected" ] on_click
+render_selected_playing_card : Maybe Int -> Msg -> Card -> Html Msg
+render_selected_playing_card maybe_card_rank on_click card =
+  render_playing_card card maybe_card_rank [ "selected" ] on_click
 
-render_selectable_card_ : Maybe Int -> Msg -> Card -> Html Msg
-render_selectable_card_ maybe_card_rank on_click card =
-  render_card_ card maybe_card_rank [ "selectable" ] on_click
+render_not_selected_playing_card : Maybe Int -> Card -> Html Msg
+render_not_selected_playing_card maybe_card_rank card =
+  render_playing_card card maybe_card_rank [ "not-selected" ] NothingToDo
 
-render_not_selectable_card_ : Maybe Int -> Card -> Html Msg
-render_not_selectable_card_ maybe_card_rank card =
-  render_card_ card maybe_card_rank [ "not-selectable" ] NothingToDo
+render_selectable_playing_card : Maybe Int -> Msg -> Card -> Html Msg
+render_selectable_playing_card maybe_card_rank on_click card =
+  render_playing_card card maybe_card_rank [ "selectable" ] on_click
 
-render_card_ : Card -> Maybe Int -> List String -> Msg -> Html Msg
-render_card_ card maybe_card_rank card_classes on_click =
+render_not_selectable_playing_card : Maybe Int -> Card -> Html Msg
+render_not_selectable_playing_card maybe_card_rank card =
+  render_playing_card card maybe_card_rank [ "not-selectable" ] NothingToDo
+
+render_playing_card : Card -> Maybe Int -> List String -> Msg -> Html Msg
+render_playing_card card maybe_card_rank card_classes on_click =
   let
     card_suit_class =
       case card.card_suit of
@@ -372,6 +448,7 @@ render_card_ card maybe_card_rank card_classes on_click =
         Diamond -> "suit-diamond"
         Star -> "suit-star"
         Dot -> "suit-dot"
+        Square -> "suit-square"
     card_color_class =
       case card.card_color of
         NoColor -> "no-color"
@@ -397,110 +474,47 @@ render_card_ card maybe_card_rank card_classes on_click =
       ]
     ]
 
--- card colors
-
-render_card_colors : Model -> Int -> Html Msg
-render_card_colors model player_id =
-  span [ ] [
-    span [ ]
-      ( Array.toList <| Array.indexedMap ( render_card_color model player_id ) model.available_card_colors ),
-    render_invert_card_color model player_id      
-  ]
-
-render_card_color : Model -> Int -> Int -> CardColor -> Html Msg
-render_card_color model player_id card_color_id card_color =
-  case get_player model player_id of
-    Just player ->
-      let
-        new_card = init_card player.card.card_suit card_color player.card.inverted_color
-        is_owned_by_player = ( match_card_color card_color player )
-        is_owned_by_other = ( not is_owned_by_player ) && ( is_card_already_selected new_card model )
-      in
-        if is_owned_by_player then
-          render_selected_card_ Nothing ( UnselectCardColor player_id ) new_card
-        else if is_owned_by_other  then
-          render_not_selectable_card_ Nothing new_card
-        else
-          render_selectable_card_ Nothing ( SelectCardColor player_id card_color ) new_card
-    Nothing ->
-      span [ ] [ ]
-
-render_invert_card_color : Model -> Int -> Html Msg
-render_invert_card_color model player_id =
-  case get_player model player_id of
-    Just player ->
-      let
-        new_card = init_card player.card.card_suit player.card.card_color ( not player.card.inverted_color )
-        is_owned_by_other = ( is_card_already_selected new_card model )
-      in
-        if is_owned_by_other  then
-          render_not_selectable_card_ Nothing new_card
-        else
-          render_selectable_card_ Nothing ( InvertCardColor player_id ) new_card
-    Nothing ->
-      span [ ] [ ]
-
--- card suits
-
-render_card_suits : Model -> Int -> Html Msg
-render_card_suits model player_id =
-  span [ ]
-    ( Array.toList <| Array.indexedMap ( render_card_suit model player_id ) model.available_card_suits )
-
-render_card_suit : Model -> Int -> Int -> CardSuit -> Html Msg
-render_card_suit model player_id card_suit_id card_suit =
-  case get_player model player_id of
-    Just player ->
-      let
-        new_card = init_card card_suit player.card.card_color player.card.inverted_color
-        is_owned_by_player = ( match_card_suit card_suit player )
-        is_owned_by_other = ( not is_owned_by_player ) && ( is_card_already_selected new_card model )
-      in
-        if is_owned_by_player then
-          render_selected_card_ Nothing ( UnselectCardSuit player_id ) new_card
-        else if is_owned_by_other  then
-          render_not_selectable_card_ Nothing new_card
-        else
-          render_selectable_card_ Nothing ( SelectCardSuit player_id card_suit ) new_card
-    Nothing ->
-      span [ ] [ ]
-
 -- card
 
-render_cards : Model -> Int -> Html Msg
-render_cards model choice_id =
+render_choice_cards : Model -> Int -> Html Msg
+render_choice_cards model choice_id =
   div [ class "cards" ]
-    ( Array.toList <| Array.indexedMap ( render_card model choice_id ) model.players )
+    ( Array.toList <| Array.indexedMap ( render_choice_card model choice_id ) model.players )
 
-render_card : Model -> Int -> Int -> Player -> Html Msg
-render_card model choice_id player_id player =
+render_choice_card : Model -> Int -> Int -> Player -> Html Msg
+render_choice_card model choice_id player_id player =
   let
     card_rank = id_to_nb choice_id
   in
     if player.active then
       if has_selected_card choice_id player_id model then
-        render_selected_card_ ( Just card_rank ) ( UnselectCard choice_id player_id ) player.card
+        render_not_selectable_playing_card ( Just card_rank ) player.card -- ( UnselectCard choice_id player_id )
       else
-        render_selectable_card_ ( Just card_rank ) ( SelectCard choice_id player_id ) player.card
+        render_selectable_playing_card ( Just card_rank ) ( SelectCard choice_id player_id ) player.card
     else
       span [ ] [ ]
 
--- selected card
+-- selected cards
 
-render_selected_cards : State -> Html Msg
-render_selected_cards state =
+render_selected_cards : Model -> State -> Html Msg
+render_selected_cards model state =
   div [ class "selected_cards" ]
-    ( Array.toList <| Array.indexedMap ( render_selected_card ) state.selected_cards )
+    ( Array.toList <| Array.indexedMap ( render_selected_card model ) state.selected_cards )
 
-render_selected_card : Int -> SelectedCard -> Html Msg
-render_selected_card selected_card_id selected_card =
+render_selected_card : Model -> Int -> SelectedCard -> Html Msg
+render_selected_card model selected_card_id selected_card =
   let
     classes = "selected_card " ++ ( render_correct_class ( Just selected_card.correct ) )
+    card_rank = Just ( id_to_nb selected_card.choice_id )
+    on_click = UnselectCard selected_card.choice_id selected_card.player_id
   in
-    div [ class classes, onClick ( UnselectCard selected_card.choice_id selected_card.player_id ) ] [
+    div [ class classes ] [
       div [ ] [
-        text "P",
-        render_id_to_nb( selected_card.player_id )
+        case get_player model selected_card.player_id of
+          Just player ->
+            render_selectable_playing_card card_rank on_click player.card
+          Nothing ->
+            span [ ] [ ]
       ],
       div [ ] [
         if selected_card.correct then
@@ -530,42 +544,31 @@ render_player_score rank_id player =
 
 -- test
 
-render_test_cards : Html Msg
-render_test_cards =
+render_all_cards : Model -> Html Msg
+render_all_cards model =
   let
-    cards =
-      ( init_card NoSuit NoColor False ) ::
-      ( init_card Dot NoColor False ) ::
-      ( init_card Dot Blue False ) ::
-      ( init_card Spade Green False ) ::
-      ( init_card Star Yellow False ) ::
-      ( init_card Club Black False ) ::
-      ( init_card Diamond Red False ) ::
-      ( init_card NoSuit NoColor True ) ::
-      ( init_card Dot NoColor True ) ::
-      ( init_card Dot Blue True ) ::
-      ( init_card Spade Green True ) ::
-      ( init_card Star Yellow True ) ::
-      ( init_card Club Black True ) ::
-      ( init_card Diamond Red True ) ::
-      []
+    card_by_color =
+      List.append
+        ( List.map ( \c -> ( init_card Dot c False ) ) ( NoColor :: ( Array.toList model.available_card_colors ) ) )
+        ( List.map ( \c -> ( init_card Dot c True  ) ) ( NoColor :: ( Array.toList model.available_card_colors ) ) )
+    card_by_suit =
+      List.append
+        ( List.map ( \s -> ( init_card s NoColor False ) ) ( NoSuit :: ( Array.toList model.available_card_suits ) ) )
+        ( List.map ( \s -> ( init_card s NoColor True  ) ) ( NoSuit :: ( Array.toList model.available_card_suits ) ) )
   in
     div [ class "tmp" ] [
       div [ class "players" ]
-        ( List.map ( render_selectable_card_ Nothing NothingToDo ) cards )
-      ,
-      div [ class "players" ]
-        ( List.map ( render_selectable_card_ ( Just 2 ) NothingToDo ) cards )
+        ( List.map ( render_selectable_playing_card Nothing NothingToDo ) card_by_suit )
       ,
       div [ class "players correct" ]
-        ( List.map ( render_selectable_card_ ( Just 2 ) NothingToDo ) cards )
+        ( List.map ( render_selectable_playing_card ( Just 2 ) NothingToDo ) card_by_color )
       ,
       div [ class "players incorrect" ]
-        ( List.map ( render_selectable_card_ ( Just 2 ) NothingToDo ) cards )
+        ( List.map ( render_selectable_playing_card ( Just 2 ) NothingToDo ) card_by_color )
       ,
       div [ class "players" ]
-        ( List.map ( render_selected_card_ ( Just 2 ) NothingToDo ) cards )
+        ( List.map ( render_selected_playing_card ( Just 2 ) NothingToDo ) card_by_color )
       ,
       div [ class "players" ]
-        ( List.map ( render_not_selectable_card_ ( Just 2 ) ) cards )
+        ( List.map ( render_not_selectable_playing_card ( Just 2 ) ) card_by_color )
     ]

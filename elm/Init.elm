@@ -3,6 +3,7 @@ module Init exposing (..)
 
 -- import
 
+import Html exposing (..)
 import Array exposing (..)
 
 import Type exposing (..)
@@ -14,23 +15,24 @@ init_model =
   { questions = init_default_questions
   , players = init_default_players
   , state = init_state
-  , available_card_suits = Array.fromList [ Club, Spade, Heart, Diamond, Star, Dot ]
+  , available_card_suits = Array.fromList [ Club, Spade, Heart, Diamond, Star, Dot, Square ]
   , available_card_colors = Array.fromList [ Black, Red, Yellow, Blue, Green ]
   }
 
 init_state : State
 init_state =
-  { page = PageStart
+  { page = PagePlayers -- PageStart
   , question_id = 0
   , step = StepNotReady
   , media_status = MediaNotReady
   , selected_cards = Array.fromList [ ]
   , score_mode = ScoreByVelocity
+  , maybe_modal_player_id = Nothing
   }
 
 init_default_players : Array Player
 init_default_players =
-  Array.fromList [ ( init_default_player Heart Red 0 ), ( init_default_player Dot Blue 1 ) ]
+  Array.fromList [ ( init_default_player Heart Red 0 ), ( init_default_player Spade Black 1 ) ]
 
 init_default_player : CardSuit -> CardColor -> Int -> Player
 init_default_player card_suit card_color player_id =

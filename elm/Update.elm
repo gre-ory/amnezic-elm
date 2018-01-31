@@ -3,6 +3,7 @@ module Update exposing (..)
 
 -- import
 
+import Html exposing (..)
 import Array exposing (..)
 
 import Type exposing (..)
@@ -139,6 +140,18 @@ delete_player model player_id =
 
 -- update
 
+update_modal_player_id : Maybe Int -> State -> State
+update_modal_player_id maybe_modal_player_id state =
+  { state | maybe_modal_player_id = maybe_modal_player_id }
+
+set_modal_player_id : Model -> Int -> Model
+set_modal_player_id model player_id =
+  { model | state = ( update_modal_player_id ( Just player_id ) model.state ) }
+
+unset_modal_player_id : Model -> Model
+unset_modal_player_id model =
+  { model | state = ( update_modal_player_id Nothing model.state ) }
+
 update_page : Page -> Model -> Model
 update_page page model =
   { model | state = ( update_state_page page model.state ) }
@@ -179,17 +192,13 @@ update_card_color : CardColor -> Card -> Card
 update_card_color card_color card =
   { card | card_color = card_color }
 
-update_player_card_color : CardColor -> Player -> Player
-update_player_card_color card_color player =
-  { player | card = ( update_card_color card_color player.card ) }
+update_player_card_color : CardColor -> Bool -> Player -> Player
+update_player_card_color card_color inverted_color player =
+  { player | card = ( update_inverted_color inverted_color <| update_card_color card_color player.card ) }
 
-toggle_inverted_color : Card -> Card
-toggle_inverted_color card =
-  { card | inverted_color = not card.inverted_color }
-
-toggle_player_inverted_color : Player -> Player
-toggle_player_inverted_color player =
-  { player | card = ( toggle_inverted_color player.card ) }
+update_inverted_color : Bool -> Card -> Card
+update_inverted_color inverted_color card =
+  { card | inverted_color = inverted_color }
 
 update_player_name : String -> Player -> Player
 update_player_name name player =

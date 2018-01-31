@@ -114,9 +114,9 @@ var _gre_ory$amnezic_elm$Type$Model = F5(
 	function (a, b, c, d, e) {
 		return {questions: a, players: b, state: c, available_card_suits: d, available_card_colors: e};
 	});
-var _gre_ory$amnezic_elm$Type$State = F6(
-	function (a, b, c, d, e, f) {
-		return {page: a, question_id: b, step: c, media_status: d, selected_cards: e, score_mode: f};
+var _gre_ory$amnezic_elm$Type$State = F7(
+	function (a, b, c, d, e, f, g) {
+		return {page: a, question_id: b, step: c, media_status: d, selected_cards: e, score_mode: f, maybe_modal_player_id: g};
 	});
 var _gre_ory$amnezic_elm$Type$Question = F3(
 	function (a, b, c) {
@@ -142,6 +142,7 @@ var _gre_ory$amnezic_elm$Type$PlayingCard = F4(
 	function (a, b, c, d) {
 		return {choice_id: a, player_id: b, engaged_point: c, correct: d};
 	});
+var _gre_ory$amnezic_elm$Type$Square = {ctor: 'Square'};
 var _gre_ory$amnezic_elm$Type$Dot = {ctor: 'Dot'};
 var _gre_ory$amnezic_elm$Type$Star = {ctor: 'Star'};
 var _gre_ory$amnezic_elm$Type$Diamond = {ctor: 'Diamond'};
@@ -165,13 +166,13 @@ var _gre_ory$amnezic_elm$Type$NoColor = {ctor: 'NoColor'};
 var _gre_ory$amnezic_elm$Type$has_card_color = function (player) {
 	return !_elm_lang$core$Native_Utils.eq(player.card.card_color, _gre_ory$amnezic_elm$Type$NoColor);
 };
-var _gre_ory$amnezic_elm$Type$match_card_color = F2(
-	function (card_color, player) {
-		return _gre_ory$amnezic_elm$Type$has_card_color(player) ? _elm_lang$core$Native_Utils.eq(player.card.card_color, card_color) : false;
+var _gre_ory$amnezic_elm$Type$match_card_color = F3(
+	function (card_color, inverted_color, player) {
+		return _gre_ory$amnezic_elm$Type$has_card_color(player) ? (_elm_lang$core$Native_Utils.eq(player.card.card_color, card_color) && _elm_lang$core$Native_Utils.eq(player.card.inverted_color, inverted_color)) : false;
 	});
 var _gre_ory$amnezic_elm$Type$match_card = F2(
 	function (card, player) {
-		return A2(_gre_ory$amnezic_elm$Type$match_card_suit, card.card_suit, player) && (A2(_gre_ory$amnezic_elm$Type$match_card_color, card.card_color, player) && _elm_lang$core$Native_Utils.eq(card.inverted_color, player.card.inverted_color));
+		return A2(_gre_ory$amnezic_elm$Type$match_card_suit, card.card_suit, player) && A3(_gre_ory$amnezic_elm$Type$match_card_color, card.card_color, card.inverted_color, player);
 	});
 var _gre_ory$amnezic_elm$Type$is_card_already_selected = F2(
 	function (card, model) {
@@ -384,6 +385,10 @@ var _gre_ory$amnezic_elm$Type$NothingToDo = {ctor: 'NothingToDo'};
 var _gre_ory$amnezic_elm$Type$OnKey = function (a) {
 	return {ctor: 'OnKey', _0: a};
 };
+var _gre_ory$amnezic_elm$Type$UnsetModalPlayerId = {ctor: 'UnsetModalPlayerId'};
+var _gre_ory$amnezic_elm$Type$SetModalPlayerId = function (a) {
+	return {ctor: 'SetModalPlayerId', _0: a};
+};
 var _gre_ory$amnezic_elm$Type$UnselectCard = F2(
 	function (a, b) {
 		return {ctor: 'UnselectCard', _0: a, _1: b};
@@ -392,9 +397,6 @@ var _gre_ory$amnezic_elm$Type$SelectCard = F2(
 	function (a, b) {
 		return {ctor: 'SelectCard', _0: a, _1: b};
 	});
-var _gre_ory$amnezic_elm$Type$InvertCardColor = function (a) {
-	return {ctor: 'InvertCardColor', _0: a};
-};
 var _gre_ory$amnezic_elm$Type$SelectCardSuit = F2(
 	function (a, b) {
 		return {ctor: 'SelectCardSuit', _0: a, _1: b};
@@ -402,9 +404,9 @@ var _gre_ory$amnezic_elm$Type$SelectCardSuit = F2(
 var _gre_ory$amnezic_elm$Type$UnselectCardSuit = function (a) {
 	return {ctor: 'UnselectCardSuit', _0: a};
 };
-var _gre_ory$amnezic_elm$Type$SelectCardColor = F2(
-	function (a, b) {
-		return {ctor: 'SelectCardColor', _0: a, _1: b};
+var _gre_ory$amnezic_elm$Type$SelectCardColor = F3(
+	function (a, b, c) {
+		return {ctor: 'SelectCardColor', _0: a, _1: b, _2: c};
 	});
 var _gre_ory$amnezic_elm$Type$UnselectCardColor = function (a) {
 	return {ctor: 'UnselectCardColor', _0: a};
