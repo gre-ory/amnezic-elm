@@ -169,7 +169,7 @@ render_players model =
         div [ class "alert alert-info" ] [ text "all players have cards!" ]
     -- next_player_id = "player-" ++ ( toString ( id_to_nb ( Array.length model.players ) ) )
     html_add_player =
-      div [ class "player player-add", onClick AddPlayer ] [
+      div [ class "player-add", onClick AddPlayer ] [
         render_material_icon "person_add"
       ]
   in

@@ -165,15 +165,45 @@ body, html, #amnezic, .page {
 
 .page-players .player {
   border-radius: 6px;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
 	background: #eee;
   padding: 10px 0px;
   margin: 10px;
 }
 
+.page-players .player-add {
+  border-radius: 6px;
+  border: 1px solid #eee;
+	background: white;
+  padding: 10px 0px;
+  margin: 10px;
+}
+
+.page-players .player-add:hover {
+	cursor: pointer;
+	border: 1px solid #ddd;
+	background: #eee;
+}
+
 .page-players .player .player-card {
 	text-align: center;
+	display: flex;
 }
+
+.page-players .player .player-card .card {
+  margin: auto;
+}
+
+.page-players .player-add {
+	text-align: center;
+	display: flex;
+}
+
+.page-players .player-add .icon {
+  margin: auto;
+}
+
+
 
 .page-players .player-with-card .player-card .card {
   /* background-color: var( --color-green ); */

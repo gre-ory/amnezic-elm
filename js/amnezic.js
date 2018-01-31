@@ -11662,7 +11662,7 @@ var _gre_ory$amnezic_elm$View$render_players = function (model) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('player player-add'),
+			_0: _elm_lang$html$Html_Attributes$class('player-add'),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Events$onClick(_gre_ory$amnezic_elm$Type$AddPlayer),
