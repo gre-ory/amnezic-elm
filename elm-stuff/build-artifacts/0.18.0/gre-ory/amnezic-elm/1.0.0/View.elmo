@@ -399,10 +399,18 @@ var _gre_ory$amnezic_elm$View$render_choice_class = F2(
 	});
 var _gre_ory$amnezic_elm$View$render_choice = F3(
 	function (model, choice_id, choice) {
+		var choice_nb = _elm_lang$core$Basics$toString(
+			_gre_ory$amnezic_elm$Type$id_to_nb(choice_id));
 		var classes = _gre_ory$amnezic_elm$Type$show_result(model.state.step) ? A2(
 			_elm_lang$core$Basics_ops['++'],
-			'choice ',
-			A2(_gre_ory$amnezic_elm$View$render_choice_class, model, choice_id)) : 'choice';
+			'choice choice-',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				choice_nb,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' ',
+					A2(_gre_ory$amnezic_elm$View$render_choice_class, model, choice_id)))) : A2(_elm_lang$core$Basics_ops['++'], 'choice choice-', choice_nb);
 		var _p5 = model.state.step;
 		switch (_p5.ctor) {
 			case 'StepNotReady':
@@ -690,24 +698,43 @@ var _gre_ory$amnezic_elm$View$render_selected_cards = F2(
 					_gre_ory$amnezic_elm$View$render_selected_card(model),
 					state.selected_cards)));
 	});
-var _gre_ory$amnezic_elm$View$render_questions_progress = function (model) {
-	var question_max = _gre_ory$amnezic_elm$Type$id_to_nb(
-		_elm_lang$core$Array$length(model.questions) - 1);
-	var question_now = _gre_ory$amnezic_elm$Type$id_to_nb(model.state.question_id);
-	var question_min = _gre_ory$amnezic_elm$Type$id_to_nb(0);
-	var progress_percent = ((((question_now - question_min) + 1) * 100) / ((question_max - question_min) + 1)) | 0;
-	var progress_style = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'width: ',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Basics$toString(progress_percent),
-			'%;'));
+var _gre_ory$amnezic_elm$View$render_question_audio = function (question) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('row'),
+			_0: _elm_lang$html$Html_Attributes$class('question-audio'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(question.audio),
+			_1: {ctor: '[]'}
+		});
+};
+var _gre_ory$amnezic_elm$View$render_question_theme = function (question) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('question-theme'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(question.theme),
+			_1: {ctor: '[]'}
+		});
+};
+var _gre_ory$amnezic_elm$View$render_question_nb = function (model) {
+	var question_max = _gre_ory$amnezic_elm$Type$id_to_nb(
+		_elm_lang$core$Array$length(model.questions) - 1);
+	var question_now = _gre_ory$amnezic_elm$Type$id_to_nb(model.state.question_id);
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('question-nb'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -723,58 +750,7 @@ var _gre_ory$amnezic_elm$View$render_questions_progress = function (model) {
 							_elm_lang$core$Basics_ops['++'],
 							' / ',
 							_elm_lang$core$Basics$toString(question_max))))),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('progress'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('progress-bar'),
-								_1: {
-									ctor: '::',
-									_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'progressbar'),
-									_1: {
-										ctor: '::',
-										_0: A2(_elm_lang$html$Html_Attributes$attribute, 'style', progress_style),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html_Attributes$attribute,
-												'aria-valuenow',
-												_elm_lang$core$Basics$toString(question_now)),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html_Attributes$attribute,
-													'aria-valuemin',
-													_elm_lang$core$Basics$toString(question_min)),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html_Attributes$attribute,
-														'aria-valuemax',
-														_elm_lang$core$Basics$toString(question_max)),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		});
 };
 var _gre_ory$amnezic_elm$View$render_card_color = F4(
@@ -1059,96 +1035,81 @@ var _gre_ory$amnezic_elm$View$render_nav_item = F4(
 			A2(_elm_lang$core$Basics_ops['++'], page_name, 'page'));
 		var button_text = page_name;
 		var button_class = A2(_elm_lang$core$Basics_ops['++'], 'go-to-', page_name);
-		return A2(
-			_elm_lang$html$Html$li,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('navbar-item'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$core$Native_Utils.eq(model.state.page, target_page) ? A4(_gre_ory$amnezic_elm$View$render_activated_button, icon_class, button_class, button_text, button_description) : (A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, target_page) ? A5(_gre_ory$amnezic_elm$View$render_enabled_button, icon_class, button_class, button_text, button_description, on_click) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, icon_class, button_class, button_text, button_description)),
-				_1: {ctor: '[]'}
-			});
+		return _elm_lang$core$Native_Utils.eq(model.state.page, target_page) ? A4(_gre_ory$amnezic_elm$View$render_activated_button, icon_class, button_class, button_text, button_description) : (A2(_gre_ory$amnezic_elm$Type$can_go_to_page, model, target_page) ? A5(_gre_ory$amnezic_elm$View$render_enabled_button, icon_class, button_class, button_text, button_description, on_click) : A4(_gre_ory$amnezic_elm$View$render_disabled_button, icon_class, button_class, button_text, button_description));
 	});
 var _gre_ory$amnezic_elm$View$render_header = function (model) {
 	return {
 		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$nav,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('navbar'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
+		_0: function () {
+			var _p12 = model.state.page;
+			if (_p12.ctor === 'PageQuestions') {
+				var _p13 = _gre_ory$amnezic_elm$Type$get_question(model);
+				if (_p13.ctor === 'Just') {
+					return _gre_ory$amnezic_elm$View$render_question_theme(_p13._0);
+				} else {
+					return A2(
+						_elm_lang$html$Html$span,
+						{ctor: '[]'},
+						{ctor: '[]'});
+				}
+			} else {
+				return A2(
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('navbar-brand'),
+						_0: _elm_lang$html$Html_Attributes$class('header-brand'),
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text('@mnez!c'),
 						_1: {ctor: '[]'}
-					}),
+					});
+			}
+		}(),
+		_1: {
+			ctor: '::',
+			_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageStart, 'home', 'Start'),
+			_1: {
+				ctor: '::',
+				_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageThemes, 'menu', 'Themes'),
 				_1: {
 					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$ul,
-						{
+					_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PagePlayers, 'people', 'Players'),
+					_1: {
+						ctor: '::',
+						_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageQuestions, 'queue_music', 'Question'),
+						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('navbar-items'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageStart, 'home', 'Start'),
+							_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageScore, 'grade', 'Score'),
 							_1: {
 								ctor: '::',
-								_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageThemes, 'menu', 'Themes'),
+								_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageEnd, '', 'End'),
 								_1: {
 									ctor: '::',
-									_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PagePlayers, 'people', 'Players'),
+									_0: function () {
+										var _p14 = model.state.page;
+										if (_p14.ctor === 'PageQuestions') {
+											return _gre_ory$amnezic_elm$View$render_question_nb(model);
+										} else {
+											return A2(
+												_elm_lang$html$Html$span,
+												{ctor: '[]'},
+												{ctor: '[]'});
+										}
+									}(),
 									_1: {
 										ctor: '::',
-										_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageQuestions, 'queue_music', 'Question'),
-										_1: {
-											ctor: '::',
-											_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageScore, 'grade', 'Score'),
-											_1: {
-												ctor: '::',
-												_0: A4(_gre_ory$amnezic_elm$View$render_nav_item, model, _gre_ory$amnezic_elm$Type$PageEnd, '', 'End'),
-												_1: {ctor: '[]'}
-											}
-										}
+										_0: A5(_gre_ory$amnezic_elm$View$render_enabled_button, 'keyboard_arrow_right', 'move-forward', 'Next', 'Next step', _gre_ory$amnezic_elm$Type$MoveForward),
+										_1: {ctor: '[]'}
 									}
 								}
 							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('navbar-nav'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A5(_gre_ory$amnezic_elm$View$render_enabled_button, 'keyboard_arrow_right', 'move-forward', 'Next', 'Next step', _gre_ory$amnezic_elm$Type$MoveForward),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
+						}
 					}
 				}
-			}),
-		_1: {ctor: '[]'}
+			}
+		}
 	};
 };
 var _gre_ory$amnezic_elm$View$render_deactivate_player_button = F2(
@@ -1239,74 +1200,43 @@ var _gre_ory$amnezic_elm$View$render_page_skeleton = F3(
 			});
 	});
 var _gre_ory$amnezic_elm$View$render_question = function (model) {
-	var _p12 = _gre_ory$amnezic_elm$Type$get_question(model);
-	if (_p12.ctor === 'Just') {
-		var _p13 = _p12._0;
+	var _p15 = _gre_ory$amnezic_elm$Type$get_question(model);
+	if (_p15.ctor === 'Just') {
 		return {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('row theme'),
+					_0: _elm_lang$html$Html_Attributes$class('row question'),
 					_1: {ctor: '[]'}
 				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(_p13.theme),
-					_1: {ctor: '[]'}
-				}),
+				_elm_lang$core$Array$toList(
+					A2(
+						_elm_lang$core$Array$indexedMap,
+						_gre_ory$amnezic_elm$View$render_choice(model),
+						_p15._0.choices))),
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$div,
+					_elm_lang$html$Html$fieldset,
+					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('row audio'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(_p13.audio),
+						_0: A2(_gre_ory$amnezic_elm$View$render_selected_cards, model, model.state),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$div,
+						_elm_lang$html$Html$fieldset,
+						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('row question'),
+							_0: _gre_ory$amnezic_elm$View$render_player_scores(model),
 							_1: {ctor: '[]'}
-						},
-						_elm_lang$core$Array$toList(
-							A2(
-								_elm_lang$core$Array$indexedMap,
-								_gre_ory$amnezic_elm$View$render_choice(model),
-								_p13.choices))),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$fieldset,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(_gre_ory$amnezic_elm$View$render_selected_cards, model, model.state),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$fieldset,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _gre_ory$amnezic_elm$View$render_player_scores(model),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
+						}),
+					_1: {ctor: '[]'}
 				}
 			}
 		};
@@ -1330,14 +1260,7 @@ var _gre_ory$amnezic_elm$View$render_question = function (model) {
 	}
 };
 var _gre_ory$amnezic_elm$View$render_questions = function (model) {
-	return A2(
-		_elm_lang$core$List$append,
-		{
-			ctor: '::',
-			_0: _gre_ory$amnezic_elm$View$render_questions_progress(model),
-			_1: {ctor: '[]'}
-		},
-		_gre_ory$amnezic_elm$View$render_question(model));
+	return _gre_ory$amnezic_elm$View$render_question(model);
 };
 var _gre_ory$amnezic_elm$View$render_questions_page = F2(
 	function (model, page_id) {
@@ -1561,7 +1484,7 @@ var _gre_ory$amnezic_elm$View$render_players = function (model) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('alert alert-warning'),
+			_0: _elm_lang$html$Html_Attributes$class('player-alert alert alert-warning'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -1572,7 +1495,7 @@ var _gre_ory$amnezic_elm$View$render_players = function (model) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('alert alert-info'),
+			_0: _elm_lang$html$Html_Attributes$class('player-alert alert alert-info'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -1606,8 +1529,8 @@ var _gre_ory$amnezic_elm$View$render_players_page = F2(
 			_gre_ory$amnezic_elm$View$render_players(model));
 	});
 var _gre_ory$amnezic_elm$View$render_page = function (model) {
-	var _p14 = model.state.page;
-	switch (_p14.ctor) {
+	var _p16 = model.state.page;
+	switch (_p16.ctor) {
 		case 'PageStart':
 			return A3(
 				_gre_ory$amnezic_elm$View$render_page_skeleton,

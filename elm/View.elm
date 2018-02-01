@@ -87,31 +87,33 @@ render_nav_item model target_page icon_class page_name =
     button_description = "Go to " ++ page_name ++ "page"
     on_click = GoToPage target_page
   in
-    li [ class "navbar-item" ] [
-      if model.state.page == target_page then
-        render_activated_button icon_class button_class button_text button_description
-      else if can_go_to_page model target_page then
-        render_enabled_button icon_class button_class button_text button_description on_click
-      else
-        render_disabled_button icon_class button_class button_text button_description
-    ]
+    if model.state.page == target_page then
+      render_activated_button icon_class button_class button_text button_description
+    else if can_go_to_page model target_page then
+      render_enabled_button icon_class button_class button_text button_description on_click
+    else
+      render_disabled_button icon_class button_class button_text button_description
 
 render_header : Model -> List ( Html Msg )
 render_header model = [
-    nav [ class "navbar" ] [
-      div [ class "navbar-brand" ] [ text "@mnez!c" ],
-      ul [ class "navbar-items" ] [
-        render_nav_item model PageStart "home" "Start",
-        render_nav_item model PageThemes "menu" "Themes",
-        render_nav_item model PagePlayers "people" "Players",
-        render_nav_item model PageQuestions "queue_music" "Question",
-        render_nav_item model PageScore "grade" "Score",
-        render_nav_item model PageEnd "" "End"
-      ],
-      div [ class "navbar-nav" ] [
-        render_enabled_button "keyboard_arrow_right" "move-forward" "Next" "Next step" MoveForward
-      ]
-    ]
+    case model.state.page of
+      PageQuestions ->
+        case get_question model of
+          Just question -> render_question_theme question
+          Nothing -> span [ ] [ ]
+      _ -> div [ class "header-brand" ] [ text "@mnez!c" ]
+    ,
+    render_nav_item model PageStart "home" "Start",
+    render_nav_item model PageThemes "menu" "Themes",
+    render_nav_item model PagePlayers "people" "Players",
+    render_nav_item model PageQuestions "queue_music" "Question",
+    render_nav_item model PageScore "grade" "Score",
+    render_nav_item model PageEnd "" "End",
+    case model.state.page of
+      PageQuestions -> render_question_nb model
+      _ -> span [ ] [ ]
+    ,
+    render_enabled_button "keyboard_arrow_right" "move-forward" "Next" "Next step" MoveForward
   ]
 
 render_footer : Model -> List ( Html Msg )
@@ -164,9 +166,9 @@ render_players model =
   let
     warning_notification =
       if not ( all_player_has_card model ) then
-        div [ class "alert alert-warning" ] [ text "at least one player has no card!" ]
+        div [ class "player-alert alert alert-warning" ] [ text "at least one player has no card!" ]
       else
-        div [ class "alert alert-info" ] [ text "all players have cards!" ]
+        div [ class "player-alert alert alert-info" ] [ text "all players have cards!" ]
     -- next_player_id = "player-" ++ ( toString ( id_to_nb ( Array.length model.players ) ) )
     html_add_player =
       div [ class "player-add", onClick AddPlayer ] [
@@ -293,35 +295,35 @@ render_card_color model player_id inverted_color card_color =
 
 render_questions : Model -> List ( Html Msg )
 render_questions model =
-  List.append [ render_questions_progress model ] ( render_question model )
+  render_question model
 
-render_questions_progress : Model -> Html Msg
-render_questions_progress model =
+render_question_nb : Model -> Html Msg
+render_question_nb model =
   let
-    question_min = id_to_nb 0
     question_now = id_to_nb model.state.question_id
     question_max = id_to_nb ( ( Array.length model.questions ) - 1 )
-    progress_percent = ( ( ( question_now - question_min + 1 ) * 100 ) // ( question_max - question_min + 1 ) )
-    progress_style = ( "width: " ++ toString( progress_percent ) ++ "%;" )
   in
-    div [ class "row" ] [
-      text ( "Question " ++ ( toString question_now ) ++ " / " ++ ( toString question_max ) ),
-      div [ class "progress" ] [
-        div [ class "progress-bar", attribute "role" "progressbar", attribute "style" progress_style, attribute "aria-valuenow" ( toString question_now ), attribute "aria-valuemin" ( toString question_min ), attribute "aria-valuemax" ( toString question_max ) ] [ ]
-      ]
+    div [ class "question-nb" ] [
+      text ( "Question " ++ ( toString question_now ) ++ " / " ++ ( toString question_max ) )
     ]
+
+render_question_theme : Question -> Html Msg
+render_question_theme question =
+  div [ class "question-theme" ] [
+    text question.theme
+  ]
+
+render_question_audio : Question -> Html Msg
+render_question_audio question =
+  div [ class "question-audio" ] [
+    text question.audio
+  ]
 
 render_question : Model -> List ( Html Msg )
 render_question model =
   case get_question model of
     Just question ->
       [
-        div [ class "row theme" ] [
-          text question.theme
-        ],
-        div [ class "row audio" ] [
-          text question.audio
-        ],
         div [ class "row question" ]
           ( Array.toList <| Array.indexedMap ( render_choice model ) question.choices ),
         fieldset [ ] [
@@ -360,11 +362,12 @@ render_choice_class model choice_id =
 render_choice : Model -> Int -> Choice -> Html Msg
 render_choice model choice_id choice =
   let
+    choice_nb = toString ( id_to_nb choice_id )
     classes =
       if show_result model.state.step then
-        "choice " ++ ( render_choice_class model choice_id )
+        "choice choice-" ++ choice_nb ++ " " ++ ( render_choice_class model choice_id )
       else
-        "choice"
+        "choice choice-" ++ choice_nb
   in
     case model.state.step of
       StepNotReady ->

@@ -6,7 +6,8 @@
   --card-height: 60px;
   --card-border-width: 5px;
   --card-border-radius: 6px;
-  --card-shadow-depth: 4px;
+  --card-shadow-depth: 2px;
+  --card-shadow-blur: 1px;
   --card-shadow-color: rgba( 0, 0, 0, .3 );
   --stripped-rotation: 225deg;
   --stripped-width: 5px;
@@ -19,8 +20,6 @@
   vertical-align: middle;
   border-radius: var( --card-border-radius );
   border: 1px solid var( --card-shadow-color );
-  -webkit-box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-color );
-  box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-color );
 }
 
 .card .card-content {
@@ -40,7 +39,7 @@
 }
 
 .card {
-  margin: 5px;
+  margin: 10px;
 }
 
 /* ========================= card size ========================= */
@@ -71,6 +70,10 @@
 .card.selected:hover,
 .card.selectable:hover {
   cursor: pointer;
+
+  -webkit-box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-blur ) var( --card-shadow-color );
+          box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-blur ) var( --card-shadow-color );
+
   -webkit-transform: scale( 1.1, 1.1 );
       -ms-transform: scale( 1.1, 1.1 );
           transform: scale( 1.1, 1.1 );
