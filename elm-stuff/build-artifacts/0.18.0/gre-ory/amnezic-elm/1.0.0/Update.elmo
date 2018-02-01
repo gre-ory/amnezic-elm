@@ -298,10 +298,11 @@ var _gre_ory$amnezic_elm$Update$add_player = function (model) {
 		{
 			players: A2(
 				_elm_lang$core$Array$push,
-				A3(
+				A4(
 					_gre_ory$amnezic_elm$Init$init_default_player,
 					_gre_ory$amnezic_elm$Type$NoSuit,
 					_gre_ory$amnezic_elm$Type$NoColor,
+					false,
 					_elm_lang$core$Array$length(model.players)),
 				model.players)
 		}) : model;

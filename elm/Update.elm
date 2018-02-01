@@ -97,7 +97,7 @@ go_to_question model question_id =
 add_player : Model -> Model
 add_player model =
   if can_add_player model then
-    { model | players = Array.push ( init_default_player NoSuit NoColor ( Array.length model.players ) ) model.players }
+    { model | players = Array.push ( init_default_player NoSuit NoColor False ( Array.length model.players ) ) model.players }
   else
     model
 

@@ -29,7 +29,7 @@ render_page model =
       PageStart -> render_page_skeleton model "start" [ render_all_cards model ]
       PageThemes -> render_default_page model "themes"
       PagePlayers -> render_players_page model "players"
-      PageQuestions -> render_questions_page model "questions"
+      PageQuestions -> render_question_page model "question"
       PageScore -> render_default_page model "score"
       PageEnd -> render_default_page model "end"
 
@@ -41,9 +41,9 @@ render_players_page : Model -> String -> Html Msg
 render_players_page model page_id =
   render_page_skeleton model page_id ( render_players model )
 
-render_questions_page : Model -> String -> Html Msg
-render_questions_page model page_id =
-  render_page_skeleton model page_id ( render_questions model )
+render_question_page : Model -> String -> Html Msg
+render_question_page model page_id =
+  render_page_skeleton model page_id ( render_question model )
 
 -- skeleton
 
@@ -293,10 +293,6 @@ render_card_color model player_id inverted_color card_color =
 
 -- question
 
-render_questions : Model -> List ( Html Msg )
-render_questions model =
-  render_question model
-
 render_question_nb : Model -> Html Msg
 render_question_nb model =
   let
@@ -323,22 +319,11 @@ render_question : Model -> List ( Html Msg )
 render_question model =
   case get_question model of
     Just question ->
-      [
-        div [ class "row question" ]
-          ( Array.toList <| Array.indexedMap ( render_choice model ) question.choices ),
-        fieldset [ ] [
-          render_selected_cards model model.state
-        ],
-        fieldset [ ] [
-          render_player_scores model
-        ]
-      ]
+      ( List.concat <| Array.toList <| Array.indexedMap ( render_choice model ) question.choices )
+       |> \l -> ( l ++ [ render_selected_cards model model.state ] )
+       |> \l -> ( l ++ [ render_player_scores model ] )
     Nothing ->
-      [
-        div [ class "row question" ] [
-          render_error "unknown question!"
-        ]
-      ]
+      [ render_error "unknown question!" ]
 
 -- choice
 
@@ -359,7 +344,48 @@ render_choice_class model choice_id =
     Just choice -> render_correct_class ( Just choice.correct )
     Nothing -> render_correct_class Nothing
 
-render_choice : Model -> Int -> Choice -> Html Msg
+render_choice_nb : Model -> Int -> Choice -> Html Msg
+render_choice_nb model choice_id choice =
+  let
+    choice_nb = toString ( id_to_nb choice_id )
+  in
+    div [ class ( "nb nb-" ++ choice_nb ) ] [
+      text choice_nb
+    ]
+
+render_choice_content : Model -> Int -> Choice -> List ( Html Msg )
+render_choice_content model choice_id choice =
+  case model.state.step of
+    StepNotReady ->
+      [ text "loading question..." ]
+    StepShowChoices ->
+      [
+        div [ class "answer" ] [ text choice.answer ],
+        div [ class "hint" ] [ text " --- " ]
+      ]
+    StepShowHints ->
+      [
+        div [ class "answer" ] [ text choice.answer ],
+        div [ class "hint" ] [ text choice.hint ]
+      ]
+    StepShowCorrect ->
+      [
+        div [ class "answer" ] [ text choice.answer ],
+        div [ class "hint" ] [ text choice.hint ]
+      ]
+    StepShowCards ->
+      [
+        render_choice_cards model choice_id,
+        div [ class "answer" ] [ text choice.answer ],
+        div [ class "hint" ] [ text choice.hint ]
+      ]
+    StepShowScore ->
+      [
+        div [ class "answer" ] [ text choice.answer ],
+        div [ class "hint" ] [ text choice.hint ]
+      ]
+
+render_choice : Model -> Int -> Choice -> List ( Html Msg )
 render_choice model choice_id choice =
   let
     choice_nb = toString ( id_to_nb choice_id )
@@ -369,57 +395,11 @@ render_choice model choice_id choice =
       else
         "choice choice-" ++ choice_nb
   in
-    case model.state.step of
-      StepNotReady ->
-        div [ class classes ] [
-          text "loading question..."
-        ]
-      StepShowChoices ->
-        div [ class classes ] [
-          div [ class "answer" ] [
-            text choice.answer
-          ],
-          div [ class "hint" ] [
-            text " --- "
-          ]
-        ]
-      StepShowHints ->
-        div [ class classes ] [
-          div [ class "answer" ] [
-            text choice.answer
-          ],
-          div [ class "hint" ] [
-            text choice.hint
-          ]
-        ]
-      StepShowCorrect ->
-        div [ class classes ] [
-          div [ class "answer" ] [
-            text choice.answer
-          ],
-          div [ class "hint" ] [
-            text choice.hint
-          ]
-        ]
-      StepShowCards ->
-        div [ class classes ] [
-          render_choice_cards model choice_id,
-          div [ class "answer" ] [
-            text choice.answer
-          ],
-          div [ class "hint" ] [
-            text choice.hint
-          ]
-        ]
-      StepShowScore ->
-        div [ class classes ] [
-          div [ class "answer" ] [
-            text choice.answer
-          ],
-          div [ class "hint" ] [
-            text choice.hint
-          ]
-        ]
+    [
+      render_choice_nb model choice_id choice,
+      div [ class classes ]
+        ( render_choice_content model choice_id choice )
+    ]
 
 -- playing card
 
@@ -512,14 +492,14 @@ render_selected_card model selected_card_id selected_card =
     on_click = UnselectCard selected_card.choice_id selected_card.player_id
   in
     div [ class classes ] [
-      div [ ] [
+      div [ class "selected_card-card" ] [
         case get_player model selected_card.player_id of
           Just player ->
             render_selectable_playing_card card_rank on_click player.card
           Nothing ->
             span [ ] [ ]
       ],
-      div [ ] [
+      div [ class "selected_card-info" ] [
         if selected_card.correct then
           text ( "+" ++ ( toString selected_card.engaged_point ) )
         else

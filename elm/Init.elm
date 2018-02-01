@@ -32,14 +32,25 @@ init_state =
 
 init_default_players : Array Player
 init_default_players =
-  Array.fromList [ ( init_default_player Heart Red 0 ), ( init_default_player Spade Black 1 ) ]
+  Array.fromList (
+    []
+      |> \l -> ( l ++ [ ( init_default_player Heart Red False 0 ) ] )
+      |> \l -> ( l ++ [ ( init_default_player Spade Black False 1 ) ] )
+      |> \l -> ( l ++ [ ( init_default_player Diamond Red False 2 ) ] )
+      |> \l -> ( l ++ [ ( init_default_player Club Black False 3 ) ] )
+      |> \l -> ( l ++ [ ( init_default_player Heart Green False 4 ) ] )
+      |> \l -> ( l ++ [ ( init_default_player Square Yellow False 5 ) ] )
+      |> \l -> ( l ++ [ ( init_default_player Star Black False 6 ) ] )
+      |> \l -> ( l ++ [ ( init_default_player Dot Blue False 7 ) ] )
+  )
+  -- Array.fromList [ , ( init_default_player Spade Black 1 ) ]
 
-init_default_player : CardSuit -> CardColor -> Int -> Player
-init_default_player card_suit card_color player_id =
+init_default_player : CardSuit -> CardColor -> Bool -> Int -> Player
+init_default_player card_suit card_color inverted_color player_id =
   { name = ( "Player " ++ toString( id_to_nb player_id ) )
   , score = 0
   , active = True
-  , card = ( init_card card_suit card_color False )
+  , card = ( init_card card_suit card_color inverted_color )
   }
 
 init_default_questions: Array Question
@@ -50,7 +61,15 @@ init_default_question : Int -> Question
 init_default_question question_id =
   { theme = ( "Theme " ++ toString( id_to_nb question_id ) )
   , audio = ( "audio_" ++ toString( id_to_nb question_id ) ++ ".mp3" )
-  , choices = Array.fromList [ init_default_choice 0 False, init_default_choice 1 True, init_default_choice 2 False, init_default_choice 3 False ]
+  , choices = Array.fromList (
+      []
+        |> \l -> ( l ++ [ ( init_default_choice 0 False ) ] )
+        |> \l -> ( l ++ [ ( init_default_choice 1 True ) ] )
+        |> \l -> ( l ++ [ ( init_default_choice 2 False ) ] )
+        |> \l -> ( l ++ [ ( init_default_choice 3 True ) ] )
+        |> \l -> ( l ++ [ ( init_default_choice 4 False ) ] )
+        |> \l -> ( l ++ [ ( init_default_choice 5 False ) ] )
+    )
   }
 
 init_default_choice : Int -> Bool -> Choice

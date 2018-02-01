@@ -38,28 +38,72 @@ var _gre_ory$amnezic_elm$Init$init_default_question = function (question_id) {
 					_gre_ory$amnezic_elm$Type$id_to_nb(question_id)),
 				'.mp3')),
 		choices: _elm_lang$core$Array$fromList(
-			{
-				ctor: '::',
-				_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 0, false),
-				_1: {
-					ctor: '::',
-					_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 1, true),
-					_1: {
-						ctor: '::',
-						_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 2, false),
-						_1: {
+			function (l) {
+				return function (l) {
+					return function (l) {
+						return function (l) {
+							return function (l) {
+								return function (l) {
+									return A2(
+										_elm_lang$core$Basics_ops['++'],
+										l,
+										{
+											ctor: '::',
+											_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 5, false),
+											_1: {ctor: '[]'}
+										});
+								}(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										l,
+										{
+											ctor: '::',
+											_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 4, false),
+											_1: {ctor: '[]'}
+										}));
+							}(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									l,
+									{
+										ctor: '::',
+										_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 3, true),
+										_1: {ctor: '[]'}
+									}));
+						}(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								l,
+								{
+									ctor: '::',
+									_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 2, false),
+									_1: {ctor: '[]'}
+								}));
+					}(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							l,
+							{
+								ctor: '::',
+								_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 1, true),
+								_1: {ctor: '[]'}
+							}));
+				}(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						l,
+						{
 							ctor: '::',
-							_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 3, false),
+							_0: A2(_gre_ory$amnezic_elm$Init$init_default_choice, 0, false),
 							_1: {ctor: '[]'}
-						}
-					}
-				}
-			})
+						}));
+			}(
+				{ctor: '[]'}))
 	};
 };
 var _gre_ory$amnezic_elm$Init$init_default_questions = A2(_elm_lang$core$Array$initialize, 4, _gre_ory$amnezic_elm$Init$init_default_question);
-var _gre_ory$amnezic_elm$Init$init_default_player = F3(
-	function (card_suit, card_color, player_id) {
+var _gre_ory$amnezic_elm$Init$init_default_player = F4(
+	function (card_suit, card_color, inverted_color, player_id) {
 		return {
 			name: A2(
 				_elm_lang$core$Basics_ops['++'],
@@ -68,19 +112,91 @@ var _gre_ory$amnezic_elm$Init$init_default_player = F3(
 					_gre_ory$amnezic_elm$Type$id_to_nb(player_id))),
 			score: 0,
 			active: true,
-			card: A3(_gre_ory$amnezic_elm$Init$init_card, card_suit, card_color, false)
+			card: A3(_gre_ory$amnezic_elm$Init$init_card, card_suit, card_color, inverted_color)
 		};
 	});
 var _gre_ory$amnezic_elm$Init$init_default_players = _elm_lang$core$Array$fromList(
-	{
-		ctor: '::',
-		_0: A3(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Heart, _gre_ory$amnezic_elm$Type$Red, 0),
-		_1: {
-			ctor: '::',
-			_0: A3(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Spade, _gre_ory$amnezic_elm$Type$Black, 1),
-			_1: {ctor: '[]'}
-		}
-	});
+	function (l) {
+		return function (l) {
+			return function (l) {
+				return function (l) {
+					return function (l) {
+						return function (l) {
+							return function (l) {
+								return function (l) {
+									return A2(
+										_elm_lang$core$Basics_ops['++'],
+										l,
+										{
+											ctor: '::',
+											_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Dot, _gre_ory$amnezic_elm$Type$Blue, false, 7),
+											_1: {ctor: '[]'}
+										});
+								}(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										l,
+										{
+											ctor: '::',
+											_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Star, _gre_ory$amnezic_elm$Type$Black, false, 6),
+											_1: {ctor: '[]'}
+										}));
+							}(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									l,
+									{
+										ctor: '::',
+										_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Square, _gre_ory$amnezic_elm$Type$Yellow, false, 5),
+										_1: {ctor: '[]'}
+									}));
+						}(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								l,
+								{
+									ctor: '::',
+									_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Heart, _gre_ory$amnezic_elm$Type$Green, false, 4),
+									_1: {ctor: '[]'}
+								}));
+					}(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							l,
+							{
+								ctor: '::',
+								_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Club, _gre_ory$amnezic_elm$Type$Black, false, 3),
+								_1: {ctor: '[]'}
+							}));
+				}(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						l,
+						{
+							ctor: '::',
+							_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Diamond, _gre_ory$amnezic_elm$Type$Red, false, 2),
+							_1: {ctor: '[]'}
+						}));
+			}(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					l,
+					{
+						ctor: '::',
+						_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Spade, _gre_ory$amnezic_elm$Type$Black, false, 1),
+						_1: {ctor: '[]'}
+					}));
+		}(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				l,
+				{
+					ctor: '::',
+					_0: A4(_gre_ory$amnezic_elm$Init$init_default_player, _gre_ory$amnezic_elm$Type$Heart, _gre_ory$amnezic_elm$Type$Red, false, 0),
+					_1: {ctor: '[]'}
+				}));
+	}(
+		{ctor: '[]'}));
 var _gre_ory$amnezic_elm$Init$init_state = {
 	page: _gre_ory$amnezic_elm$Type$PagePlayers,
 	question_id: 0,
