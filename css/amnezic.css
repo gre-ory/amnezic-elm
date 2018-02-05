@@ -18,9 +18,9 @@
 /* ---------- font ---------- */
 
 body {
-  font-family: 'Lalezar', cursive;
-  font-family: 'Rubik', sans-serif;
-  font-family: 'Bungee', cursive;
+  /* font-family: 'Lalezar', cursive; */
+  /* font-family: 'Rubik', sans-serif; */
+  /* font-family: 'Bungee', cursive; */
   font-family: 'Roboto', sans-serif;
 }
 
@@ -121,11 +121,32 @@ body, html, #amnezic, .page {
 
 /* ========================= card ========================= */
 
-.correct .card {
+.selected_cards .selected_card {
+  margin-right: 10px;
+  border: 1px solid rgba( 0, 0, 0, .3 );
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  -webkit-box-shadow: 3px 3px 1px rgba( 0, 0, 0, .1 );
+          box-shadow: 3px 3px 1px rgba( 0, 0, 0, .1 );
+}
+
+.selected_cards .selected_card .card {
+  /* margin-left: 5px; */
+}
+
+.selected_cards .selected_card-info {
+  margin-left: 5px;
+  padding: 10px;
+  border-radius: 6px;
+  color: white;
+}
+
+.selected_cards .correct .selected_card-info {
   background-color: var( --color-green );
 }
 
-.incorrect .card {
+.selected_cards .incorrect .selected_card-info {
   background-color: var( --color-red );
 }
 
@@ -181,6 +202,10 @@ body, html, #amnezic, .page {
   background-color: var( --color-red );
 }
 
+.page-players .player .modal .card {
+  margin: 10px;
+}
+
 /* ---------- choice ---------- */
 
 .choice {
@@ -207,7 +232,7 @@ body, html, #amnezic, .page {
 }
 
 .choice .cards .card {
-	margin: 3px 7px;
+	margin: 3px 3px;
 }
 
 .choice.correct .answer,

@@ -9031,6 +9031,104 @@ var _elm_lang$keyboard$Keyboard$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Keyboard'] = {pkg: 'elm-lang/keyboard', init: _elm_lang$keyboard$Keyboard$init, onEffects: _elm_lang$keyboard$Keyboard$onEffects, onSelfMsg: _elm_lang$keyboard$Keyboard$onSelfMsg, tag: 'sub', subMap: _elm_lang$keyboard$Keyboard$subMap};
 
+/* copyright xarvh/elm-audio */
+
+var _gre_ory$amnezic_elm$Native_Audio = function() {
+
+  var Task = _elm_lang$core$Native_Scheduler;
+
+  function loadSound(source) {
+    return Task.nativeBinding(function (callback) {
+
+      if (typeof Audio === 'undefined') {
+        return callback(Task.fail('The browser does not support HTML5 Audio'));
+      }
+
+      var audio = new Audio();
+      audio.preload = 'auto';
+
+      function oncanplaythrough() {
+        // `canplaythrough` triggers also when audio.currentTime is assigned
+        audio.removeEventListener('canplaythrough', oncanplaythrough, false);
+
+        var elmSound = { ctor: 'Sound', src: source };
+
+        // define audio as non-enumerable property to allow comparison and stringification
+        Object.defineProperty(elmSound, 'audio', { value: audio });
+
+        callback(Task.succeed(elmSound));
+      };
+
+      function onerror(/* event */) {
+        callback(Task.fail('Unable to load ' + source));
+      };
+
+      audio.addEventListener('canplaythrough', oncanplaythrough, false);
+      audio.addEventListener('error', onerror, false);
+      audio.src = source;
+      audio.load();
+    });
+  }
+
+
+  function playSound(options, sound) {
+    return Task.nativeBinding(function (callback) {
+      var audio = sound.audio;
+
+      audio.loop = options.loop;
+
+      if (!(options.volume >= 0 && options.volume <= 1)) {
+        return callback(Task.fail('volume should be within 0 and 1, but is ' + options.volume));
+      }
+      audio.volume = options.volume;
+
+      if (options.startAt.ctor === 'Just') {
+        var startAt = options.startAt._0;
+        if (!(startAt >= 0 && isFinite(startAt))) {
+          return callback(Task.fail('startAt should be finite and positive, but is ' + startAt));
+        }
+        audio.currentTime = options.startAt._0;
+      }
+
+      function onended() {
+        callback(Task.succeed());
+      };
+
+      audio.addEventListener('ended', onended, false);
+      audio.play();
+    });
+  }
+
+
+  function stopSound(sound) {
+    return Task.nativeBinding(function (callback) {
+      sound.audio.pause();
+      callback(Task.succeed());
+    });
+  }
+
+
+  return {
+    loadSound: loadSound,
+    playSound: F2(playSound),
+    stopSound: stopSound,
+  };
+}();
+
+var _gre_ory$amnezic_elm$Audio$stopSound = _gre_ory$amnezic_elm$Native_Audio.stopSound;
+var _gre_ory$amnezic_elm$Audio$playSound = _gre_ory$amnezic_elm$Native_Audio.playSound;
+var _gre_ory$amnezic_elm$Audio$loadSound = _gre_ory$amnezic_elm$Native_Audio.loadSound;
+var _gre_ory$amnezic_elm$Audio$PlaybackOptions = F3(
+	function (a, b, c) {
+		return {volume: a, startAt: b, loop: c};
+	});
+var _gre_ory$amnezic_elm$Audio$defaultPlaybackOptions = A3(
+	_gre_ory$amnezic_elm$Audio$PlaybackOptions,
+	1.0,
+	_elm_lang$core$Maybe$Just(0.0),
+	false);
+var _gre_ory$amnezic_elm$Audio$Sound = {ctor: 'Sound'};
+
 var _gre_ory$amnezic_elm$Type$show_result = function (step) {
 	var _p0 = step;
 	switch (_p0.ctor) {

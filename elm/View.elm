@@ -8,6 +8,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Array exposing (..)
 import Modal exposing (..)
+import Audio exposing (..)
 
 import Type exposing (..)
 import Init exposing (..)

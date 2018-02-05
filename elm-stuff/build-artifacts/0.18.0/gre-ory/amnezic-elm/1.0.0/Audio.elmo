@@ -1,0 +1,13 @@
+var _gre_ory$amnezic_elm$Audio$stopSound = _gre_ory$amnezic_elm$Native_Audio.stopSound;
+var _gre_ory$amnezic_elm$Audio$playSound = _gre_ory$amnezic_elm$Native_Audio.playSound;
+var _gre_ory$amnezic_elm$Audio$loadSound = _gre_ory$amnezic_elm$Native_Audio.loadSound;
+var _gre_ory$amnezic_elm$Audio$PlaybackOptions = F3(
+	function (a, b, c) {
+		return {volume: a, startAt: b, loop: c};
+	});
+var _gre_ory$amnezic_elm$Audio$defaultPlaybackOptions = A3(
+	_gre_ory$amnezic_elm$Audio$PlaybackOptions,
+	1.0,
+	_elm_lang$core$Maybe$Just(0.0),
+	false);
+var _gre_ory$amnezic_elm$Audio$Sound = {ctor: 'Sound'};

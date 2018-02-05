@@ -1,18 +1,16 @@
 {
     "version": "1.0.0",
-    "summary": "Amnezic elm app",
+    "summary": "Amnezic app",
     "repository": "https://github.com/gre-ory/amnezic-elm.git",
     "license": "BSD3",
-    "source-directories": [
-        ".",
-        "elm"
-    ],
-    "exposed-modules": [],
+    "source-directories": [ ".", "elm" ],
+    "exposed-modules": [ "Audio" ],
     "dependencies": {
-        "elm-lang/core": "4.0.1 <= v <= 6.0.0",
+        "elm-lang/core": "4.0.0 <= v <= 6.0.0",
         "elm-lang/html": "1.1.0 <= v <= 3.0.0",
         "elm-lang/keyboard": "1.0.0 <= v <= 1.0.1",
         "rjbma/elm-modal": "1.0.0 <= v < 2.0.0"
     },
+    "native-modules": true,
     "elm-version": "0.17.0 <= v <= 0.19.0"
 }

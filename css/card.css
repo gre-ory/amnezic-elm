@@ -2,15 +2,20 @@
 /* ========================= card ========================= */
 
 .card {
-  --card-width: 40px;
-  --card-height: 60px;
-  --card-border-width: 5px;
+  --card-width: 45px;
+  --card-height: 65px;
+  --card-rank-offset: 20px;
+  --card-border-width: 4px;
   --card-border-radius: 6px;
-  --card-shadow-depth: 2px;
+  --card-border-color: rgba( 0, 0, 0, .3 );
+  --card-shadow-depth: 5px;
   --card-shadow-blur: 1px;
-  --card-shadow-color: rgba( 0, 0, 0, .3 );
+  --card-shadow-color: rgba( 0, 0, 0, .1 );
   --stripped-rotation: 225deg;
-  --stripped-width: 5px;
+  --stripped-width: 1px;
+  --card-selected-color: #ffeaa7;
+  --card-text-shadow-color: rgba( 0, 0, 0, 0.4 );
+  --card-not-selectable-opacity: 0.3;
 }
 
 .card {
@@ -19,7 +24,10 @@
   text-align: center;
   vertical-align: middle;
   border-radius: var( --card-border-radius );
-  border: 1px solid var( --card-shadow-color );
+  border: 1px solid var( --card-border-color );
+
+  font-family: 'Lalezar', cursive;
+  font-size: 1.3em;
 }
 
 .card .card-content {
@@ -35,18 +43,14 @@
 
 .card .card-rank {
   display: inline-block;
-  margin-top: 16px;
-}
-
-.card {
-  margin: 10px;
+  margin-top: var( --card-rank-offset );
 }
 
 /* ========================= card size ========================= */
 
 .card {
-  width: 45px;
-  height: 65px;
+  width: var( --card-width );
+  height: var( --card-height );
 }
 
 /* ========================= card selection ========================= */
@@ -55,16 +59,9 @@
   background-color: var( --color-white );
 }
 
-.correct .card {
-  background-color: var( --color-green );
-}
-
-.incorrect .card {
-  background-color: var( --color-red );
-}
-
-.card.selected {
-  background-color: var( --color-yellow );
+.card.selected,
+.card.selectable:hover {
+  background-color: var( --card-selected-color );
 }
 
 .card.selected:hover,
@@ -74,13 +71,13 @@
   -webkit-box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-blur ) var( --card-shadow-color );
           box-shadow: var( --card-shadow-depth ) var( --card-shadow-depth ) var( --card-shadow-blur ) var( --card-shadow-color );
 
-  -webkit-transform: scale( 1.1, 1.1 );
-      -ms-transform: scale( 1.1, 1.1 );
-          transform: scale( 1.1, 1.1 );
+  -webkit-transform: translate( calc( -1 * var( --card-shadow-depth ) ), calc( -1 * var( --card-shadow-depth ) ) );
+      -ms-transform: translate( calc( -1 * var( --card-shadow-depth ) ), calc( -1 * var( --card-shadow-depth ) ) );
+          transform: translate( calc( -1 * var( --card-shadow-depth ) ), calc( -1 * var( --card-shadow-depth ) ) );
 }
 
 .card.not-selectable {
-  opacity: 0.3;
+  opacity: var( --card-not-selectable-opacity );
 }
 
 /* ========================= card rank ========================= */
@@ -109,6 +106,12 @@
 .card.suit-dot     .card-rank:after { content: "⚫"; }
 .card.suit-square  .card-rank:after { content: "∎"; }
 
+/* ========================= card text shadow ========================= */
+
+.card {
+  text-shadow: 1px 1px var( --card-text-shadow-color );
+}
+
 /* ========================= card color ========================= */
 
 .card .card-content {
@@ -116,22 +119,22 @@
   background: white;
 }
 
-.card.no-color     .card-content { color: var( --color-light-grey   ); }
-.card.color-black  .card-content { color: var( --color-black  ); }
+.card.no-color     .card-content { color: var( --color-light-grey  ); }
+.card.color-black  .card-content { color: var( --color-black       ); }
 .card.color-red    .card-content { color: var( --color-dark-red    ); }
 .card.color-yellow .card-content { color: var( --color-dark-yellow ); }
 .card.color-blue   .card-content { color: var( --color-dark-blue   ); }
 .card.color-green  .card-content { color: var( --color-dark-green  ); }
 
-/*
-.card.inverted-color              .card-content { background-color: var( --color-grey   ); }
-.card.inverted-color.no-color     .card-content { background-color: var( --color-grey   ); }
-.card.inverted-color.color-black  .card-content { background-color: var( --color-black  ); }
-.card.inverted-color.color-red    .card-content { background-color: var( --color-red    ); }
-.card.inverted-color.color-yellow .card-content { background-color: var( --color-yellow ); }
-.card.inverted-color.color-blue   .card-content { background-color: var( --color-blue   ); }
-.card.inverted-color.color-green  .card-content { background-color: var( --color-green  ); }
-*/
+.card                             .card-content {
+  color: black;
+  background: repeating-linear-gradient( var( --stripped-rotation ),
+    #fff,
+    #fff var( --stripped-width ),
+    #eee var( --stripped-width ),
+    #eee calc( 2 * var( --stripped-width ) )
+  );
+}
 
 .card.inverted-color              .card-content {
   color: white;
@@ -186,15 +189,4 @@
     #222 var( --stripped-width ),
     #222 calc( 2 * var( --stripped-width ) )
   );
-}
-
-/* ========================= card text shadow ========================= */
-
-.card {
-  text-shadow: 1px 1px rgba( 0, 0, 0, 0.2 );
-}
-
-.card.color-yellow .card-content,
-.card.inverted-color .card-content {
-  text-shadow: 1px 1px rgba( 0, 0, 0, 0.7 );
 }
